@@ -1,0 +1,10 @@
+{
+  "extends": "weblab",
+  "env": {
+    "amd": true,
+    "browser": true
+  },
+  "rules": {
+    "import/no-amd": 0
+  }
+}

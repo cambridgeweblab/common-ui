@@ -1,0 +1,24 @@
+{
+  "name": "common-ui",
+  "description": "A collection of common web components",
+  "main": "index.js",
+  "authors": [
+    "Cambridge Assessment - WebLab"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "web-components"
+  ],
+  "homepage": "https://github.com/cambridgeweblab/common-ui",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "system.js": "^0.19.39",
+    "document-register-element": "^1.2.0"
+  }
+}
