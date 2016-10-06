@@ -1,4 +1,4 @@
-define('utils', [], () => {
+define('types', [], () => {
     /**
     * toBoolean - casts a string value to boolean.
     * @param {string} value - value to cast to boolean.

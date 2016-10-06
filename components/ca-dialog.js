@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', '/components/helpers/utils.js', 'document-register-element'], (createElement, utils) => {
+define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
     // desctruture until customElements is a standard.
     const { customElements } = window;
     /**
@@ -82,7 +82,7 @@ define(['/components/helpers/create-element.js', '/components/helpers/utils.js',
         * @return {string} visibility of the element, defaults to false
         */
         get visibility() {
-            return utils.toBoolean(this.getAttribute('visibility'));
+            return types.toBoolean(this.getAttribute('visibility'));
         }
 
         /**
