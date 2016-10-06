@@ -1,0 +1,89 @@
+/* lite reset */
+html { height: 100%; min-height: 100%; -webkit-text-size-adjust: none; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+abbr, article, aside, details, figure, footer, header, main, mark, menu, nav, output, progress, section, time { display: block }
+html, body, ul, li, p, blockquote, h1, h2, h3, h4, h5, form, fieldset, legend, div, span, img, button {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    font-family: arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    -webkit-text-size-adjust: none;
+    list-style: none;
+}
+
+body { margin: 10px; font-size: 14px; height: 100%; overflow-y: scroll; }
+
+/* Home Page link on each example page */
+.ca-home a {
+    font-family: tahoma;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background-color: #e0e0e0;
+    border-radius: 12px;
+    padding: 12px;
+}
+.ca-home a::after {
+    content: "Back to CA Examples";
+}
+
+.ca-examples {
+    font-family: tahoma;
+    font-size: 1em;
+}
+.ca-title {
+    display: block;
+    font-size:1.3em;
+    font-weight: bold;
+    font-family: tahoma;
+    padding-bottom: 10px;
+}
+
+
+.ca-examples ol {
+    counter-reset:li; /* Initiate a counter */
+    margin-left:20px; /* Remove the default left margin */
+    margin-right:20px; /* Remove the default left margin */
+    margin-top: 0;
+    padding-left:0; /* Remove the default left padding */
+}
+.ca-examples ol > li {
+    position:relative; /* Create a positioning context */
+    margin:0 0 2px 2em; /* Give each list item a left margin to make room for the numbers */
+    padding:4px 8px; /* Add some spacing around the content */
+    list-style:none; /* Disable the normal item numbering */
+    /*border-top:2px solid #666;*/
+    border:2px solid #666;
+    background:#f6f6f6;
+}
+.ca-examples ol > li:before {
+    content:counter(li); /* Use the counter as content */
+    counter-increment:li; /* Increment the counter by 1 */
+    /* Position and style the number */
+    position:absolute;
+    top:-2px;
+    left:-2em;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    box-sizing:border-box;
+    width:2em;
+    /* Some space between the number and the content in browsers that support
+    generated content but not positioning it (Camino 2 is one example) */
+    margin-right:8px;
+    padding:4px;
+    border:2px solid #666;
+    color:#eee;
+    background:#666;
+    font-weight:bold;
+    text-align:center;
+}
+
+.ca-examples a { font-size:16px; font-weight:bold; color:blue; }
+.ca-examples a::after { content: attr(href); }
+
+.ca-examples a[rel=inactive],
+.ca-examples a[rel=todo] { border-bottom: 1px dotted; text-decoration: none; font-weight:normal; }
+
+.ca-examples a[rel=todo] { color: royalblue; }
+.ca-examples a[rel=inactive] { color:#b0b0b0; pointer-events: none; }

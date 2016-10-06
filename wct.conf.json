@@ -1,0 +1,10 @@
+{
+  "persistent": false,
+  "waitForFrameworks": false,
+  "suites": ["test/"],
+  "plugins": {
+    "local": {
+      "browsers": ["chrome"]
+    }
+  }
+}

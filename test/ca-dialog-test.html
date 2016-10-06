@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA DIALOG | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-dialog.css">
+  </head>
+  <body>
+    <test-fixture id="dialog">
+      <template>
+        <ca-dialog></ca-dialog>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-dialog>', () => {
+            let dialog;
+
+            setup(done => {
+                SystemJS.import('ca-dialog.js').then(() => {
+                    dialog = fixture('dialog');
+                    done();
+                });
+            });
+
+            test('it should stay hidden when created', () => {
+                // assert
+                expect(dialog.hasAttribute('visibility')).to.be.false;
+                expect(dialog.visibility).to.be.false;
+            });
+
+            test('it should display when show function is called', () => {
+                // act
+                dialog.show();
+                // assert
+                expect(dialog.hasAttribute('visibility')).to.be.true;
+                expect(dialog.visibility).to.be.true;
+            });
+
+            test('it should display when visibility attribute is set to true', () => {
+                // act
+                dialog.visibility = true;
+                // assert
+                expect(dialog.hasAttribute('visibility')).to.be.true;
+                expect(dialog.visibility).to.be.true;
+            });
+
+            test('it should have a close button, overlay, and modal when visible', () => {
+                // setup
+                dialog.heading = 'Heading';
+                // act
+                dialog.show();
+                // assert
+                const overlay = dialog.querySelector('.ca-dialog-overlay');
+                const modal = dialog.querySelector('.ca-dialog-body');
+                const closeButton = modal.querySelector('.ca-dialog-buttons-container button[name="close"]');
+                expect(overlay).to.be.ok;
+                expect(modal).to.be.ok;
+                expect(closeButton).to.be.ok;
+            });
+
+            test('it should no longer be visile if close is called', () => {
+                // act
+                dialog.close();
+                // assert
+                expect(dialog.visibility).to.be.false;
+            });
+
+            test('it should render heading or content without content if not set', () => {
+                // act
+                dialog.show();
+                const overlay = dialog.querySelector('.ca-dialog-overlay');
+                const modal = dialog.querySelector('.ca-dialog-body');
+                const heading = dialog.querySelector('h1');
+                const content = modal.querySelector('.ca-dialog-content');
+                // assert
+                expect(overlay).to.be.ok;
+                expect(modal).to.be.ok;
+                expect(heading.innerText.length).to.equal(0);
+                expect(content.innerText.length).to.equal(0);
+            });
+
+            test('it should render buttons based on property', () => {
+                // setup
+                dialog.heading = 'Heading';
+                dialog.buttons = ['add,delete,destroy'];
+
+                // act
+                dialog.show();
+
+                // check that we have the buttons
+                const dynamicButtonsContainer = dialog.querySelector('.ca-dialog-dynamic-buttons');
+                expect(dynamicButtonsContainer.querySelector('button[name="add"]')).to.ok;
+                expect(dynamicButtonsContainer.querySelector('button[name="delete"]')).to.ok;
+                expect(dynamicButtonsContainer.querySelector('button[name="destroy"]')).to.ok;
+            });
+
+            test('it should render buttson if property is set', () => {
+                // setup
+                dialog.heading = 'Heading';
+                dialog.buttons = ['add'];
+
+                // act
+                dialog.show();
+                dialog.buttons = ['delete,test'];
+
+                // check that we have the buttons
+                const dynamicButtonsContainer = dialog.querySelector('.ca-dialog-dynamic-buttons');
+                expect(dynamicButtonsContainer.querySelector('button[name="add"]')).to.not.ok;
+                expect(dynamicButtonsContainer.querySelector('button[name="delete"]')).to.ok;
+                expect(dynamicButtonsContainer.querySelector('button[name="test"]')).to.ok;
+            });
+
+            test('it should clear the content div if updated', () => {
+                // setup
+                const firstContentDiv = document.createElement('div');
+                firstContentDiv.innerText = '1st content';
+                const secondContentDiv = document.createElement('div');
+                secondContentDiv.innerText = '2nd content';
+                dialog.content = firstContentDiv;
+
+                // act
+                dialog.show();
+                expect(dialog.content.innerText).to.equal('1st content');
+                dialog.content = secondContentDiv;
+                expect(dialog.content.innerText).to.equal('2nd content');
+            });
+        });
+        a11ySuite('dialog');
+    </script>
+  </body>
+</html>
