@@ -1,0 +1,16 @@
+ca-email-confirm label span {
+    display: block;
+}
+
+ca-email-confirm label strong {
+    display: none;
+    color: red;
+}
+
+ca-email-confirm[valid="false"][show-validation="true"] label span {
+    color: red;
+}
+
+ca-email-confirm[valid="false"][show-validation="true"] label strong {
+    display: block;
+}

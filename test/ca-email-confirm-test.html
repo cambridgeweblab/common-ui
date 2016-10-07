@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA EMAIL CONFIRM | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-email-confirm.css">
+  </head>
+  <body>
+    <test-fixture id="email-confirm">
+      <template>
+        <ca-email-confirm></ca-email-confirm>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-email-confirm>', () => {
+            
+            let emailConfirm;
+
+            setup(done => {
+                SystemJS.import('ca-email-confirm.js').then(() => {
+                    emailConfirm = fixture('email-confirm');
+                    done();
+                });
+            });
+
+            test('it should add valid and show-validation attributes when created', () => {
+              
+                expect(emailConfirm.hasAttribute('valid')).to.be.true;
+                expect(emailConfirm.hasAttribute('show-validation')).to.be.true;
+            });
+        });
+        a11ySuite('email-confirm');
+    </script>
+  </body>
+</html>
