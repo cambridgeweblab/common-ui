@@ -31,6 +31,16 @@
                 expect(emailConfirm.hasAttribute('valid')).to.be.true;
                 expect(emailConfirm.hasAttribute('show-validation')).to.be.true;
             });
+
+            test('it should have been set up with default values for labels and inputs', () => {
+              
+                expect(emailConfirm.getAttribute('valid')).to.equal('false');
+                expect(emailConfirm.label1).to.equal('Please enter your email address');
+                expect(emailConfirm.label2).to.equal('Please confirm your email address');
+                expect(emailConfirm.placeholder1).to.equal('');
+                expect(emailConfirm.placeholder2).to.equal('');
+                expect(emailConfirm.value).to.equal('');
+            });
         });
         a11ySuite('email-confirm');
     </script>

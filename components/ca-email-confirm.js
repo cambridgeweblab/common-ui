@@ -78,7 +78,7 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
          */
         get value() {
 
-            if (!this.isValid()) return '';
+            if (!this.validate()) return '';
             return this.querySelector('.ctl1 input').val();
         }
 
