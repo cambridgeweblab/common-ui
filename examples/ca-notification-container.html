@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA NOTIFICATION CONTAINER | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-notification-container.css">
+    <style>
+      ca-notification-container {
+        /* for example only */
+        top: 150px;
+      }
+    </style>
+  </head>
+  <body>
+    <ca-notification-container></ca-notification-container>
+    <button onclick="addInfoNotification()">Open Info Notification</button>
+    <button onclick="addErrorNotification()">Open Error Notification</button>
+    <button onclick="addWarnNotification()">Open Warning Notification</button>
+    <button onclick="addSuccessNotification()">Open Success Notification</button>
+    <script>
+        SystemJS.import('ca-notification-container.js');
+        function addInfoNotification() {
+            const notificationContainer = document.querySelector('ca-notification-container');
+            const notification = document.createElement('ca-notification');
+            notification.content = 'Notice has been noticed.';
+            notificationContainer.addNotification(notification);
+        };
+        function addErrorNotification() {
+            const notificationContainer = document.querySelector('ca-notification-container');
+            const notification = document.createElement('ca-notification');
+            notification.type = 'error';
+            notification.content = 'Notice has been noticed.';
+            notificationContainer.addNotification(notification);
+        };
+        function addWarnNotification() {
+            const notificationContainer = document.querySelector('ca-notification-container');
+            const notification = document.createElement('ca-notification');
+            notification.type = 'warn';
+            notification.content = 'Notice has been noticed.';
+            notificationContainer.addNotification(notification);
+        };
+        function addSuccessNotification() {
+            const notificationContainer = document.querySelector('ca-notification-container');
+            const notification = document.createElement('ca-notification');
+            notification.type = 'success';
+            notification.content = 'Notice has been noticed.';
+            notificationContainer.addNotification(notification);
+        };
+    </script>
+  </body>
+</html>

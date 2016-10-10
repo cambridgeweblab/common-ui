@@ -78,8 +78,8 @@
                 // assert
                 expect(overlay).to.be.ok;
                 expect(modal).to.be.ok;
-                expect(heading.innerText.length).to.equal(0);
-                expect(content.innerText.length).to.equal(0);
+                expect(heading.textContent.length).to.equal(0);
+                expect(content.textContent.length).to.equal(0);
             });
 
             test('it should render buttons based on property', () => {
@@ -116,16 +116,16 @@
             test('it should clear the content div if updated', () => {
                 // setup
                 const firstContentDiv = document.createElement('div');
-                firstContentDiv.innerText = '1st content';
+                firstContentDiv.textContent = '1st content';
                 const secondContentDiv = document.createElement('div');
-                secondContentDiv.innerText = '2nd content';
+                secondContentDiv.textContent = '2nd content';
                 dialog.content = firstContentDiv;
 
                 // act
                 dialog.show();
-                expect(dialog.content.innerText).to.equal('1st content');
+                expect(dialog.content.textContent).to.equal('1st content');
                 dialog.content = secondContentDiv;
-                expect(dialog.content.innerText).to.equal('2nd content');
+                expect(dialog.content.textContent).to.equal('2nd content');
             });
         });
         a11ySuite('dialog');
