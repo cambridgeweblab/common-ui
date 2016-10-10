@@ -1,16 +1,27 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>CA EMAIL CONFIRM | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-email-confirm.css">
-  </head>
-  <body>
-    <ca-email-confirm placeholder1="e.g. joe@bloggs.com" placeholder2="Re-enter your email address to confirm"</ca-email-confirm>
-    <script>
-        SystemJS.import('ca-email-confirm.js');
-    </script>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <title>CA EMAIL CONFIRM | Web Lab Common UI</title>
+        <script src="/bower_components/system.js/dist/system.js"></script>
+        <script src="/components/config/index.js"></script>
+        <link rel="stylesheet" type="text/css" href="/examples/index.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-email-confirm.css">
+    </head>
+    <body>
+        <ca-email-confirm placeholder1="e.g. joe@bloggs.com" placeholder2="Re-enter your email address to confirm"></ca-email-confirm>
+
+        <button class="toggle-validation-messages">Toggle 'Show validation messages'</button>
+
+        <script>
+            SystemJS.import('ca-email-confirm.js');
+            document.querySelector('.toggle-validation-messages').onclick = e => {
+
+                e.preventDefault();
+                const emailConfirmElement = document.querySelector('ca-email-confirm');
+                emailConfirmElement.setAttribute('show-validation', (emailConfirmElement.getAttribute('show-validation') === 'true') ? 'false' : 'true');
+                return false;
+            }
+        </script>
+    </body>
 </html>

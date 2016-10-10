@@ -29,17 +29,44 @@
             test('it should add valid and show-validation attributes when created', () => {
               
                 expect(emailConfirm.hasAttribute('valid')).to.be.true;
+                expect(emailConfirm.getAttribute('valid')).to.equal('false');
                 expect(emailConfirm.hasAttribute('show-validation')).to.be.true;
+                expect(emailConfirm.getAttribute('show-validation')).to.equal('false');
             });
 
             test('it should have been set up with default values for labels and inputs', () => {
               
-                expect(emailConfirm.getAttribute('valid')).to.equal('false');
                 expect(emailConfirm.label1).to.equal('Please enter your email address');
                 expect(emailConfirm.label2).to.equal('Please confirm your email address');
                 expect(emailConfirm.placeholder1).to.equal('');
                 expect(emailConfirm.placeholder2).to.equal('');
                 expect(emailConfirm.value).to.equal('');
+            });
+
+            test('it should correctly validate email addresses entered into both inputs', () => {
+                
+                // setup invalid state
+                emailConfirm.querySelector('.ctl1 input').value = 'invalidEmail';
+                emailConfirm.querySelector('.ctl2 input').value = 'invalidEmail';
+                emailConfirm.validate();
+                expect(emailConfirm.getAttribute('valid')).to.equal('false');
+                expect(emailConfirm.error1).to.equal('Please enter a valid email address');
+                expect(emailConfirm.error2).to.equal('Please enter a valid email address');
+
+                // change to valid values and recheck valid state
+                emailConfirm.querySelector('.ctl1 input').value = 'test@domain.com';
+                emailConfirm.querySelector('.ctl2 input').value = 'test@domain.com';
+                emailConfirm.validate();
+                expect(emailConfirm.getAttribute('valid')).to.equal('true');
+                expect(emailConfirm.error1).to.equal('');
+                expect(emailConfirm.error2).to.equal('');
+                
+                // check that valid states returns to invalid if one value is incorrect
+                emailConfirm.querySelector('.ctl1 input').value = 'invalidEmail';
+                emailConfirm.validate();
+                expect(emailConfirm.getAttribute('valid')).to.equal('false');
+                expect(emailConfirm.error1).to.equal('Please enter a valid email address');
+                expect(emailConfirm.error2).to.equal('Email addresses must match, please check carefully and re-enter');
             });
         });
         a11ySuite('email-confirm');

@@ -83,6 +83,18 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
 
         /**
+         * sets the value of both inputs
+         * @param {string} value - to be set in both input boxes
+         * @return {void}
+         */
+        set value(value) {
+
+            this.querySelector('.ctl1 input').value = value;
+            this.querySelector('.ctl2 input').value = value;
+            this.validate();
+        }
+
+        /**
         * label 1 getter
         * @return {string} returns label text for label 1
         */
