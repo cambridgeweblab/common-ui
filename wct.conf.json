@@ -10,7 +10,7 @@
       "dir": "./coverage",
       "reporters": ["text-summary", "lcov"],
       "include": [
-        "**/*.js"
+        "./components/**/*.js"
       ]
     }
   }
