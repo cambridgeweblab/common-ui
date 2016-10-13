@@ -1,5 +1,5 @@
 {
-  "persistent": true,
+  "persistent": false,
   "waitForFrameworks": false,
   "suites": ["test/"],
   "plugins": {

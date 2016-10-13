@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA NOTIFICATION | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-notification-container.css">
+  </head>
+  <body>
+    <test-fixture id="notification-container">
+      <template>
+        <ca-notification-container></ca-notification--container>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-notification-container>', () => {
+            let notificationContainer;
+
+            setup(done => {
+                SystemJS.import('ca-notification-container.js').then(() => {
+                    notificationContainer = fixture('notification-container');
+                    done();
+                });
+            });
+
+            test('it should not be visible if notifications are present', () => {
+                // assert
+                expect(notificationContainer.hasAttribute('visibility')).to.be.false;
+            });
+
+            test('it should be visible if a notification is added', () => {
+                const notification = document.createElement('ca-notification');
+                notification.content = 'content here';
+                notificationContainer.addNotification(notification);
+                // assert
+                expect(notificationContainer.hasAttribute('visibility')).to.be.true;
+            });
+
+            test('it should not visible once a notification is removed', (done) => {
+                // setup
+                const notification = document.createElement('ca-notification');
+                notification.content = 'content here';
+                notification.timeout = 200;
+                notificationContainer.addNotification(notification);
+                // assert
+                expect(notificationContainer.hasAttribute('visibility')).to.be.true;
+                expect(notificationContainer.visibility).to.be.true;
+                setTimeout(() => {
+                    expect(notificationContainer.visibility).to.be.false;
+                    done();
+                }, 225)
+            });
+
+            test('it should clear the deferred closeStack if detached from the dom', () => {
+                // setup
+                const notification = document.createElement('ca-notification');
+                const parent = notificationContainer.parentNode;
+                notification.content = 'content here';
+                notification.timeout = 30000;
+                notificationContainer.addNotification(notification);
+
+                // assert
+                expect(notificationContainer.closeStack.length === 1);
+                parent.removeChild(notificationContainer);
+                // assert
+                expect(notificationContainer.closeStack.length === 0);
+            });
+        });
+        a11ySuite('notification-container');
+    </script>
+  </body>
+</html>

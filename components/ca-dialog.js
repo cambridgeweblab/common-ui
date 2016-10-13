@@ -95,10 +95,10 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
 
         /**
         * type getter
-        * @return {string} type of the modal, defaults to info.
+        * @return {string} type of the modal.
         */
         get type() {
-            return this.getAttribute('type') || '';
+            return this.getAttribute('type');
         }
 
         /**

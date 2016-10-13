@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA NOTIFICATION | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
+  </head>
+  <body>
+    <test-fixture id="notification">
+      <template>
+        <ca-notification></ca-notification>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-notification>', () => {
+            let notification;
+
+            setup(done => {
+                SystemJS.import('ca-notification.js').then(() => {
+                    notification = fixture('notification');
+                    done();
+                });
+            });
+
+            test('it should not display by default', () => {
+                // assert
+                expect(notification.hasAttribute('visibility')).to.be.false;
+                expect(notification.visibility).to.be.false;
+            });
+
+            test('it should display even if content is set', () => {
+                // setup
+                notification.content = 'I am a message';
+                // assert
+                expect(notification.hasAttribute('visibility')).to.be.false;
+                expect(notification.visibility).to.be.false;
+                expect(notification.querySelector('.ca-notification-content').textContent).to.equal('I am a message');
+            });
+
+            test('it should not display if show is called and content is not set', () => {
+              // setup
+              notification.show();
+              // assert
+              expect(notification.hasAttribute('visibility')).to.be.false;
+              expect(notification.visibility).to.be.false;
+            });
+
+            test('it should display if show is called and content is set', () => {
+              // setup
+              notification.content = 'I am a message';
+              notification.show();
+              // assert
+              expect(notification.hasAttribute('visibility')).to.be.true;
+              expect(notification.visibility).to.be.true;
+              expect(notification.querySelector('.ca-notification-content').textContent).to.equal('I am a message');
+            });
+
+            test('it should no longer display is close is called', () => {
+              // setup
+              notification.content = 'I am a message';
+              notification.show();
+              notification.close();
+              // assert
+              expect(notification.visibility).to.be.false;
+              expect(notification.querySelector('.ca-notification-content').textContent).to.equal('I am a message');
+            });
+        });
+        a11ySuite('notification');
+    </script>
+  </body>
+</html>
