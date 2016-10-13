@@ -87,3 +87,8 @@ body { margin: 10px; font-size: 14px; height: 100%; overflow-y: scroll; }
 
 .ca-examples a[rel=todo] { color: royalblue; }
 .ca-examples a[rel=inactive] { color:#b0b0b0; pointer-events: none; }
+
+.toggle-validation-messages {
+    margin: 20px 0 0;
+    padding: 10px;
+}

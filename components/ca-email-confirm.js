@@ -1,0 +1,257 @@
+define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
+
+    // destructure until customElements is a standard
+    const { customElements } = window;
+
+    /**
+     * Class EmailConfirm - creates a two-input email confirmation control
+     * @extends HTMLElement
+     */
+    class EmailConfirm extends HTMLElement {
+
+        /**
+        * Constructor - called when the component is added to a page
+        * @param {number} self - simply a hack for a polyfill to allow v1 web components.
+        */
+        constructor(self) {
+
+            const emailConfirm = super(self);
+
+            emailConfirm.innerHTML = `
+                <div class="ctl1">
+                    <label>
+                        <span>${this.label1}</span>
+                        <input type="email" name="ca-email-confirm-email-address" placeholder="${this.placeholder1}"></input>
+                        <strong>${this.error1}</strong>
+                    </label>
+                </div>
+                <div class="ctl2">
+                    <label>
+                        <span>${this.label2}</span>
+                        <input type="email" name="ca-email-confirm-email-address-confirm" placeholder="${this.placeholder2}"></input>
+                        <strong>${this.error2}</strong>
+                    </label>
+                </div>
+            `;
+
+            emailConfirm.setAttribute('show-validation', 'false');
+
+            const ctl1 = emailConfirm.querySelector('.ctl1 input');
+            const ctl2 = emailConfirm.querySelector('.ctl2 input');
+
+            ctl1.onblur = () => {
+                emailConfirm.validate();
+            };
+
+            ctl2.onblur = () => {
+                emailConfirm.validate();
+            };
+
+            emailConfirm.validate();
+        }
+
+        /**
+        * observedAttributes - get a list of attributes that should trigger a re-render
+        * @return {array} list of attributes that should trigger a re-render
+        */
+        static get observedAttributes() {
+
+            return ['label1', 'placeholder1', 'label2', 'placeholder2'];
+        }
+
+        /**
+        * attributeChangedCallback - perform re-render when observed attributes change
+        * @param {string} name - attribute name.
+        * @param {string} oldValue - old value of the attribute.
+        * @param {string} newValue - new value of the attribute.
+        * @return {void}
+        */
+        attributeChangedCallback(name, oldValue, newValue) {
+
+            // no need to check old / new value - see render method.
+            this.render({ [name.toString()]: newValue });
+        }
+
+        /**
+         * returns the entered email address, if they both match and are valid email addresses
+         * @return {string} the entered email address if valid
+         */
+        get value() {
+
+            if (!this.validate()) return '';
+            return this.querySelector('.ctl1 input').val();
+        }
+
+        /**
+         * sets the value of both inputs
+         * @param {string} value - to be set in both input boxes
+         * @return {void}
+         */
+        set value(value) {
+
+            this.querySelector('.ctl1 input').value = value;
+            this.querySelector('.ctl2 input').value = value;
+            this.validate();
+        }
+
+        /**
+        * label 1 getter
+        * @return {string} returns label text for label 1
+        */
+        get label1() {
+
+            return this.getAttribute('label1') || 'Please enter your email address';
+        }
+
+        /**
+        * label 1 setter
+        * @param {string} value - label text for label 1
+        * @return {void}
+        */
+        set label1(value) {
+
+            this.setAttribute('label1', value);
+        }
+
+        /**
+        * placeholder 1 getter
+        * @return {string} returns placeholder text for input 1
+        */
+        get placeholder1() {
+
+            return this.getAttribute('placeholder1') || '';
+        }
+
+        /**
+        * placeholder 1 setter
+        * @param {string} value - placeholder text for input 1
+        * @return {void}
+        */
+        set placeholder1(value) {
+
+            return this.setAttribute('placeholder1', value);
+        }
+
+        /**
+        * label 2 getter
+        * @return {string} returns label text for label 2
+        */
+        get label2() {
+
+            return this.getAttribute('label2') || 'Please confirm your email address';
+        }
+
+        /**
+        * label 2 setter
+        * @param {string} value - label text for label 2
+        */
+        set label2(value) {
+
+            this.setAttribute('label2', value);
+        }
+
+        /**
+        * placeholder 2 getter
+        * @return {string} returns placeholder text for input 2
+        */
+        get placeholder2() {
+
+            return this.getAttribute('placeholder2') || '';
+        }
+
+        /**
+        * placeholder 2 setter
+        * @param {string} value - placeholder text for input 2
+        * @return {void}
+        */
+        set placeholder2(value) {
+
+            return this.setAttribute('placeholder2', value);
+        }
+
+        /**
+         * calculates error message for control 1
+         * @return {string} error message text
+         */
+        get error1() {
+
+            const ctl1 = (this.querySelector('.ctl1 input')) ? this.querySelector('.ctl1 input').value : '';
+
+            if (!ctl1.length) return 'Please enter your email address';
+            if (ctl1.length < 3) return 'Email address must be at least 3 characters';
+            if (!types.isValidEmailAddress(ctl1)) return 'Please enter a valid email address';
+
+            return '';
+        }
+
+        /**
+         * calculates error message for control 1
+         * @return {string} error message text
+         */
+        get error2() {
+
+            const ctl1 = (this.querySelector('.ctl1 input')) ? this.querySelector('.ctl1 input').value : '';
+            const ctl2 = (this.querySelector('.ctl2 input')) ? this.querySelector('.ctl2 input').value : '';
+
+            if (!ctl2.length) return 'Please re-enter your email address';
+            if (ctl2.length < 3) return 'Email address must be at least 3 characters';
+            if (!types.isValidEmailAddress(ctl2)) return 'Please enter a valid email address';
+            if (ctl1 !== ctl2) return 'Email addresses must match, please check carefully and re-enter';
+
+            return '';
+        }
+
+        /**
+        * render - renders the ca-email-confirm web component
+        * @return {void}
+        */
+        render({ label1 = null, placeholder1 = null, label2 = null, placeholder2 = null } = {}) {
+
+            if (label1) {
+                this.querySelector('.ctl1 span').textContent = label1;
+            }
+
+            if (placeholder1) {
+                this.querySelector('.ctl1 input').placeholder = placeholder1;
+            }
+
+            if (label2) {
+                this.querySelector('.ctl2 span').textContent = label2;
+            }
+
+            if (placeholder2) {
+                this.querySelector('.ctl2 input').placeholder = placeholder2;
+            }
+
+            // keep error messages up to date
+            this.querySelector('.ctl1 strong').textContent = this.error1;
+            this.querySelector('.ctl2 strong').textContent = this.error2;
+        }
+
+        /**
+         * validate - performs validation on the entered values, and maintains the valid attribute
+         * @return {boolean} - returns if control has passed validation rules
+         */
+        validate() {
+
+            this.setAttribute('valid', 'false');
+
+            const ctl1 = this.querySelector('.ctl1 input').value;
+            const ctl2 = this.querySelector('.ctl2 input').value;
+
+            if (
+                ctl1.length >= 3 &&
+                ctl1 === ctl2 &&
+                types.isValidEmailAddress(ctl1)
+            ) {
+                this.setAttribute('valid', 'true');
+            }
+
+            this.render({ error1: this.error1, error2: this.error2 });
+
+            return (this.getAttribute('valid') === 'true');
+        }
+    }
+
+    customElements.define('ca-email-confirm', EmailConfirm);
+});
