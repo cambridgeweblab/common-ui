@@ -37,5 +37,5 @@ ca-notification[type="error"] {
 ca-notification .ca-notification-close {
   float: right;
   opacity: 0.2;
-  text-decoration: none !important;
+  text-decoration: none;
 }

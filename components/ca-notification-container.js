@@ -18,14 +18,6 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
 
         /**
-        * observedAttributes - get a list of attributes that should effect re-render.
-        * @return {array} list of attributes that effect a re-render.
-        */
-        static get observedAttributes() {
-            return ['notifications'];
-        }
-
-        /**
         * detachedCallback - called when the element is detached from the dom.
         * @return {void} nothing is returned, just clears the close stack.
         */
@@ -60,7 +52,7 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
 
         /**
-        * timeout - get timeout that overrides notification timeouts
+        * timeout - get timeout that overrides notification timeouts.
         * @return {string} list of defered close functions.
         */
         get timeout() {
@@ -68,18 +60,18 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
 
         /**
-        * closeStack - get a list of defered close functions.
-        * @param {string} value - timeout override
-        * @return {array} list of defered close functions.
+        * timeout - set a timeout value that overrides notification timeouts.
+        * @param {integer} value - timeout override
+        * @return {void} undefined implicit return.
         */
         set timeout(value) {
             this.getAttribute('timeout', value);
         }
 
         /**
-        * addNotification - function to manage the hiding of the notification
+        * addNotification - function to manage the attachment of notifications
         * @param {ca-notification} notification to append to container.
-        * @return {void}.
+        * @return {void} undefined implicit return.
         */
         addNotification(notification) {
             this.appendChild(notification);
