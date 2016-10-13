@@ -1,0 +1,9 @@
+ca-notification-container {
+  position: fixed;
+  width: 100%;
+  visibility: hidden;
+}
+
+ca-notification-container[visibility='true'] {
+  visibility: visible;
+}
