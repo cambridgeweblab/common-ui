@@ -1,7 +1,4 @@
 define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
-    // desctruture until customElements is a standard.
-    const { customElements } = window;
-
     /**
      * Class Notification for a Notification web component
      * @extends HTMLElement
@@ -10,15 +7,14 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         /**
         * Create a HTMLElement
         * @param {number} self - simply a hack for a polyfill to allow v1 web components.
+        * @returns {undefined} initalises the component.
         */
-        constructor(self) {
-            const notification = super(self);
+        createdCallback() {
             const content = createElement(null, 'section', { class: 'ca-notification-content' });
             const closeButton = createElement(null, 'a', { class: 'ca-notification-close', href: '#' }, 'X');
             closeButton.addEventListener('click', this.close.bind(this), false);
-            notification.appendChild(closeButton);
-            notification.appendChild(content);
-            return notification;
+            this.appendChild(closeButton);
+            this.appendChild(content);
         }
 
         /**
@@ -38,7 +34,9 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         */
         attributeChangedCallback(name, oldValue, newValue) {
             // no need to check old / new value - see render method.
-            this.render({ [name.toString()]: newValue });
+            if (Notification.observedAttributes.includes(name)) {
+                this.render({ [name.toString()]: newValue });
+            }
         }
 
         /**
@@ -141,5 +139,5 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
 
     }
 
-    customElements.define('ca-notification', Notification);
+    document.registerElement('ca-notification', Notification);
 });

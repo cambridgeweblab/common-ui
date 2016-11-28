@@ -1,6 +1,4 @@
 define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
-    // desctruture until customElements is a standard.
-    const { customElements } = window;
     /**
     * buildActions
     * @param {element} element to append the actions to.
@@ -20,10 +18,9 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         /**
         * Create a HTMLElement
         * @param {number} self - simply a hack for a polyfill to allow v1 web components.
+        * @returns {undefined} initalises the component.
         */
-        constructor(self) {
-            const dialog = super(self);
-
+        createdCallback() {
             // create dialog-content and structure
             const dialogContent = createElement(null, 'article', { class: 'ca-dialog-body' });
             createElement(dialogContent, 'h1', {}, '');
@@ -38,8 +35,8 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
             dialogContent.appendChild(buttonContainer);
 
             // attach the overlay and dialog content
-            createElement(dialog, 'div', { class: 'ca-dialog-overlay' });
-            dialog.appendChild(dialogContent);
+            createElement(this, 'div', { class: 'ca-dialog-overlay' });
+            this.appendChild(dialogContent);
 
             closeButton.addEventListener('click', this.close.bind(this), false);
             // watch for click events on the dynamic container
@@ -54,7 +51,6 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
                 });
                 this.dispatchEvent(clickEvent);
             });
-            return dialog;
         }
 
         /**
@@ -74,7 +70,9 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         */
         attributeChangedCallback(name, oldValue, newValue) {
             // no need to check old / new value - see render method.
-            this.render({ [name.toString()]: newValue });
+            if (Dialog.observedAttributes.includes(name)) {
+                this.render({ [name.toString()]: newValue });
+            }
         }
 
         /**
@@ -197,5 +195,5 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
             }
         }
     }
-    customElements.define('ca-dialog', Dialog);
+    document.registerElement('ca-dialog', Dialog);
 });
