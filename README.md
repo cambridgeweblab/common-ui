@@ -13,12 +13,12 @@ To test run - npm test, if you need to keep the browser open, change the persist
 
 ## Adding submodules
 
-cd in to your project directory  
+Navigate to your project directory.  
 ```$ cd /myproject```
 
-Add the old weblab-common-ui submodule to the "app" directory  
+Add the old weblab-common-ui submodule to the "app" directory.  
 ```$ git submodule add git@bitbucket.org:carepo/weblab-common-ui.git app/weblab-common-ui```
 
-Add the new common-ui submodules to the "app" directory  
+Add the new common-ui submodules to the "app" directory.  
 ```$ git submodule add git@github.com:cambridgeweblab/common-ui.git app/common-ui```
 
