@@ -1,7 +1,4 @@
 define(['/components/helpers/create-element.js', '/components/helpers/types.js', '/components/ca-notification.js', 'document-register-element'], (createElement, types) => {
-    // desctruture until customElements is a standard.
-    const { customElements } = window;
-
     /**
      * Class NotificationContainer for a NotificationContainer web component
      * @extends HTMLElement
@@ -10,11 +7,10 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         /**
         * Create a HTMLElement
         * @param {number} self - simply a hack for a polyfill to allow v1 web components.
+        * @returns {undefined} initalises the component.
         */
-        constructor(self) {
-            const notificationContainer = super(self);
-            notificationContainer._closeStack = [];
-            return notificationContainer;
+        createdCallback() {
+            this._closeStack = [];
         }
 
         /**
@@ -90,5 +86,5 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
     }
 
-    customElements.define('ca-notification-container', NotificationContainer);
+    document.registerElement('ca-notification-container', NotificationContainer);
 });

@@ -9,6 +9,8 @@
   },
   "scripts": {
     "start": "node index.js",
+    "postinstall": "bower install",
+    "lint": "eslint .",
     "test": "wct"
   },
   "repository": {
@@ -32,8 +34,8 @@
     "web-component-tester-istanbul": "^0.10.0"
   },
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "compression": "^1.6.2",
-    "express": "^4.14.0"
+    "body-parser": "1.15.2",
+    "compression": "1.6.2",
+    "express": "4.14.0"
   }
 }

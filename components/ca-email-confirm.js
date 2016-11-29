@@ -1,8 +1,4 @@
 define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
-
-    // destructure until customElements is a standard
-    const { customElements } = window;
-
     /**
      * Class EmailConfirm - creates a two-input email confirmation control
      * @extends HTMLElement
@@ -10,14 +6,12 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
     class EmailConfirm extends HTMLElement {
 
         /**
-        * Constructor - called when the component is added to a page
+        * createdCallback - called when the component created, (not yet attached to the DOM).
         * @param {number} self - simply a hack for a polyfill to allow v1 web components.
+        * @returns {undefined} initalises the component.
         */
-        constructor(self) {
-
-            const emailConfirm = super(self);
-
-            emailConfirm.innerHTML = `
+        createdCallback() {
+            this.innerHTML = `
                 <div class="ctl1">
                     <label>
                         <span>${this.label1}</span>
@@ -34,20 +28,20 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
                 </div>
             `;
 
-            emailConfirm.setAttribute('show-validation', 'false');
+            this.setAttribute('show-validation', 'false');
 
-            const ctl1 = emailConfirm.querySelector('.ctl1 input');
-            const ctl2 = emailConfirm.querySelector('.ctl2 input');
+            const ctl1 = this.querySelector('.ctl1 input');
+            const ctl2 = this.querySelector('.ctl2 input');
 
             ctl1.onblur = () => {
-                emailConfirm.validate();
+                this.validate();
             };
 
             ctl2.onblur = () => {
-                emailConfirm.validate();
+                this.validate();
             };
 
-            emailConfirm.validate();
+            this.validate();
         }
 
         /**
@@ -55,7 +49,6 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         * @return {array} list of attributes that should trigger a re-render
         */
         static get observedAttributes() {
-
             return ['label1', 'placeholder1', 'label2', 'placeholder2'];
         }
 
@@ -67,9 +60,10 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         * @return {void}
         */
         attributeChangedCallback(name, oldValue, newValue) {
-
-            // no need to check old / new value - see render method.
-            this.render({ [name.toString()]: newValue });
+            if (EmailConfirm.observedAttributes.includes(name)) {
+                // no need to check old / new value - see render method.
+                this.render({ [name.toString()]: newValue });
+            }
         }
 
         /**
@@ -253,5 +247,5 @@ define(['/components/helpers/create-element.js', '/components/helpers/types.js',
         }
     }
 
-    customElements.define('ca-email-confirm', EmailConfirm);
+    document.registerElement('ca-email-confirm', EmailConfirm);
 });
