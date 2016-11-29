@@ -12,9 +12,16 @@ All tests are self contained into [:component]-test.html. As we are using system
 To test run - npm test, if you need to keep the browser open, change the persistent flag to true in wct.conf.json.
 
 ## Adding submodules
+
 cd in to your project directory
-$ cd /myproject
+
+```$ cd /myproject```
+
 Add the old weblab-common-ui submodule to the "app" directory
-$ git submodule add git@bitbucket.org:carepo/weblab-common-ui.git app/weblab-common-ui
+
+```$ git submodule add git@bitbucket.org:carepo/weblab-common-ui.git app/weblab-common-ui```
+
 Add the new common-ui submodules to the "app" directory
-$ git submodule add git@github.com:cambridgeweblab/common-ui.git app/common-ui
+
+```$ git submodule add git@github.com:cambridgeweblab/common-ui.git app/common-ui```
+
