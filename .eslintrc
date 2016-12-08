@@ -4,6 +4,10 @@
     "amd": true,
     "browser": true
   },
+  "globals": {
+    "ajax": true,
+    "ActiveXObject": true
+  },
   "rules": {
     "import/no-amd": 0
   }

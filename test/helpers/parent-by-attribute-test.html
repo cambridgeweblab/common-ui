@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>PARENT BY ATTRIBUTE | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+  </head>
+  <body>
+    <test-fixture id="parent-by-attribute">
+      <template>
+        <div class="container"></div>
+      </template>
+    </test-fixture>
+    <script>
+        // TODO: test this helper.
+        suite('types', () => {
+            let element;
+            let parentByAttribute;
+
+            setup(done => {
+                SystemJS.import('helpers/parent-by-attribute.js').then(module => {
+                    element = fixture('parent-by-attribute');
+                    parentByAttribute = module;
+                    done();
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

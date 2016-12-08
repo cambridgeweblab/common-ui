@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CLEAR ELEMENT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+  </head>
+  <body>
+    <test-fixture id="clear-element">
+      <template>
+        <div class="container"></div>
+      </template>
+    </test-fixture>
+    <script>
+        // TODO: test this helper.
+        suite('clear-element', () => {
+            let element;
+            let clearElement;
+
+            setup(done => {
+                SystemJS.import('helpers/clear-element.js').then(module => {
+                    element = fixture('clear-element');
+                    clearElement = module;
+                    done();
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

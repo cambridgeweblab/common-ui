@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA NOTIFICATION CONTAINER | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <script src="/components/helpers/secureajax.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-treeview.css">
+    <style>
+      .title { font-size: 1.3em; font-weight:bold; padding: 10px 0; padding:0.25em; }
+    </style>
+  </head>
+  <body>
+    <ca-treeview></ca-treeview>
+    <script>
+        SystemJS.import('ca-treeview.js').then(() => {
+            const dataSrc = {
+              'links': [
+                  {
+                    'rel': 'describedby:learners',
+                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema',
+                    'title': 'Learners'
+                  }, {
+                    'rel': 'describedby:learnergroups',
+                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learnergroup/$schema',
+                    'title': 'Learner groups'
+                  }, {
+                    'rel': 'describedby:teachers',
+                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$schema',
+                    'title': 'Teachers'
+                  }
+              ]
+            };
+            const element = document.querySelector('ca-treeview');
+            element.root = 'CA Treeview';
+            element.data = dataSrc;
+        });
+    </script>
+  </body>
+</html>
