@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA APP CONTEXT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+  </head>
+  <body>
+    <test-fixture id="app-context">
+      <template>
+        <ca-app-context></ca-app-context>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-app-dialog>', () => {
+            let appContext;
+
+            setup(done => {
+                SystemJS.import('ca-app-context.js').then(() => {
+                    appContext = fixture('app-context');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+                // Check the element has been created with the correct tag
+                expect(appContext).to.be.defined;
+                expect(appContext.tagName).to.equal('CA-APP-CONTEXT');
+            });
+
+            test('should listen to config event and update element according when value is present', function() {
+                // setup
+                var testElement = document.createElement('div');
+                var event = new CustomEvent('ca-config-component', {
+                  'detail': {
+                      config: [
+                          { name: 'rpi', localName: 'data-rpi', type: 'attribute' },
+                      ],
+                      component: testElement
+                  },
+                  'bubbles': true
+                });
+
+                // act
+                appContext.setAttribute('data-rpi', true);
+                testElement.dispatchEvent(event);
+
+                // verify
+                expect(appContext.getAttribute('data-rpi')).to.be.defined;
+
+            });
+
+            test('should listen to config event and not update element if value is not present', function() {
+                // setup
+                var testElement = document.createElement('div');
+                var event = new CustomEvent('ca-config-component', {
+                  'detail': {
+                      config: [
+                          { name: 'rpi', localName: 'data-rpi', type: 'attribute' },
+                      ],
+                      component: testElement
+                  },
+                  'bubbles': true
+                });
+
+                // act
+                testElement.dispatchEvent(event);
+
+                expect(testElement.getAttribute('data-rpi')).to.equal(null);
+            });
+
+            test('should listen to config event and update element if value is present', function() {
+                // setup
+                var testElement = document.createElement('div');
+                appContext.setAttribute('data-rpi', 'yes~yes');
+                var event = new CustomEvent('ca-config-component', {
+                  'detail': {
+                      config: [
+                          { name: 'rpi', localName: 'data-rpi', type: 'attribute' },
+                      ],
+                      component: testElement
+                  },
+                  'bubbles': true
+                });
+
+                // act
+                testElement.dispatchEvent(event);
+
+                // event will be consumed on the next event loop
+                setTimeout(() => expect(testElement.getAttribute('data-rpi')).to.equal('yes~yes'), 0);
+            });
+        });
+    </script>
+  </body>
+</html>
