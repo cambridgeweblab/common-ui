@@ -5,6 +5,7 @@
     <title>CA NOTIFICATION CONTAINER | Web Lab Common UI</title>
     <script src="/bower_components/system.js/dist/system.js"></script>
     <script src="/components/config/index.js"></script>
+    <link href="/examples/index.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
     <link rel="stylesheet" type="text/css" href="/components/ca-notification-container.css">
     <style>
@@ -15,6 +16,10 @@
     </style>
   </head>
   <body>
+    <div class="ca-home">
+      <a id="home" href="/"></a>
+    </div>
+    <div class="ca-title">CA NOTIFICATION CONTAINER EXAMPLE</div>
     <ca-notification-container></ca-notification-container>
     <button onclick="addInfoNotification()">Open Info Notification</button>
     <button onclick="addErrorNotification()">Open Error Notification</button>
