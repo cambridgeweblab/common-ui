@@ -1,0 +1,30 @@
+language: node_js
+
+node_js:
+  - 7.0.0
+
+before_install:
+  - curl -O https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v6.22.2/cf-cli-installer_6.22.2_x86-64.deb
+  - SUDO=$(which sudo) && $SUDO dpkg -i cf-cli-installer_6.22.2_x86-64.deb
+
+before_script:
+  - mkdir -p shippable/buildoutput
+
+after_success:
+  - cf login -a https://api.eu-gb.bluemix.net -u boden.g@cambridgeassessment.org.uk -s dev -p Cucumber1
+  - cp -rv package.json server.js server config ./shippable/buildoutput
+  - cd shippable/buildoutput && ls -la && cf push common-ui -t 120 -c "node server.js"
+  - cf target -s stable
+  - cf push common-ui -t 120 -c "node server.js"
+
+integrations:
+  notifications:
+    - integrationName: hipchat
+      type: hipchat
+      recipients:
+        - '#Common%20UI'
+      branches:
+        only:
+          - master
+      on_success: always
+      on_failure: always
