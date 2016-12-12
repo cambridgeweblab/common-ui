@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CANCEL EVENT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+  </head>
+  <body>
+    <test-fixture id="cancel-event">
+      <template>
+        <div class="container"></div>
+      </template>
+    </test-fixture>
+    <script>
+        // TODO: test this helper.
+        suite('types', () => {
+            let element;
+            let cancelEvent;
+
+            setup(done => {
+                SystemJS.import('helpers/cancel-event.js').then(module => {
+                    element = fixture('cancel-event');
+                    cancelEvent = module;
+                    done();
+                });
+            });
+        });
+    </script>
+  </body>
+</html>

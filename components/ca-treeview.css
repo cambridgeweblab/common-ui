@@ -1,0 +1,34 @@
+/* GENERIC WEB-COMPONENT OVERRIDES */
+ca-treeview { display: inline-block; vertical-align: top; border-right: none !important; background-color: #E5E8EC; margin: 0; padding: 0.5em; position: absolute; box-sizing: border-box; width: 200px; }
+
+ca-treeview nav { color: #363636; }
+ca-treeview [rel]:before { background-size: 100% 100% !important; position: absolute; left: 0; top: 0; width: 28px; height: 28px; transition: 150ms !important; }
+ca-treeview [rel] { padding-left: 30px; }
+ca-treeview [rel="root"] > span { font-weight: bold; text-decoration: none !important; cursor: default !important; }
+ca-treeview [rel="root"]:hover:before{
+    -webkit-transform: scale(1) !important;
+    -moz-transform: scale(1) !important;
+    -ms-transform: scale(1) !important;
+    -o-transform: scale(1) !important;
+    transform: scale(1) !important;
+}
+ca-treeview [rel]:hover:before { -webkit-transform: scale(1.2); -moz-transform: scale(1.2); -ms-transform: scale(1.2); -o-transform: scale(1.2); transform: scale(1.2); }
+
+ca-treeview {
+    width: 208px;
+    height: 100%;
+    display: block;
+    border-right: 3px solid #e6e6e6;
+    margin: 6px;
+}
+ca-treeview ol { position: relative; padding-left: 0; margin: 0; }
+ca-treeview li {
+     position: relative;
+     line-height: 2.2em;
+     margin-left: 0;
+     display: block;
+}
+ca-treeview span:hover { text-decoration: underline; cursor: pointer; }
+ca-treeview [data-href] { cursor: pointer; }
+
+ca-treeview [data-selected="true"] { font-weight: bold; }

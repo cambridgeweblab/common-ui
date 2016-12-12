@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA TREE VIEW | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <!--- TODO: GLOBAL AJAX - RESOLVE -->
+    <script src="/components/helpers/secureajax.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-treeview.css">
+  </head>
+  <body>
+    <test-fixture id="treeview">
+      <template>
+        <ca-treeview></ca-treeview>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-treeview>', () => {
+            let treeview;
+
+            setup(done => {
+                SystemJS.import('ca-treeview.js').then(() => {
+                    treeview = fixture('treeview');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+                // Check the element has been created with the correct tag
+                expect(treeview).to.be.defined;
+                expect(treeview.tagName).to.equal('CA-TREEVIEW');
+            });
+
+            test('should allow all attributes and properties to be get and set', () => {
+                // Check that the attributes and properties can be get & set on this element
+                expect(treeview.root).to.be.defined;
+                expect(treeview.dataSrc).to.be.defined;
+                expect(treeview.maxChildren).to.be.defined;
+                expect(treeview.maxChildren).to.be.defined;
+                expect(treeview.maxChildren).to.equal(0);
+                expect(treeview.data).to.be.defined;
+                expect(treeview.data).to.be.defined;
+            });
+
+            test('should load data and create child nodes', () => {
+                // Query the dom for the new <ca-treeview> element
+                const element = document.querySelector('ca-treeview');
+
+                // The <ca-treeview> should have one immediate child
+                expect(element.children.length).to.equal(1);
+
+                // Set up the data for the render
+                const data = {
+                    'links': [
+                        { 'rel': 'describedby:learners', 'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema', 'title': 'Learners' },
+                        { 'rel': 'describedby:learnergroups', 'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learnergroup/$schema', 'title': 'Learner groups' },
+                        { 'rel': 'describedby:teachers', 'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$schema', 'title': 'Teachers' }
+                    ]
+                };
+
+                // Expecting the following structure:
+                const html = `
+                  <ca-treeview>
+                    <nav>
+                      <ol>
+                        <li data-href="http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema" rel="learners">
+                          <span>Learners</span>
+                        </li>
+                        <li data-href="http://stable-odt-api.eu-gb.mybluemix.net/api/learnergroup/$schema" rel="learnergroups">
+                          <span>Learner groups</span>
+                        </li>
+                        <li data-href="http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$schema" rel="teachers">
+                          <span>Teachers</span>
+                        </li>
+                      </ol>
+                    </nav>
+                  </ca-treeview>`;
+
+                // Force a render
+                element.render(element.ol, data);
+
+                // And check that the generated HTML matches
+                expect(element.outerHTML).to.equal(html.replace(/\s\s+/g, ''));
+
+                // Grab hold of the NAV element
+                expect(element.nav).to.be.defined;
+                expect(element.nav.tagName).to.equal('NAV');
+                expect(element.nav.children.length).to.equal(1);
+
+                // Grab hold of the OL element
+                expect(element.ol).to.be.defined;
+                expect(element.ol.tagName).to.equal('OL');
+                expect(element.ol.children.length).to.equal(3);
+
+                // Grab hold of the first LI element
+                let li = element.ol.children[0];
+                expect(li).to.be.defined;
+                expect(li.tagName).to.equal('LI');
+                expect(li.children.length).to.equal(1);
+                expect(li.children[0].tagName).to.equal('SPAN');
+                expect(li.children[0].innerHTML).to.equal('Learners');
+
+                li = element.ol.children[1];
+                expect(li).to.be.defined;
+                expect(li.tagName).to.equal('LI');
+                expect(li.children.length).to.equal(1);
+                expect(li.children[0].tagName).to.equal('SPAN');
+                expect(li.children[0].innerHTML).to.equal('Learner groups');
+
+                li = element.ol.children[2];
+                expect(li).to.be.defined;
+                expect(li.tagName).to.equal('LI');
+                expect(li.children.length).to.equal(1);
+                expect(li.children[0].tagName).to.equal('SPAN');
+                expect(li.children[0].innerHTML).to.equal('Teachers');
+            });
+
+            test('should call loadData when changing the dataSrc property', () => {
+                // Get hold of the element attached to the body
+                const el = document.querySelector('ca-treeview');
+
+                // Spy on the createTable method of the element
+                sinon.spy(el, 'loadData');
+
+                // At this point in time, the createTable method should not have been called
+                expect(el.loadData.callCount).to.equal(0);
+
+                // Setting the schema property should cause loadData to be invoked
+                el.dataSrc = 'http://stable-odt-api.eu-gb.mybluemix.net/api/';
+
+                // Verify
+                expect(el.loadData.callCount).to.equal(1);
+            });
+        });
+        a11ySuite('treeview');
+    </script>
+  </body>
+</html>
