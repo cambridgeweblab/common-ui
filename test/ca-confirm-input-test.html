@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA DIALOG | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-confirm-input.css">
+  </head>
+  <body>
+    <test-fixture id="confirm-input">
+      <template>
+        <ca-confirm-input id="id" name="Name" type="text" label="label" value="Value"></ca-confirm-input>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-confirm-input>', () => {
+            let confirmInput;
+
+            setup(done => {
+                SystemJS.import('ca-confirm-input.js').then(() => {
+                    confirmInput = fixture('confirm-input');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+                // Check the  has been created with the correct tag
+                expect(confirmInput).to.be.defined;
+                expect(confirmInput.tagName).to.equal('CA-CONFIRM-INPUT');
+            });
+
+            test('should allow all attributes and properties to be get and set', () => {
+                expect(confirmInput.name).to.be.defined;
+                expect(confirmInput.label).to.be.defined;
+                expect(confirmInput.type).to.be.defined;
+                expect(confirmInput.autofocus).to.be.defined;
+                expect(confirmInput.autofocus).to.equal(false);
+            });
+
+            test('should create the relevant structure', (done) => {
+                setTimeout(() => {
+                    const input2 = confirmInput.querySelector('ca-confirm-input .ca-confirm-input-2');
+                    expect(input2).to.be.defined;
+                    expect(input2.tagName).to.equal('INPUT');
+                    expect(input2.type).to.equal(confirmInput.type);
+                    debugger;
+                    expect(input2.id).to.equal('caConfirmInput_Name_confirm');
+                    expect(input2.className).to.equal(`ca-confirm-input-2`);
+
+                    // Make sure the confirm value is the same as the main value (otherwise confirmInput.value doesn't work)
+                    input2.value = 'Value';
+
+                    const input1 = confirmInput.querySelector('ca-confirm-input .ca-confirm-input-1');
+                    expect(input1).to.be.defined;
+                    expect(input1.tagName).to.equal('INPUT');
+                    expect(input1.type).to.equal(confirmInput.type);
+                    expect(input1.value).to.equal(confirmInput.value);
+                    expect(input1.id).to.equal('caConfirmInput_Name');
+                    expect(input1.className).to.equal('ca-confirm-input-1');
+
+                    done();
+                }, 0);
+            });
+        });
+        a11ySuite('confirm-input');
+    </script>
+  </body>
+</html>

@@ -5,9 +5,14 @@
     <title>CA DIALOG | Web Lab Common UI</title>
     <script src="/bower_components/system.js/dist/system.js"></script>
     <script src="/components/config/index.js"></script>
+    <link href="/examples/index.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/components/ca-dialog.css">
   </head>
   <body>
+    <div class="ca-home">
+      <a id="home" href="/"></a>
+    </div>
+    <div class="ca-title">CA DIALOG EXAMPLE</div>
     <ca-dialog heading="hello" buttons="add,delete,whatever" type="error"></ca-dialog>
     <button onclick="openDialog()">Open Dialog</button>
     <script>
