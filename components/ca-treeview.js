@@ -163,15 +163,15 @@ define([
         createChild(parent, tagName, item) {
             const label = item.label || item.title || 'undefined';
             const rel = (item.rel || '').toLowerCase().replace(/(describedby|described_by):/gi, '');
+            const attributes = {};
 
             // get a list of attributes to be added to the element
-            const attributes = Object.keys(item).reduce((attributeList, key) => {
-                const list = attributeList;
+            // eslint-disable-next-line no-restricted-syntax
+            for (const key in item) {
                 if (Object.prototype.hasOwnProperty.call(item, key) && key !== 'label' && key !== 'title' && key !== 'rel') {
-                    list[`data-${key}`] = item[key] || '';
+                    attributes[`data-${key}`] = item[key] || '';
                 }
-                return list;
-            }, {});
+            }
 
             if (rel !== '') {
                 attributes.rel = rel;
