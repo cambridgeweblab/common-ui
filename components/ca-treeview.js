@@ -214,7 +214,7 @@ define([
         /**
          * Event handler for component.
          * @param {event} e, event object from action.
-         * @return {undefined} no returned value.
+         * @returns {undefined}
          */
         eventDelegate(e = event) {
             let el = e.target || e.srcElement;
