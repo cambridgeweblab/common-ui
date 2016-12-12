@@ -5,7 +5,6 @@
     "browser": true
   },
   "globals": {
-    "ajax": true,
     "ActiveXObject": true
   },
   "rules": {
