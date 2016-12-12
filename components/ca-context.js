@@ -9,7 +9,7 @@ define(['document-register-element'], () => {
             return this.getAttribute('id');
         }
 
-        /** @param {string} value, assigned to id attrinute */
+        /** @param {string} value, assigned to id attribute */
         set id(value) {
             this.setAttribute('id', value);
         }
@@ -19,7 +19,7 @@ define(['document-register-element'], () => {
             return this.getAttribute('name');
         }
 
-        /** @param {string} value, assigned to name attrinute */
+        /** @param {string} value, assigned to name attribute */
         set name(value) {
             this.setAttribute('name', value);
         }
