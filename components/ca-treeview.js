@@ -13,7 +13,7 @@ define([
         /**
          * createdCallback is called when the component is first created.
          * creates children, binds events and loads data if src is avaliable.
-         * @returns {undefined} nothing.
+         * @returns {undefined}
          */
         createdCallback() {
             this.nav = createElement(this, 'nav', {});
@@ -257,7 +257,7 @@ define([
         /**
          * onrendercomplete blank function, it exists so other can hook into this.
          * TODO: Kill this ASAP.
-         * @returns {undefined} undefined
+         * @returns {undefined}
          */
         onrendercomplete() {
         }
