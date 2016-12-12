@@ -1,6 +1,10 @@
-define(
-['/components/helpers/create-element.js', '/components/helpers/parent-by-attribute.js', '/components/helpers/cancel-event.js', 'document-register-element'],
-(createElement, parentByAttribute, cancelEvent) => {
+define([
+    '/components/helpers/create-element.js',
+    '/components/helpers/clear-element.js',
+    '/components/helpers/parent-by-attribute.js',
+    '/components/helpers/cancel-event.js',
+    'document-register-element'
+], (createElement, clearElement, parentByAttribute, cancelEvent) => {
     /**
      * Class TreeView for a TreeView web component
      * @extends HTMLElement
@@ -9,7 +13,6 @@ define(
         /**
          * createdCallback is called when the component is first created.
          * creates children, binds events and loads data if src is avaliable.
-         * @returns {undefined} nothing.
          */
         createdCallback() {
             this.nav = createElement(this, 'nav', {});
@@ -143,7 +146,7 @@ define(
                         // we need to go get the instance data and recall this function to trigger rendering
                         this.loadData(parent, instancesUrl);
                     } else {
-                        createElement(this.ol);
+                        clearElement(this.ol);
                         this.render(parent, data);
                     }
                 });
