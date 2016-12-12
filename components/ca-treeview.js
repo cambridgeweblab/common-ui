@@ -13,6 +13,7 @@ define([
         /**
          * createdCallback is called when the component is first created.
          * creates children, binds events and loads data if src is avaliable.
+         * @returns {undefined} nothing.
          */
         createdCallback() {
             this.nav = createElement(this, 'nav', {});
@@ -59,8 +60,8 @@ define([
          * Gets the root attribute
          * @param {string} value, data-root attribute, default is empty.
          */
-        set root(value = '') {
-            this.setAttribute('data-root', value);
+        set root(value) {
+            this.setAttribute('data-root', value || '');
         }
 
         /**
