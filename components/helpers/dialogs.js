@@ -52,7 +52,7 @@ define([
 
         // returns a dialog object where name matches
         get(id) {
-            return dialogs.items.where('id', id, true);
+            return dialogs.items.find(item => item.id === id);
         },
 
         // closes a dialog where the name matches
@@ -192,8 +192,11 @@ define([
                 }
             },
 
+            // TODO: had to disable lint as this is being used as contructor
+            // Object short hand cannot be used as a constructor
             // creates an internal dialog window
-            create(url, params) {
+            // eslint-disable-next-line object-shorthand
+            create: function(url, params) {
                 // <summary>creates an internal dialog window</summary>
                 // <param name="url" type="String">the url to load</param>
                 // <param name="name" optional="true" type="String">the unique name to assign to the dialog (required if a call to dialogs.close is needed)</param>
@@ -235,7 +238,7 @@ define([
                 // if the mask is required, insert it
                 if (dlg.params.mask || dlg.params.modal) {
                     dlg.mask = createElement(body, 'div', {
-                        class: 'dialog-mask {0}-mask'.format(dlg.id)
+                        class: `dialog-mask ${dlg.id}-mask`
                     });
                 }
 
@@ -259,7 +262,7 @@ define([
                 // create and insert the window
                 dlg.dialog = createElement(dlg.mask || body, 'div', {
                     id: dlg.id,
-                    class: 'dialog dialog-offscreen {0}'.format(dlg.params.css),
+                    class: `dialog dialog-offscreen ${dlg.params.css}`,
                     style
                 });
                 dlg.closeIcon = (!dlg.params.modal) ? createElement(this.dialog, 'span', {
@@ -320,7 +323,7 @@ define([
 
                 // workout rendered dimensions and centre using negative margins (only if we have dimensions as params)
                 if (dlg.params.width > -1 && dlg.params.height > -1) {
-                    dlg.dialog.style.margin = '-{0}px 0 0 -{1}px'.format(dlg.dialog.offsetHeight / 2, dlg.dialog.offsetWidth / 2);
+                    dlg.dialog.style.margin = `-${dlg.dialog.offsetHeight / 2}px 0 0 -${dlg.dialog.offsetWidth / 2}px`;
                 }
 
                 // iframe.onload does not fire in IE, therefore create a method IE can use to check if the iframe has loaded
@@ -347,7 +350,8 @@ define([
                     dlg._docTitle = document.title;
 
                     // assign the loading message to dialog and document title
-                    document.title = dlg.loadingMessage[dialogs._.txtProp] = dialogs.loadingMessage.format(title);
+                    // TODO: clean up the string formatting.
+                    document.title = dlg.loadingMessage[dialogs._.txtProp] = `Loading ${title}, please wait...`;
 
                     // assign loading class (hides iframe and shows loading gif/message)
                     dlg.dialog.className += ' dialog-loading';
@@ -391,7 +395,7 @@ define([
                             classesToRemove.push(existingClass);
                         }
                     }
-                    classesToRemove.forEach((existingClass) => {
+                    classesToRemove.forEach(existingClass => {
                         classList.remove(existingClass);
                     });
                     classList.add(cssClass);
@@ -473,7 +477,7 @@ define([
                     }
 
                     // find dialog in collection
-                    const idx = dialogs.items.getIndex('id', dlg.id);
+                    const idx = dialogs.items.findIndex(item => item.id === dlg.id);
 
                     // remove the dialog from the items collection
                     if (idx > -1) {
@@ -521,4 +525,6 @@ define([
             }
         }
     };
+
+    return dialogs;
 });
