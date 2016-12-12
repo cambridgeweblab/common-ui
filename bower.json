@@ -19,6 +19,7 @@
   ],
   "dependencies": {
     "system.js": "^0.19.39",
-    "document-register-element": "^1.2.0"
+    "document-register-element": "^1.2.0",
+    "base64": "^1.0.0"
   }
 }
