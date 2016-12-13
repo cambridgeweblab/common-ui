@@ -1,264 +1,268 @@
-/**
- * ensures user is logged in before attempting to execute an AJAX request
- */
-const ajax = (function () {
-    let oAutTokenhUri = '';
-    const hasStorage = (typeof (Storage) !== 'undefined');
+define('secure-ajax', [], () => {
+    /**
+     * ensures user is logged in before attempting to execute an AJAX request
+     */
+    const ajax = (function () {
+        let oAutTokenhUri = '';
+        const hasStorage = (typeof (Storage) !== 'undefined');
 
-    // generic ajax request function
-    let request = function (settings) {
-        const type = settings.type || 'GET';
-        const url = settings.url;
+        // generic ajax request function
+        let request = function (settings) {
+            const type = settings.type || 'GET';
+            const url = settings.url;
 
-        // turns a key value pair object into a http key value pair
-        const objectToFormPost = function (kvp) {
-            const data = [];
+            // turns a key value pair object into a http key value pair
+            const objectToFormPost = function (kvp) {
+                const data = [];
 
-            // get data into key value collection
-            Object.keys(kvp).forEach(key => {
-                // stop prototype functions from been converted into data
-                if (Object.prototype.hasOwnProperty.call(kvp, key)) {
-                    data.push(`${key}=${encodeURIComponent(kvp[key])}`);
+                // get data into key value collection
+                Object.keys(kvp).forEach(key => {
+                    // stop prototype functions from been converted into data
+                    if (Object.prototype.hasOwnProperty.call(kvp, key)) {
+                        data.push(`${key}=${encodeURIComponent(kvp[key])}`);
+                    }
+                });
+
+                // turn data into a string
+                return data.join('&');
+            };
+
+            return new Promise((resolve, reject) => {
+                const XHR = XMLHttpRequest || ActiveXObject;
+                let data = settings.data || {};
+                const isFormDataPost = (data.constructor === FormData);
+                const contentType = settings.contentType || 'application/x-www-form-urlencoded';
+                request = new XHR('MSXML2.XMLHTTP.3.0');
+
+                request.open(type, url, true);
+
+                // dont add a content type when posting JS FormData data as the browser needs to add the boundry info
+                if (type.toUpperCase() !== 'GET' && !isFormDataPost) {
+                    request.setRequestHeader('Content-type', contentType);
+                }
+
+                if (settings.headers) {
+                    Object.keys(settings.headers).forEach(header => {
+                        if (Object.prototype.hasOwnProperty.call(settings.headers, header)) {
+                            request.setRequestHeader(header, settings.headers[header]);
+                        }
+                    });
+                }
+
+                request.onreadystatechange = function () {
+                    if (request.readyState === 4) {
+                        const reqText = (request.responseText || '');
+                        const isJson = reqText.isJson();
+
+                        if (request.status >= 200 && request.status < 300) {
+                            if (request.responseType === 'json') {
+                                // just about to resolve the request
+                                ajax.onloadend();
+                                resolve(request.response);
+                            } else if (settings.dataType === 'json' && isJson) {
+                                // just about to resolve the request
+                                ajax.onloadend();
+                                resolve(JSON.parse(reqText));
+                            } else {
+                                // just about to resolve the request
+                                ajax.onloadend();
+                                resolve(reqText);
+                            }
+                        } else {
+                            if (request.status === 0 && url.startsWith('data:')) {
+                                // The request failed, probably due to unhelpful CORS policy in Safari.
+                                // See related WebKit bug https://bugs.webkit.org/show_bug.cgi?id=123978
+                                // Manually process the URL instead...
+                                console.log('Falling back to manual data: URI processing...');
+                                const parsedDataUri = parseDataUri(url);
+                                if (parsedDataUri) {
+                                    // just about to resolve the request
+                                    ajax.onloadend();
+                                    resolve(settings.dataType === 'json' && parsedDataUri.isJson() ? JSON.parse(parsedDataUri) : parsedDataUri);
+                                    return;
+                                }
+                            }
+                            try {
+                                // just about to reject the request
+                                ajax.onloadend();
+                                reject([JSON.parse(reqText), request]);
+                            } catch (e) {
+                                // just about to reject the request
+                                ajax.onloadend();
+                                reject([reqText, request]);
+                            }
+                        }
+                    }
+                };
+
+                // TODO: Rework this function, its gettting hard to follow!
+                if (type.toUpperCase() !== 'GET' && contentType === 'application/x-www-form-urlencoded' && typeof settings.data === 'object' && !isFormDataPost) {
+                    data = objectToFormPost(data);
+                } else if (typeof settings.data !== 'string' && !isFormDataPost) { // dont stringify the browsers 'FormData' object
+                    // stringify objects
+                    data = JSON.stringify(settings.data);
+                }
+
+                try {
+                    // just about to send the request
+                    ajax.onloadstart();
+                    request.send(data || '');
+                } catch (e) {
+                    // error so invoke the onloadend
+                    ajax.onloadend();
                 }
             });
 
-            // turn data into a string
-            return data.join('&');
+            /**
+             * Manually extract the data from the URI.
+             * @param {string} href to target
+             * @returns {string} encoded data
+             */
+            function parseDataUri(href) {
+                const commaPos = href.indexOf(',');
+                // header is of the form data:[<mediatype>][;base64]
+                const header = href.substring(0, commaPos);
+                let data = href.substring(commaPos + 1);
+                if (header.endsWith(';base64')) {
+                    data = escape(window.atob(data));
+                }
+                return decodeURIComponent(data);
+            }
         };
 
-        return new Promise((resolve, reject) => {
-            const XHR = XMLHttpRequest || ActiveXObject;
-            let data = settings.data || {};
-            const isFormDataPost = (data.constructor === FormData);
-            const contentType = settings.contentType || 'application/x-www-form-urlencoded';
-            request = new XHR('MSXML2.XMLHTTP.3.0');
-
-            request.open(type, url, true);
-
-            // dont add a content type when posting JS FormData data as the browser needs to add the boundry info
-            if (type.toUpperCase() !== 'GET' && !isFormDataPost) {
-                request.setRequestHeader('Content-type', contentType);
-            }
-
-            if (settings.headers) {
-                Object.keys(settings.headers).forEach(header => {
-                    if (Object.prototype.hasOwnProperty.call(settings.headers, header)) {
-                        request.setRequestHeader(header, settings.headers[header]);
-                    }
-                });
-            }
-
-            request.onreadystatechange = function () {
-                if (request.readyState === 4) {
-                    const reqText = (request.responseText || '');
-                    const isJson = reqText.isJson();
-
-                    if (request.status >= 200 && request.status < 300) {
-                        if (request.responseType === 'json') {
-                            // just about to resolve the request
-                            ajax.onloadend();
-                            resolve(request.response);
-                        } else if (settings.dataType === 'json' && isJson) {
-                            // just about to resolve the request
-                            ajax.onloadend();
-                            resolve(JSON.parse(reqText));
-                        } else {
-                            // just about to resolve the request
-                            ajax.onloadend();
-                            resolve(reqText);
-                        }
-                    } else {
-                        if (request.status === 0 && url.startsWith('data:')) {
-                            // The request failed, probably due to unhelpful CORS policy in Safari.
-                            // See related WebKit bug https://bugs.webkit.org/show_bug.cgi?id=123978
-                            // Manually process the URL instead...
-                            console.log('Falling back to manual data: URI processing...');
-                            const parsedDataUri = parseDataUri(url);
-                            if (parsedDataUri) {
-                                // just about to resolve the request
-                                ajax.onloadend();
-                                resolve(settings.dataType === 'json' && parsedDataUri.isJson() ? JSON.parse(parsedDataUri) : parsedDataUri);
-                                return;
-                            }
-                        }
-                        try {
-                            // just about to reject the request
-                            ajax.onloadend();
-                            reject([JSON.parse(reqText), request]);
-                        } catch (e) {
-                            // just about to reject the request
-                            ajax.onloadend();
-                            reject([reqText, request]);
-                        }
-                    }
-                }
-            };
-
-            // TODO: Rework this function, its gettting hard to follow!
-            if (type.toUpperCase() !== 'GET' && contentType === 'application/x-www-form-urlencoded' && typeof settings.data === 'object' && !isFormDataPost) {
-                data = objectToFormPost(data);
-            } else if (typeof settings.data !== 'string' && !isFormDataPost) { // dont stringify the browsers 'FormData' object
-                // stringify objects
-                data = JSON.stringify(settings.data);
-            }
-
-            try {
-                // just about to send the request
-                ajax.onloadstart();
-                request.send(data || '');
-            } catch (e) {
-                // error so invoke the onloadend
-                ajax.onloadend();
-            }
-        });
+        /**
+         * check if local Storage is avaliable and fetch webapiCredentials.
+         * @return {object} webapiCredentials
+         */
+        function getCredentials() {
+            return (hasStorage) ? sessionStorage.webapiCredentials : null;
+        }
 
         /**
-         * Manually extract the data from the URI.
-         * @param {string} href to target
-         * @returns {string} encoded data
+         * [saveCredentials description]
+         * @param  {object} newCredentials, webapiCredentials to identify user
+         * @return {undefined} void, stores webapiCredentials to local storage.
          */
-        function parseDataUri(href) {
-            const commaPos = href.indexOf(',');
-            // header is of the form data:[<mediatype>][;base64]
-            const header = href.substring(0, commaPos);
-            let data = href.substring(commaPos + 1);
-            if (header.endsWith(';base64')) {
-                data = escape(window.atob(data));
+        function saveCredentials(newCredentials) {
+            if (hasStorage) {
+                sessionStorage.webapiCredentials = newCredentials;
             }
-            return decodeURIComponent(data);
         }
-    };
 
-    /**
-     * check if local Storage is avaliable and fetch webapiCredentials.
-     * @return {object} webapiCredentials
-     */
-    function getCredentials() {
-        return (hasStorage) ? sessionStorage.webapiCredentials : null;
-    }
-
-    /**
-     * [saveCredentials description]
-     * @param  {object} newCredentials, webapiCredentials to identify user
-     * @return {undefined} void, stores webapiCredentials to local storage.
-     */
-    function saveCredentials(newCredentials) {
-        if (hasStorage) {
-            sessionStorage.webapiCredentials = newCredentials;
-        }
-    }
-
-    /**
-     * Removes any webapiCredentials from storage.
-     * @return {undefined} removes webapiCredentials from storage.
-     */
-    function removeCredentials() {
-        if (hasStorage) {
-            sessionStorage.removeItem('webapiCredentials');
-        }
-    }
-
-    /**
-     * [settingsWithCredentials description]
-     * @param  {object} settings, http settings.
-     * @return {object} adjusted settings with auth token added.
-     */
-    function settingsWithCredentials(settings) {
-        const settingsPlusCredentials = settings;
-        settingsPlusCredentials.headers = settings.headers || {};
-        settingsPlusCredentials.headers.Authorization = `Bearer ${getCredentials()}`;
-        return settingsPlusCredentials;
-    }
-
-    /**
-     * Perform an AJAX call, prompting the user for a username/password if authentication fails.
-     * @param  {object} settings, ajax settings.
-     * @param  {function} loginCallback function to call after login.
-     * @return {promise} result of ajax request.
-     */
-    function wrappedAjaxRequest(settings, loginCallback) {
-        let requestSettings = settings;
         /**
-         * Checks for 401 errors and if so, prompts the user for a username/password and restarts the ajax call
-         * @param  {Object} args, reponse and request.
-         * @return {Promise} if 401 rejects and prompts for login.
+         * Removes any webapiCredentials from storage.
+         * @return {undefined} removes webapiCredentials from storage.
          */
-        function loginFilter(args) {
-            const response = args[0];
-            const ajaxRequest = args[1];
+        function removeCredentials() {
+            if (hasStorage) {
+                sessionStorage.removeItem('webapiCredentials');
+            }
+        }
 
-            if (ajaxRequest.status === 401) {
-                removeCredentials();
+        /**
+         * [settingsWithCredentials description]
+         * @param  {object} settings, http settings.
+         * @return {object} adjusted settings with auth token added.
+         */
+        function settingsWithCredentials(settings) {
+            const settingsPlusCredentials = settings;
+            settingsPlusCredentials.headers = settings.headers || {};
+            settingsPlusCredentials.headers.Authorization = `Bearer ${getCredentials()}`;
+            return settingsPlusCredentials;
+        }
 
-                // get oauth link from failed request
-                if (response.links) {
-                    oAutTokenhUri = (response.links.find(link => link.rel === 'oauth2-token') || {}).href || '';
-                }
+        /**
+         * Perform an AJAX call, prompting the user for a username/password if authentication fails.
+         * @param  {object} settings, ajax settings.
+         * @param  {function} loginCallback function to call after login.
+         * @return {promise} result of ajax request.
+         */
+        function wrappedAjaxRequest(settings, loginCallback) {
+            let requestSettings = settings;
+            /**
+             * Checks for 401 errors and if so, prompts the user for a username/password and restarts the ajax call
+             * @param  {Object} args, reponse and request.
+             * @return {Promise} if 401 rejects and prompts for login.
+             */
+            function loginFilter(args) {
+                const response = args[0];
+                const ajaxRequest = args[1];
 
-                if (loginCallback) {
-                    return loginCallback()
-                        .then(usernamePassword =>
-                            // Do a request for an authentication token using the login dialog details
-                            ajax.execute({
-                                url: oAutTokenhUri,
-                                type: 'post',
-                                data: `grant_type=password&username=${encodeURIComponent(usernamePassword[0])}&password=${encodeURIComponent(usernamePassword[1])}`,
-                                dataType: 'json',
-                                headers: {
-                                    Authorization: 'Basic aHRtbDUtZXhhbXBheToxMjM0NTY='
-                                }
+                if (ajaxRequest.status === 401) {
+                    removeCredentials();
+
+                    // get oauth link from failed request
+                    if (response.links) {
+                        oAutTokenhUri = (response.links.find(link => link.rel === 'oauth2-token') || {}).href || '';
+                    }
+
+                    if (loginCallback) {
+                        return loginCallback()
+                            .then(usernamePassword =>
+                                // Do a request for an authentication token using the login dialog details
+                                ajax.execute({
+                                    url: oAutTokenhUri,
+                                    type: 'post',
+                                    data: `grant_type=password&username=${encodeURIComponent(usernamePassword[0])}&password=${encodeURIComponent(usernamePassword[1])}`,
+                                    dataType: 'json',
+                                    headers: {
+                                        Authorization: 'Basic aHRtbDUtZXhhbXBheToxMjM0NTY='
+                                    }
+                                })
+                            )
+                            .then(data => {
+                                saveCredentials(data.access_token);
+                                // Retry the original ajax request with extra authorization header and return it to the caller via the promise
+                                // settings = settingsWithCredentials(settings);
+                                // When this new AJAX call completes, resolve or reject the deferred response accordingly.
+                                return ajax.execute(settingsWithCredentials(requestSettings));
                             })
-                        )
-                        .then(data => {
-                            saveCredentials(data.access_token);
-                            // Retry the original ajax request with extra authorization header and return it to the caller via the promise
-                            // settings = settingsWithCredentials(settings);
-                            // When this new AJAX call completes, resolve or reject the deferred response accordingly.
-                            return ajax.execute(settingsWithCredentials(requestSettings));
-                        })
-                        .catch(reponse => {
-                            const reponseArgs = reponse;
-                            if (reponseArgs[1].status === 400 && !getCredentials()) {
-                                reponseArgs[1].statusOverride = 401; // flag this as authentication failed
-                                return Promise.reject([
-                                    { title: 'Authentication Failed', detail: 'The username or password entered was not recognised. Please try again.' },
-                                    reponseArgs[1]]
-                                );
-                            } else if (reponseArgs[1].status === 429 && !getCredentials()) {
-                                return Promise.reject([
-                                    { title: 'Authentication Blocked', detail: 'Too many failed attempts in a short period: please wait a while and then try again.' },
-                                    reponseArgs[1]
-                                ]);
-                            } else if (reponseArgs[1].status === 401) {
-                                removeCredentials(); // No point saving crap credentials.
-                                return Promise.reject([
-                                    { title: 'Authentication Failed', detail: 'The credentials supplied do not grant authorisation to perform this operation. Please try again.' },
-                                    reponseArgs[1]
-                                ]);
-                            }
+                            .catch(reponse => {
+                                const reponseArgs = reponse;
+                                if (reponseArgs[1].status === 400 && !getCredentials()) {
+                                    reponseArgs[1].statusOverride = 401; // flag this as authentication failed
+                                    return Promise.reject([
+                                        { title: 'Authentication Failed', detail: 'The username or password entered was not recognised. Please try again.' },
+                                        reponseArgs[1]]
+                                    );
+                                } else if (reponseArgs[1].status === 429 && !getCredentials()) {
+                                    return Promise.reject([
+                                        { title: 'Authentication Blocked', detail: 'Too many failed attempts in a short period: please wait a while and then try again.' },
+                                        reponseArgs[1]
+                                    ]);
+                                } else if (reponseArgs[1].status === 401) {
+                                    removeCredentials(); // No point saving crap credentials.
+                                    return Promise.reject([{
+                                        title: 'Authentication Failed',
+                                        detail: 'The credentials supplied do not grant authorisation to perform this operation. Please try again.'
+                                    }, reponseArgs[1]]);
+                                }
 
-                            return Promise.reject(reponseArgs);
-                        });
+                                return Promise.reject(reponseArgs);
+                            });
+                    }
                 }
+
+                // Otherwise don't filter, just return the original values.
+                return Promise.reject(args);
             }
 
-            // Otherwise don't filter, just return the original values.
-            return Promise.reject(args);
+            // only add creds if the requestuest needs to be secure
+            if (getCredentials()) {
+                requestSettings = settingsWithCredentials(settings);
+            }
+
+            // if secure return a catch block to handle failed login, otherwise its just a regular request
+            return request(requestSettings).catch(loginFilter);
         }
 
-        // only add creds if the requestuest needs to be secure
-        if (getCredentials()) {
-            requestSettings = settingsWithCredentials(settings);
-        }
+        return {
+            execute: wrappedAjaxRequest,
+            endSession: removeCredentials,
+            onloadstart() {},
+            onloadend() {}
+        };
+    }());
 
-        // if secure return a catch block to handle failed login, otherwise its just a regular request
-        return request(requestSettings).catch(loginFilter);
-    }
-
-    return {
-        execute: wrappedAjaxRequest,
-        endSession: removeCredentials,
-        onloadstart() {},
-        onloadend() {}
-    };
-}());
+    return ajax;
+});
