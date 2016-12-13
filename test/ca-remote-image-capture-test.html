@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA REMOTE IMAGE CAPTURE | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-remote-image-capture.css">
+  </head>
+  <body>
+    <test-fixture id="remote-image-capture">
+      <template>
+        <ca-remote-image-capture video-width="640" video-height="480" width="400" height="540"></ca-remote-image-capture>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-remote-image-capture>', () => {
+            let remoteImageCapture;
+
+            // TODO: ADD TEST - MIGRATED FROM OLD REPO, NO TESTS.
+            setup(done => {
+                SystemJS.import('ca-remote-image-capture.js').then(() => {
+                    remoteImageCapture = fixture('remote-image-capture');
+                    done();
+                });
+            });
+        });
+        a11ySuite('remote-image-capture');
+    </script>
+  </body>
+</html>
