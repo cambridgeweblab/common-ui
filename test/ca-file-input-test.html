@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA FILE INPUT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-file-input.css">
+  </head>
+  <body>
+    <test-fixture id="file-input">
+      <template>
+        <ca-file-input></ca-file-input>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-file-input>', () => {
+            let fileInput;
+
+            // TODO: CREATE TESTS, migrated and there were none.
+            setup(done => {
+                SystemJS.import('ca-file-input.js').then(() => {
+                    fileInput = fixture('file-input');
+                    done();
+                });
+            });
+        });
+        a11ySuite('file-input');
+    </script>
+  </body>
+</html>
