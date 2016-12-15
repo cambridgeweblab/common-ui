@@ -12,7 +12,7 @@ define([
      * @description A custom HTML element (Web Component) that can be created using
      * document.createElement('ca-datetime') or included in a HTML page as an element.
      */
-    class DateTime extends HTMLElement {
+    class DateTimeInput extends HTMLElement {
 
         /**
          * @description Executes when the element is first created
@@ -298,5 +298,5 @@ define([
         }
     }
 
-    document.registerElement('ca-datetime', DateTime);
+    document.registerElement('ca-datetime', DateTimeInput);
 });
