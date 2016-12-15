@@ -7,7 +7,7 @@ define('secure-ajax', [], () => {
         const hasStorage = (typeof (Storage) !== 'undefined');
 
         // generic ajax request function
-        let request = function (settings) {
+        const request = function (settings) {
             const type = settings.type || 'GET';
             const url = settings.url;
 
@@ -32,7 +32,8 @@ define('secure-ajax', [], () => {
                 let data = settings.data || {};
                 const isFormDataPost = (data.constructor === FormData);
                 const contentType = settings.contentType || 'application/x-www-form-urlencoded';
-                request = new XHR('MSXML2.XMLHTTP.3.0');
+                // eslint-disable-next-line no-shadow
+                const request = new XHR('MSXML2.XMLHTTP.3.0');
 
                 request.open(type, url, true);
 
@@ -52,7 +53,10 @@ define('secure-ajax', [], () => {
                 request.onreadystatechange = function () {
                     if (request.readyState === 4) {
                         const reqText = (request.responseText || '');
-                        const isJson = reqText.isJson();
+                        // TODO FIX/DELETE this is just horrible, migrated from helpers.js hacking string prototype
+                        const isJson = (/^[\],:{}\s]*$/.test(reqText.replace(/\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+                                        .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g, ']')
+                                        .replace(/(?:^|:|,)(?:\s*\[)+/g, '')));
 
                         if (request.status >= 200 && request.status < 300) {
                             if (request.responseType === 'json') {
