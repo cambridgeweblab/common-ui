@@ -3,8 +3,9 @@ define([
     '/components/helpers/clear-element.js',
     '/components/helpers/parent-by-attribute.js',
     '/components/helpers/cancel-event.js',
+    '/components/helpers/secure-ajax.js',
     'document-register-element'
-], (createElement, clearElement, parentByAttribute, cancelEvent) => {
+], (createElement, clearElement, parentByAttribute, cancelEvent, ajax) => {
     /**
      * Class TreeView for a TreeView web component
      * @extends HTMLElement
