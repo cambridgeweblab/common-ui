@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA FORM | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
+  </head>
+  <body>
+    <test-fixture id="ca-form">
+      <template>
+        <ca-form></ca-form>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-form>', () => {
+            let caForm;
+
+            // TODO: CREATE TESTS, there were non associated with the original component
+            setup(done => {
+                SystemJS.import('ca-form.js').then(() => {
+                    caForm = fixture('ca-form');
+                    done();
+                });
+            });
+        });
+        a11ySuite('ca-form');
+    </script>
+  </body>
+</html>

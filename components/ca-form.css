@@ -1,0 +1,297 @@
+ca-form.hidden {
+    display: none;
+}
+
+ca-form form {
+    padding: 10px 20px 30px 20px;
+    overflow: visible;
+    background: #f8f8f8;
+    border: 1px solid #f1f1f1;
+    border-radius: 3px;
+}
+
+ca-form form:after {
+    content: ".";
+    visibility: hidden;
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+ca-form .ca-schema-desc {
+    margin: 10px 0;
+}
+
+ca-form .ca-form-desc {
+    margin: 20px 0 10px 0;
+}
+
+ca-form .ca-field-desc {
+    margin-bottom: 4px;
+    display: block;
+}
+
+ca-form fieldset {
+    width: 100%;
+    display: block;
+}
+
+ca-form h2 {
+    font-size: 1.4em;
+    border-bottom: 1px solid #ccc;
+    padding: 0 0 0.25em 0;
+}
+
+ca-form label {
+    display: block;
+    margin: 10px 0 0 0;
+    position: relative;
+}
+
+ca-form label.required:after {
+    content: '*';
+    position: absolute;
+    right: 20px;
+    font-size: 16px;
+    top: 30px;
+    color: #aaa;
+}
+
+ca-form label.required:hover:after {
+    content: 'required';
+    font-size: 0.8em;
+}
+
+ca-form label span {
+    font-weight: bold;
+    display: block;
+    line-height: 1.75em;
+    text-transform: capitalize;
+}
+
+ca-form[mode='override'] label > span, ca-form[mode='override'] label.bool > span {
+    display: none;
+}
+
+
+/* Special handling for boolean override properties which don't need a new line. */
+
+ca-form[mode='override'] label.bool ca-override[checked='checked'] > ca-property > p {
+    visibility: hidden;
+}
+
+ca-form[mode='override'] label.bool ca-override[checked='checked'] > *:last-child {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+ca-form label.bool span {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+ca-form input, ca-form textarea, ca-form select {
+    width: 100%;
+    padding: 6px 2px 6px 6px;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -ms-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: normal;
+}
+
+ca-form input, ca-form select {
+    height: 35px;
+}
+
+ca-form input::-webkit-input-placeholder, ca-form input:-moz-placeholder, ca-form input::-moz-placeholder, ca-form input:-ms-input-placeholder {
+    padding: 0.5em;
+}
+
+ca-form textarea::-webkit-input-placeholder, ca-form textarea:-moz-placeholder, ca-form textarea::-moz-placeholder, ca-form textarea:-ms-input-placeholder {
+    padding: 0.5em;
+}
+
+ca-form select {
+    margin: 0 0 0 -2px !important;
+}
+
+ca-form textarea {
+    resize: vertical;
+}
+
+ca-form [type="checkbox"] {
+    width: auto !important;
+    padding: 0 !important;
+    height: auto !important;
+}
+
+ca-form [disabled] {
+    background: #eee;
+}
+
+ca-form .buttons {
+    margin: 1em 0;
+}
+
+ca-form input[type="submit"], ca-form input[type="button"] {
+    color: #fff;
+    cursor: pointer;
+    background-color: #333;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.6);
+    border-radius: 5px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    margin: 10px 10px 0 0 !important;
+    display: inline-block;
+    padding: 0.5em 1em !important;
+    width: auto !important;
+}
+
+
+/* column definitions */
+
+ca-form[columns="0"] fieldset {
+    width: 100%;
+}
+
+ca-form[columns="1"] fieldset {
+    width: 100%;
+}
+
+ca-form[columns="2"] fieldset {
+    width: 50%;
+}
+
+ca-form[columns="3"] fieldset {
+    width: 33.33%;
+}
+
+ca-form[columns="4"] fieldset {
+    width: 25%;
+}
+
+ca-form[columns="5"] fieldset {
+    width: 20%;
+}
+
+ca-form[columns="6"] fieldset {
+    width: 16.66%;
+}
+
+ca-form[columns="7"] fieldset {
+    width: 14.28%;
+}
+
+ca-form[columns="8"] fieldset {
+    width: 12.5%;
+}
+
+ca-form[columns="9"] fieldset {
+    width: 11.1%;
+}
+
+ca-form[columns="10"] fieldset {
+    width: 10%;
+}
+
+ca-form[columns] fieldset {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0;
+    padding: 0;
+}
+
+ca-form .group {
+    padding: 0 20px 0 0;
+}
+
+
+/* errors */
+
+ca-form form[data-error-message]:before {
+    content: 'The selected field ' attr(data-error-message);
+    color: #dd4b39;
+    margin: .5em 0 0 0;
+    font-weight: bold;
+    padding: 0.5em 0;
+    display: block;
+}
+
+ca-form [data-error] input, ca-form [data-error] select, ca-form [data-error] ca-select div, ca-form [data-error] textarea {
+    border-color: #dd4b39;
+    background-color: #eef9b4;
+}
+
+ca-form [data-error] ca-select div {
+    border: 1px solid #dd4b39;
+    border-radius: 4px;
+}
+
+ca-form[readonly="true"] input, ca-form[readonly="true"] select, ca-form[readonly="true"] textarea, ca-form[readonly="true"] ca-currency:before {
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    -webkit-appearance: none !important;
+    outline: none !important;
+}
+
+ca-form[readonly="true"] label.required:after {
+    display: none !important;
+}
+
+ca-form [data-error] ca-tel div:before {
+    border-color: #dd4b39;
+    background-color: #eef9b4;
+}
+
+
+/* error tooltips */
+
+ca-form [data-error] {
+    position: relative;
+    cursor: pointer;
+}
+
+ca-form [data-error] input, ca-form [data-error] select, ca-form [data-error] ca-select div, ca-form [data-error] textarea {
+    -webkit-border-bottom-right-radius: 0;
+    -moz-border-radius-bottomright: 0;
+    border-bottom-right-radius: 0;
+}
+
+ca-form [data-error]:after {
+    position: absolute;
+    pointer-events: none;
+    font-weight: normal;
+    text-align: left;
+    top: 100% !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: 0 !important;
+    padding: 3px 12px;
+    background-color: #dd4b39;
+    color: #fff !important;
+    content: attr(data-error) !important;
+    font-size: 14px !important;
+    line-height: normal;
+    min-width: 80px;
+    margin-top: -1px;
+    -webkit-border-top-left-radius: 0;
+    -webkit-border-top-right-radius: 0;
+    -moz-border-radius-topleft: 0;
+    -moz-border-radius-topright: 0;
+    border-radius: 0 0 5px 5px;
+}
+
+ca-form [data-type="boolean"][data-error]:after {
+    left: 0 !important;
+    right: auto !important;
+}

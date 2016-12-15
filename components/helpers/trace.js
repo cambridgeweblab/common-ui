@@ -1,0 +1,7 @@
+define('trace', [], () =>
+    function (value) {
+        if (window.console && window.console.log) {
+            window.console.log(value);
+        }
+    }
+);

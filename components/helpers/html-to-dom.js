@@ -1,0 +1,28 @@
+define('html-to-dom', [], () =>
+    function (htmlString, parent) {
+
+        // eslint-disable-next-line
+        parent = parent || document.createDocumentFragment();
+
+        const tmp = document.createElement('div');
+        let el = null;
+
+        // inject content into none live element
+        tmp.innerHTML = htmlString;
+
+        // remove script tags
+        const scripts = tmp.getElementsByTagName('script');
+        for (let i = scripts.length - 1; i >= 0; i--) {
+            scripts[i].parentElement.removeChild(scripts[i]);
+        }
+
+        // append elements
+        // eslint-disable-next-line
+        while (el = tmp.firstChild) {
+            parent.appendChild(el);
+        }
+
+        return parent;
+
+    }
+);
