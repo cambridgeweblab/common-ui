@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA CURRENCY | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-currency.css">
+  </head>
+  <body>
+    <test-fixture id="currency">
+      <template>
+        <ca-currency name="Name" symbol="$" value="123.45" readonly="true"></ca-currency>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-currency>', () => {
+            let currency;
+
+            setup(done => {
+                SystemJS.import('ca-currency.js').then(() => {
+                    currency = fixture('currency');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+                // Check the element has been created with the correct tag
+                expect(currency).to.be.defined;
+                expect(currency.tagName).to.equal('CA-CURRENCY');
+            });
+
+            test('should allow all attributes and properties to be get and set', () => {
+                expect(currency.symbol).to.be.defined;
+                expect(currency.readonly).to.be.defined;
+                expect(currency.readonly).to.equal(true);
+            });
+
+            test('should create the relevant structure', (done) => {
+                expect(currency.value).to.equal("123.45");
+
+                setTimeout(() => {
+                    const input = document.querySelector('ca-currency input');
+                    expect(input).to.be.defined;
+                    expect(input.type).to.equal('number');
+                    expect(input.step).to.equal('any');
+
+                    done();
+                }, 100);
+            });
+        });
+        a11ySuite('currency');
+    </script>
+  </body>
+</html>
