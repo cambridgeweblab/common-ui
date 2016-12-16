@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA BIG RED BUTTON | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-big-red-button.css">
+  </head>
+  <body>
+    <test-fixture id="big-button">
+      <template>
+        <ca-big-red-button></ca-big-red-button>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-big-red-button>', () => {
+            let bigRedButton;
+
+            setup(done => {
+                SystemJS.import('ca-big-red-button.js').then(() => {
+                    bigRedButton = fixture('big-button');
+                    done();
+                });
+            });
+            test('should be creatable', () => {
+                debugger;
+                // Check the element has been created with the correct tag
+                expect(bigRedButton).to.be.defined;
+                expect(bigRedButton.tagName).to.equal('CA-BIG-RED-BUTTON');
+            });
+
+            test('should create the relevant structure', () => {
+                bigRedButton.action = 'Action';
+                bigRedButton.method = 'Method';
+
+                expect(bigRedButton.action).to.equal('Action');
+                expect(bigRedButton.method).to.equal('Method');
+
+                const h2 = document.querySelector('ca-big-red-button h2');
+                expect(h2).to.be.defined;
+                expect(h2.innerHTML).to.equal('WARNING!');
+
+                const p = document.querySelector('ca-big-red-button p');
+                expect(p).to.be.defined;
+
+                const button = document.querySelector('ca-big-red-button button');
+                expect(button).to.be.defined;
+                expect(button.innerHTML).to.equal('Reset application data');
+
+                const span = document.querySelector('ca-big-red-button span');
+                expect(span).to.be.defined;
+                expect(span.innerHTML).to.equal('X');
+            });
+        });
+        a11ySuite('big-button');
+    </script>
+  </body>
+</html>

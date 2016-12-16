@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA DATE TIME | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-datetime.css">
+  </head>
+  <body>
+    <test-fixture id="datetime">
+      <template>
+        <ca-datetime></ca-datetime>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-datetime>', () => {
+            let datetime;
+
+            // TODO: ADD TEST - MIGRATED FROM OLD REPO, NO TESTS.
+            setup(done => {
+                SystemJS.import('ca-datetime.js').then(() => {
+                    datetime = fixture('datetime');
+                    done();
+                });
+            });
+        });
+        a11ySuite('datetime');
+    </script>
+  </body>
+</html>
