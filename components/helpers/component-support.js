@@ -1,4 +1,4 @@
-define('secure-ajax', ['/components/helpers/create-element.js', '/components/helpers/secureajax.js'], (createElement, ajax) => {
+define('secure-ajax', ['./create-element.js', './secureajax.js'], (createElement, ajax) => {
     const componentSupport = {
         countryData: null,
         currentUser: null,
@@ -11,8 +11,6 @@ define('secure-ajax', ['/components/helpers/create-element.js', '/components/hel
         init(req) {
             // if present, override .request with param passed to init
             componentSupport.request = req || componentSupport.request;
-
-            const oot = document.documentElement;
 
             // get country data from html attribute
             const countriesUrl = root.getAttribute('data-countries-url') || '';

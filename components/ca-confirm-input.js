@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', 'document-register-element'], (createElement) => {
+define(['./helpers/create-element.js', 'document-register-element'], (createElement) => {
     /**
      * Confirm input custom web component.
      */

@@ -1,9 +1,9 @@
 define([
-    '/components/helpers/create-element.js',
-    '/components/helpers/clear-element.js',
-    '/components/helpers/parent-by-attribute.js',
-    '/components/helpers/cancel-event.js',
-    '/components/helpers/secureajax.js',
+    './helpers/create-element.js',
+    './helpers/clear-element.js',
+    './helpers/parent-by-attribute.js',
+    './helpers/cancel-event.js',
+    './helpers/secureajax.js',
     'document-register-element'
 ], (createElement, clearElement, parentByAttribute, cancelEvent, ajax) => {
     /**

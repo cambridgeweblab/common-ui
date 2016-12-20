@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', 'document-register-element'], (createElement) => {
+define(['./helpers/create-element.js', 'document-register-element'], (createElement) => {
   /**
    * Class Currency for a ca-currency web component
    * @extends HTMLElement
