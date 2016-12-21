@@ -1,7 +1,7 @@
 define([
-    '/components/helpers/create-element.js',
-    '/components/helpers/clear-element.js',
-    '/components/helpers/cancel-event.js',
+    './helpers/create-element.js',
+    './helpers/clear-element.js',
+    './helpers/cancel-event.js',
     'document-register-element'
 ], (createElement, clearElement, cancelEvent) => {
     /**
