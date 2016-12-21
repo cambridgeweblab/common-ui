@@ -1,9 +1,9 @@
 define([
-    '/components/helpers/create-element.js',
-    '/components/helpers/parent-by-attribute.js',
-    '/components/helpers/cancel-event.js',
-    '/components/helpers/is-mobile.js',
-    '/components/helpers/component-support.js',
+    './helpers/create-element.js',
+    './helpers/parent-by-attribute.js',
+    './helpers/cancel-event.js',
+    './helpers/is-mobile.js',
+    './helpers/component-support.js',
     'pikaday',
     'document-register-element'
 ], (createElement, parentByAttribute, cancelEvent, isMobile, componentSupport, Pikaday) => {

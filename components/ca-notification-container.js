@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', '/components/helpers/types.js', '/components/ca-notification.js', 'document-register-element'], (createElement, types) => {
+define(['./helpers/create-element.js', './helpers/types.js', './ca-notification.js', 'document-register-element'], (createElement, types) => {
     /**
      * Class NotificationContainer for a NotificationContainer web component
      * @extends HTMLElement

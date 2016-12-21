@@ -1,4 +1,4 @@
-define('add-class', ['/components/helpers/has-class.js'], (hasClass) =>
+define('add-class', ['./has-class.js'], (hasClass) =>
     function (el, cls) {
         if (hasClass(el, cls)) {
             const reg = new RegExp(`\\b${cls}\\b`);

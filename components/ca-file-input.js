@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', '/components/helpers/dialogs.js', 'document-register-element'], (createElement, dialogs) => {
+define(['./helpers/create-element.js', './helpers/dialogs.js', 'document-register-element'], (createElement, dialogs) => {
     const mimeTypeToExtension = {
         'application/pdf': { accept: '.pdf', label: 'PDF' },
         'image/png': { accept: '.png', label: 'PNG' },

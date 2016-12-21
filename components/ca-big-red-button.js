@@ -1,8 +1,8 @@
 define([
-    '/components/helpers/create-element.js',
-    '/components/helpers/types.js',
-    '/components/helpers/secureajax.js',
-    '/components/helpers/dialogs.js',
+    './helpers/create-element.js',
+    './helpers/types.js',
+    './helpers/secureajax.js',
+    './helpers/dialogs.js',
     'document-register-element'
 ], (createElement, types, ajax, dialogs) => {
     /**

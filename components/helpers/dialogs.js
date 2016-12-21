@@ -1,13 +1,13 @@
 
 define([
-    '/components/helpers/create-element.js',
-    '/components/helpers/parent-by-attribute.js',
-    '/components/helpers/cancel-event.js',
-    '/components/helpers/add-event.js',
-    '/components/helpers/has-class.js',
-    '/components/helpers/add-class.js',
-    '/components/helpers/remove-class.js',
-    '/components/helpers/clear-element.js'
+    './create-element.js',
+    './parent-by-attribute.js',
+    './cancel-event.js',
+    './add-event.js',
+    './has-class.js',
+    './add-class.js',
+    './remove-class.js',
+    './clear-element.js'
 ], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, addClass, removeClass, clearElement) => {
     const dialogs = {
         // is the object ready for interaction ?

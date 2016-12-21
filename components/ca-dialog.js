@@ -1,4 +1,4 @@
-define(['/components/helpers/create-element.js', '/components/helpers/types.js', 'document-register-element'], (createElement, types) => {
+define(['./helpers/create-element.js', './helpers/types.js', 'document-register-element'], (createElement, types) => {
     /**
     * buildActions
     * @param {element} element to append the actions to.
