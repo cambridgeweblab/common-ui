@@ -1,4 +1,4 @@
-define('component-ajax', ['./create-element.js', './secureajax.js'], (createElement, ajax) => {
+define('component-support', ['./create-element.js', './secureajax.js'], (createElement, ajax) => {
     const componentSupport = {
         countryData: null,
         currentUser: null,
