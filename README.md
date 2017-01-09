@@ -23,7 +23,7 @@ Add the new common-ui submodules to the "app" directory.
 ```$ git submodule add git@github.com:cambridgeweblab/common-ui.git app/common-ui```
 
 Initialise the submodules  
-```$ git submodules init```
+```$ git submodule init```
 
 Get the latest code  
 ```$ git submodule update --recursive```
