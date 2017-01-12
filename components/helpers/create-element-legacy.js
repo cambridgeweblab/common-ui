@@ -34,7 +34,8 @@ define('create-element', ['./clear-element.js'], (clearElement) =>
             el.appendChild(document.createTextNode(text));
         }
         if (typeof html !== 'undefined') {
-            clearElement(el); html.toDOM(el);
+            clearElement(el);
+            el.textContent = html;
         }
         if (domEl) {
             el.appendChild(domEl);
