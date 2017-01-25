@@ -13,13 +13,14 @@
       <a id="home" href="/"></a>
     </div>
     <div class="ca-title">CA DIALOG EXAMPLE</div>
-    <ca-dialog heading="hello" buttons="add,delete,whatever" type="error"></ca-dialog>
+    <ca-dialog heading="hello" type="error"></ca-dialog>
     <button onclick="openDialog()">Open Dialog</button>
     <script>
         SystemJS.import('ca-dialog.js');
         function openDialog() {
             const dialog = document.querySelector('ca-dialog');
             dialog.heading = 'Updated heading';
+            dialog.buttons = ['Send feedback'];
             dialog.show();
         };
     </script>
