@@ -103,23 +103,19 @@ define(['./helpers/component-support.js', './helpers/cancel-event.js', './helper
          * @param {Object} e, event object
          * @returns {void} nothing
          */
-        render (e) {
+        render(e) {
 
             cancelEvent(e);
 
-            // if the feedback dialog is already present, exit
-            if (document.querySelector('ca-dialog')) return;
-
-            this.dialog = createElement(document.body, 'ca-dialog');
+            this.dialog = document.querySelector('ca-dialog') || createElement(document.body, 'ca-dialog');
             this.dialog.buttons = ['Send feedback'];
-
 
             if (this.description) {
                 createElement(this.dialog.body, 'p', { class: 'dialog-intro' }, this.description);
             }
 
-            const caForm = createElement(this.dialog.querySelector('.ca-dialog-content'), 'ca-form');
-            caForm.columns = 1;
+            const caForm = document.querySelector('ca-form') || createElement(this.dialog.querySelector('.ca-dialog-content'), 'ca-form');
+
             caForm.className = 'feedback non-contextual';
             caForm.schema = [this.schema];
 
