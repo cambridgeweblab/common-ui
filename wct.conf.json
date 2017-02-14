@@ -5,7 +5,7 @@
   "plugins": {
     "local": {
       "skipSeleniumInstall": true,
-      "browsers": ["chrome"]
+      "browsers": ["firefox"]
     },
     "istanbul": {
       "dir": "./coverage",
