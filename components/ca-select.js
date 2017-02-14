@@ -1,4 +1,13 @@
-define(['./helpers/component-support.js', './helpers/create-element.js', './helpers/types.js', './helpers/add-event.js', './helpers/parent-by-attribute.js', 'document-register-element'], (componentSupport, createElement, types, addEvent, parentByAttribute) => {
+define([
+    './helpers/component-support.js',
+    './helpers/create-element.js',
+    './helpers/types.js',
+    './helpers/add-event.js',
+    './helpers/cancel-event.js',
+    './helpers/parent-by-attribute.js',
+    './helpers/trace.js',
+    'document-register-element'
+], (componentSupport, createElement, types, addEvent, cancelEvent, parentByAttribute, trace) => {
 
     /**
      * Select class for Select web component
@@ -58,15 +67,13 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             // only need to re-render the component if the attribute value has changed
             if (oldValue !== newValue) {
 
-                switch (name) {
-                    case 'multiple': {
+                if (name === 'multiple') {
 
-                        if (this.root instanceof HTMLSelectElement) {
+                    if (this.root instanceof HTMLSelectElement) {
 
-                            this.root.multiple = (newValue === 'true');
-                        }
-                        // TODO: make checkboxes into radio buttons if not multiple
-                    } break;
+                        this.root.multiple = (newValue === 'true');
+                    }
+                    // TODO: make checkboxes into radio buttons if not multiple
                 }
             }
         }
@@ -85,11 +92,11 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
 
                 self.schema = data;
             })
-            .catch(err => {
+            .catch(() => {
 
                 self.data = {};
             });
-        };
+        }
 
         /**
          * Renders the ca-select element
@@ -100,9 +107,9 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             if (!this.root) return;
 
             const self = this;
-            let data = this.data || [];
+            const data = this.data || [];
             const hasData = (Array.isArray(data) && this.data.length);
-            const defaultLabel = (hasData) ? ((this.type == 'tel') ? 'Code' : 'Please select') : 'No options available';
+            const defaultLabel = (hasData) ? ((this.type === 'tel') ? 'Code' : 'Please select') : 'No options available'; // eslint-disable-line
 
             if (this.readonly && this.style !== 'checkbox') {
 
@@ -118,8 +125,8 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
                     createElement(this.root, 'option', { value: '', 'data-index': 0, selected: true }, defaultLabel);
                 }
 
-                if (this.style == 'checkbox') {
-                    
+                if (this.style === 'checkbox') {
+
                     this.rootCheckbox = createElement(self.root, 'div', {});
                 }
 
@@ -128,12 +135,12 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
                     const item = this.data[i];
 
                     switch (this.style) {
-                        
+
                         case 'checkbox': {
 
                             const p = createElement(this.rootCheckbox, 'p', {});
-                            const opt = createElement(p, 'input', { type: 'checkbox', value: item.value, 'data-index': i+1 });
-                            p.appendChild(document.createTextNode(' ' + item.label + ' '));
+                            const opt = createElement(p, 'input', { type: 'checkbox', value: item.value, 'data-index': i + 1 });
+                            p.appendChild(document.createTextNode(` ${item.label} `));
 
                             if (item.attachment) {
 
@@ -143,12 +150,12 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
                             opt.addEventListener('change', () => {
 
                                 this.setAttribute('data-selected', (this.checked).toString());
-                                onChangeHandler.call(self);
+                                this.onChangeHandler.call(self);
                             });
                         } break;
 
                         default: {
-                            const opt = createElement(this.root, 'option', { value: item.value, 'data-index': i+1 }, item.label);
+                            const opt = createElement(this.root, 'option', { value: item.value, 'data-index': i + 1 }, item.label);
 
                             if (this.multiple) {
 
@@ -156,24 +163,24 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
                             }
 
                             opt.selected = (item.value === this.value);
-                                
+
                             if (!this.isTouch && this.multiple) {
 
                                 opt.onmousedown = e => {
 
-                                    helpers.cancelEvent(e || event);
+                                    cancelEvent(e || event);
                                     self.checkChange.call(self, this);
-                                }
+                                };
 
                                 this.root.onclick = e => {
 
-                                    helpers.cancelEvent(e || event);
+                                    cancelEvent(e || event);
                                 };
                             }
                         }
                     }
                 }
-                
+
                 // just in case this is a re-render, clear this!
                 this.removeAttribute('data-empty');
             } else {
@@ -181,10 +188,11 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
                 // add an attribute to allow empty selects know this item has no children
                 this.setAttribute('data-empty', 'true');
             }
-        };
+        }
 
         /**
          * Executes each time an option is clicked
+         * @param {object} el Element
          * @returns {void} void
          */
         checkChange(el) {
@@ -192,17 +200,18 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             if (!el || el.value === '') return;
 
             const selected = (el.getAttribute('data-selected') === 'true');
-            el.setAttribute("data-selected", !selected);
-        };
+            el.setAttribute('data-selected', !selected);
+        }
 
         /**
          * A seemingly pointless method
+         * @param {object} data data
          * @returns {void} void
          */
         onupdate(data) {
 
-            helpers.trace(data);
-        };
+            trace(data);
+        }
 
         /**
          * onChange handler
@@ -214,39 +223,53 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
 
             if (parentForm) {
 
-                parentForm.setAttribute('data-select-' + this.id, this.value);
+                parentForm.setAttribute(`data-select-${this.id}`, this.value);
             }
         }
 
+        /**
+         * Get data
+         * @returns {array} data
+         */
         get data() {
 
             return this._data || [];
         }
 
+        /**
+         * Sets data
+         * @param {array} value Data
+         * @returns {void} void
+         */
         set data(value) {
 
             this._data = value || [];
             this.render();
         }
 
-        set schema(value) {
+        /**
+         * Sets schema
+         * @param {object} schema schema
+         * @returns {void} void
+         */
+        set schema(schema) {
 
-            let selectData = [];
+            const selectData = [];
             const data = schema.enum || schema.type;
 
             if (Array.isArray(data) && data.length) {
 
                 for (let i = 0, l = data.length; i < l; i++) {
 
-                    const value = data[i].enum && data[i].enum[0] || data[i];
-                    const label = data[i].title || (l == 1 && schema.title) || data[i];
-                    let links = data[i].links || (l == 1 && schema.links) || [];
+                    const value = (data[i].enum && data[i].enum[0]) || data[i];
+                    const label = data[i].title || (l === 1 && schema.title) || data[i];
+                    let links = data[i].links || (l === 1 && schema.links) || [];
                     links = links.filter(link => link.rel === 'preview');
 
                     selectData.push({
-                        value: value,
-                        label: label,
-                        attachment: links.length && links[0] || null
+                        value,
+                        label,
+                        attachment: (links.length && links[0]) || null
                     });
                 }
             }
@@ -254,39 +277,56 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             this.data = selectData;
         }
 
+        /**
+         * Gets src
+         * @returns {string} src
+         */
         get src() {
 
             return this.getAttribute('schema-url');
         }
 
+        /**
+         * Sets src
+         * @param {string} value src
+         * @returns {void} void
+         */
         set src(value) {
 
             this.setAttribute('schema-url', value);
             this.loadSchema();
         }
 
+        /**
+         * Gets value
+         * @returns {string|array} value
+         */
         get value() {
 
             if (this.multiple) {
 
-                let results = [];
+                const results = [];
 
                 if (this.root) {
 
-                    const options = (!isTouch) ? this.root.querySelectorAll('[data-selected="true"]') : Array.prototype.slice.call(this.root.options).where('selected', true);
+                    const options = (!this.isTouch) ? this.root.querySelectorAll('[data-selected="true"]') : Array.prototype.slice.call(this.root.options).where('selected', true);
 
-                    helpers.forEach(options, item => {
+                    options.forEach(item => {
 
                         results.push(item.value);
                     });
                 }
                 return results;
             }
-            else {
-                return this.root? (this.root.value || this._value) : '';
-            }
+
+            return this.root ? (this.root.value || this._value) : '';
         }
 
+        /**
+         * Sets value
+         * @param {string|array} value value
+         * @returns {void} void
+         */
         set value(value) {
 
             this._value = value;
@@ -294,7 +334,7 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             if (this.root) {
                 this.root.value = value;
             }
-            
+
             // if this a multi-select element
             if (this.multiple) {
 
@@ -308,7 +348,7 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
 
                     if (options) {
 
-                        helpers.forEach(options, item => {
+                        options.forEach(item => {
 
                             // if the value we are setting matches the option value
                             if (value.indexOf(item.value) > -1) {
@@ -322,41 +362,77 @@ define(['./helpers/component-support.js', './helpers/create-element.js', './help
             }
         }
 
+        /**
+         * Is this element a multiselect
+         * @returns {boolean} true/false
+         */
         get multiple() {
 
             return this.getAttribute('multiple') === 'true';
         }
 
+        /**
+         * Sets multiselect
+         * @param {string} value Is multiselect
+         * @returns {void} void
+         */
         set multiple(value) {
 
             this.setAttribute('multiple', value.toString());
         }
 
+        /**
+         * Gets selections
+         * @returns {array} selections
+         */
         get selections() {
 
             return this._selections || {};
         }
 
+        /**
+         * Sets selections
+         * @param {array} value selections
+         * @returns {void} void
+         */
         set selections(value) {
 
             this._selections = value;
         }
 
+        /**
+         * Get readonly
+         * @returns {boolean} readonly
+         */
         get readonly() {
 
             return this.getAttribute('readonly') === 'true';
         }
 
+        /**
+         * Sets readonly
+         * @param {boolean} value readonly
+         * @returns {void} void
+         */
         set readonly(value) {
 
             this.setAttribute('readonly', value);
         }
 
+        /**
+         * Gets style
+         * @returns {string} style
+         */
         get style() {
 
             return this.getAttribute('style');
         }
 
+        /**
+         * Sets style
+         * @param {string} value style
+         * @returns {void} void
+         */
         set style(value) {
 
             this.setAttribute('style', value);
