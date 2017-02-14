@@ -25,12 +25,12 @@ before_install:
   - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
   - $SUDO chmod +x /usr/bin/google-chrome
   - ls -l /usr/bin/*c*
-  - ls -l bower_components
   # Already installed on java image - sudo apt-get install xvfb
   - export DISPLAY=:99.0
 
 install:
   - npm install
+  - ls -l bower_components
   - mkdir -p shippable/buildoutput
   - xvfb-run --server-args="-ac" npm test
 
