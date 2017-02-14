@@ -1,10 +1,12 @@
 language: node_js
+# Use java build image (u14nodall:tip is also an option) so we've got JDK8 which selenium requires
+build_image: drydock/u14javall:prod
 
 node_js:
   - 7.0.0
 
-services:
-  - selenium
+#services:
+#  - selenium
 
 addons:
     firefox: "49.0"
