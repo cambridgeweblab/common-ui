@@ -18,6 +18,13 @@ env:
 before_install:
   - curl -O https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v6.22.2/cf-cli-installer_6.22.2_x86-64.deb
   - SUDO=$(which sudo) && $SUDO dpkg -i cf-cli-installer_6.22.2_x86-64.deb
+  - sudo apt-get install xvfb
+  - export DISPLAY=:99.0
+
+install:
+  - npm install
+  - mkdir -p shippable/buildoutput
+  - xvfb-run --server-args="-ac" npm test
 
 before_script:
   - mkdir -p shippable/buildoutput
