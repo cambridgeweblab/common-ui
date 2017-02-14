@@ -31,7 +31,6 @@ before_install:
 install:
   - npm install -g bower
   - npm install
-  - ls -l bower_components
   - bower install
   - ls -l bower_components
   - mkdir -p shippable/buildoutput
