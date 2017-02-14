@@ -29,7 +29,7 @@ before_install:
   - export DISPLAY=:99.0
 
 install:
-  - npm install -g bower
+  - $SUDO npm install -g bower
   - npm install
   - bower install
   - ls -l bower_components
