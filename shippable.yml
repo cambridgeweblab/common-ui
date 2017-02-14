@@ -5,6 +5,12 @@ build_image: drydock/u14javall:prod
 node_js:
   - 7.0.0
 
+services:
+  - selenium
+
+addons:
+    firefox: "49.0"
+
 env:
   global:
       # BLUEMIX_USER and BLUEMIX_PASSWORD encrypted as cambridgeweblab
