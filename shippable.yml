@@ -27,7 +27,7 @@ build:
   - echo '#!/bin/bash' | $SUDO tee /usr/bin/google-chrome
   - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
   - $SUDO chmod +x /usr/bin/google-chrome
-  - sudo apt-get install xvfb
+  # Already installed on java image - sudo apt-get install xvfb
   - export DISPLAY=:99.0
 
   - npm install bower
