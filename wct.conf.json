@@ -4,7 +4,8 @@
   "suites": ["test/"],
   "plugins": {
     "local": {
-      "browsers": ["chrome"]
+      "skipSeleniumInstall": true,
+      "browsers": ["firefox"]
     },
     "istanbul": {
       "dir": "./coverage",

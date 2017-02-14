@@ -3,6 +3,12 @@ language: node_js
 node_js:
   - 7.0.0
 
+services:
+  - selenium
+
+addons:
+    firefox: "49.0"
+
 env:
   global:
      - secure: ixAZpnkth9UN34rKrfYWn2CGLplPqv11YWFskyI9l6cbYCma4RInZHIw36QtHaatJwF1OfltLqjWir7vh2SbhK1Rv5uP59OjOHOsCEbTxIjCp2dRSpK0O1vXdP3+9Qxm+l7FEpIqZNM8dEQeBPeeHm2pqMoTZSgt7UcrkLa2zpcbXiMl5K2th8DVzqis5F2jtE8znD1/B3mh4WqpJWVI0v1LBCAXi4EQrFhhhmdzp3SMs2VrROzboRWxEF8T5BUSh61sWxyR5A3MCIptgbuIxryzy2dfDOkJLszp8onDx9NtfqUE7x0j2TaL4ScHmFb4D2f6GvBtaV6GDPoz6fWBYA==
