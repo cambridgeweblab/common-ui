@@ -24,7 +24,8 @@ before_install:
   - echo '#!/bin/bash' | $SUDO tee /usr/bin/google-chrome
   - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
   - $SUDO chmod +x /usr/bin/google-chrome
-  - sudo apt-get install xvfb
+  - ls -l /usr/bin/*c*
+  # Already installed on java image - sudo apt-get install xvfb
   - export DISPLAY=:99.0
 
 install:
