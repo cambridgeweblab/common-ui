@@ -1,4 +1,4 @@
-define(['./helpers/create-element.js', './helpers/types.js', './helpers/add-event.js', './helpers/parent-by-attribute.js', 'document-register-element'], (createElement, types, addEvent, parentByAttribute) => {
+define(['./helpers/component-support.js', './helpers/create-element.js', './helpers/types.js', './helpers/add-event.js', './helpers/parent-by-attribute.js', 'document-register-element'], (componentSupport, createElement, types, addEvent, parentByAttribute) => {
 
     /**
      * Select class for Select web component
