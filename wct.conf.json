@@ -4,7 +4,7 @@
   "suites": ["test/"],
   "plugins": {
     "local": {
-      "skipSeleniumInstall": true,
+      "skipSeleniumInstall": false,
       "browsers": ["firefox"]
     },
     "istanbul": {
