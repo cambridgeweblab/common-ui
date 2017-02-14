@@ -30,6 +30,7 @@ before_install:
 
 install:
   - npm install
+  - bower install
   - ls -l bower_components
   - mkdir -p shippable/buildoutput
   - xvfb-run --server-args="-ac" npm test
