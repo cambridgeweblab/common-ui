@@ -21,17 +21,14 @@ build:
   ci:
   - curl -O https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v6.22.2/cf-cli-installer_6.22.2_x86-64.deb
   - SUDO=$(which sudo) && $SUDO dpkg -i cf-cli-installer_6.22.2_x86-64.deb
-  - curl -o /tmp/chromedriver.zip -L http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip
-  - unzip /tmp/chromedriver.zip -d /home/shippable/bin
-  - chmod +x /home/shippable/bin/chromedriver
-  - echo '#!/bin/bash' | $SUDO tee /usr/bin/google-chrome
-  - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
-  - $SUDO chmod +x /usr/bin/google-chrome
+  - sudo apt-get install xvfb
+  - export DISPLAY=:99.0
 
   - npm install bower
   - npm install
   - ./node_modules/bower/bin/bower install --allow-root
   - mkdir -p shippable/buildoutput
+  - xvfb-run --server-args="-ac" npm test
 
   on_success:
   - cf login -a https://api.eu-gb.bluemix.net -o "Web Lab" -u $BLUEMIX_USER -s dev -p $BLUEMIX_PASSWORD
