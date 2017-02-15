@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>CA BIG RED BUTTON | Web Lab Common UI</title>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="/web-component-tester/browser.js"></script>
     <script src="/bower_components/system.js/dist/system.js"></script>
     <script src="/components/config/index.js"></script>
@@ -25,7 +26,6 @@
                 });
             });
             test('should be creatable', () => {
-                debugger;
                 // Check the element has been created with the correct tag
                 expect(bigRedButton).to.be.defined;
                 expect(bigRedButton.tagName).to.equal('CA-BIG-RED-BUTTON');
