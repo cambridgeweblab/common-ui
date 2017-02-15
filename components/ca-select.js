@@ -21,11 +21,10 @@ define([
         */
         createdCallback() {
 
-            const self = this;
             this.isTouch = ('ontouchend' in document.documentElement);
             this.selections = {};
 
-            switch (self.style) {
+            switch (this.style) {
 
                 case 'checkbox':
                     this.root = this;
@@ -34,12 +33,12 @@ define([
                 default:
                     this.root = createElement(this, 'select', {});
                     this.root.multiple = this.multiple;
-                    this.root.onchange = this.onChangeHandler.bind(self);
+                    this.root.onchange = this.onChangeHandler();
 
                     // force blur events to bubble (required for ca-form validation)
                     this.root.onblur = () => {
 
-                        // helpers.fireEvent(self, 'blur');
+                        // helpers.fireEvent(this, 'blur');
                     };
             }
 
@@ -85,16 +84,15 @@ define([
          */
         loadSchema() {
 
-            const self = this;
             const schemaUrl = this.src;
 
             return componentSupport.request({ url: schemaUrl, dataType: 'json' }).then(data => {
 
-                self.schema = data;
+                this.schema = data;
             })
             .catch(() => {
 
-                self.data = {};
+                this.data = {};
             });
         }
 
@@ -106,7 +104,6 @@ define([
 
             if (!this.root) return;
 
-            const self = this;
             const data = this.data || [];
             const hasData = (Array.isArray(data) && this.data.length);
             const defaultLabel = (hasData) ? ((this.type === 'tel') ? 'Code' : 'Please select') : 'No options available'; // eslint-disable-line
@@ -127,7 +124,7 @@ define([
 
                 if (this.style === 'checkbox') {
 
-                    this.rootCheckbox = createElement(self.root, 'div', {});
+                    this.rootCheckbox = createElement(this.root, 'div', {});
                 }
 
                 for (let i = 0, l = this.data.length; i < l; i++) {
@@ -150,7 +147,7 @@ define([
                             opt.addEventListener('change', () => {
 
                                 this.setAttribute('data-selected', (this.checked).toString());
-                                this.onChangeHandler.call(self);
+                                this.onChangeHandler();
                             });
                         } break;
 
@@ -169,7 +166,7 @@ define([
                                 opt.onmousedown = e => {
 
                                     cancelEvent(e || event);
-                                    self.checkChange.call(self, this);
+                                    this.checkChange(this);
                                 };
 
                                 this.root.onclick = e => {
@@ -340,11 +337,10 @@ define([
 
                 // TODO: handle set with style = checkbox
                 // grab hold of all the option elements
-                const self = this;
 
                 setTimeout(() => {
 
-                    const options = self.root && self.root.querySelectorAll('option');
+                    const options = this.root && this.root.querySelectorAll('option');
 
                     if (options) {
 
