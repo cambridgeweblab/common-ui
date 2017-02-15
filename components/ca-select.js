@@ -306,7 +306,7 @@ define([
 
                 if (this.root) {
 
-                    const options = (!this.isTouch) ? this.root.querySelectorAll('[data-selected="true"]') : Array.prototype.slice.call(this.root.options).where('selected', true);
+                    const options = (!this.isTouch) ? this.root.querySelectorAll('[data-selected="true"]') : this.root.options.filter(option => option.value === 'selected')[0];
 
                     options.forEach(item => {
 
