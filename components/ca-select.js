@@ -33,7 +33,7 @@ define([
                 default:
                     this.root = createElement(this, 'select', {});
                     this.root.multiple = this.multiple;
-                    this.root.onchange = this.onChangeHandler();
+                    this.root.onchange = () => this.onChangeHandler();
 
                     // force blur events to bubble (required for ca-form validation)
                     this.root.onblur = () => {
