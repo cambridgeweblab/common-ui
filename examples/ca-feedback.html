@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>CA FEEDBACK | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-dialog.css">
+    <!--<link rel="stylesheet" type="text/css" href="/components/ca-context.css"> @todo need to port from weblab-common-ui-->
+    <!--<link rel="stylesheet" type="text/css" href="/components/ca-rating.css"> @todo need to port from weblab-common-ui-->
+
+    <link rel="stylesheet" type="text/css" href="/components/ca-feedback.css">
+</head>
+
+<body>
+    <div class="ca-feedback">
+        <a id="home" href="/"></a>
+    </div>
+    <div class="ca-title">CA FEEDBACK</div>
+    <ca-feedback value="123.45" readonly="false"></ca-feedback>
+
+    <script>
+        SystemJS.import('ca-feedback.js');
+        const cafeedback = document.querySelector('ca-feedback');
+        
+        const schema = {
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema#",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "id": "order:01_name",
+                    "required": true,
+                    "maxLength": 60,
+                    "minLength": 1,
+                    "title": "Name"
+                },
+                "email": {
+                    "type": "string",
+                    "id": "order:02_email",
+                    "required": true,
+                    "maxLength": 60,
+                    "minLength": 1,
+                    "description": "Please enter an email address",
+                    "title": "Email address",
+                    "pattern": "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$"
+                },
+                "comments": {
+                    "type": "string",
+                    "id": "order:03_comments",
+                    "description": "Comments",
+                    "title": "Comments",
+                    "format": "textarea"
+                }
+            }
+        };
+
+        cafeedback.schema = schema;
+
+    </script>
+
+</body>
+
+</html>
