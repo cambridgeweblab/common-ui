@@ -1,0 +1,15 @@
+{
+    "name":"B-1452705927444",
+    "notes":"Please transfer as required",
+    "type":"Bank",
+    "iban":"DD00201201010210200",
+    "sortCode":"718104",
+    "bankAccount":"80285623",
+    "accountHolderName":"Cambridge English",
+    "currencies": ["GBP","USD"],
+    "links":[
+        {
+            "rel":"self",
+            "href":"https://ca-uat-exampay-api.cfapps.io/api/paymenttype/bank/CO001/a52149f2-26f5-446d-89a0-4e001d88193d"
+        }]
+}
