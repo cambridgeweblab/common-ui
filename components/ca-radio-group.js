@@ -56,7 +56,7 @@ define([], () => {
         }
 
         /**
-         * Destorys HTML element
+         * Destroys HTML element
          * @returns {void} void
          */
         destroy() {
@@ -114,13 +114,7 @@ define([], () => {
         get value() {
 
             const selectedItem = this.querySelector('input[type="radio"]:checked');
-
-            if (selectedItem) {
-
-                return selectedItem.value;
-            }
-
-            return null;
+            return (selectedItem) ? selectedItem.value : null;
         }
 
         /**
