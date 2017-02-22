@@ -1080,6 +1080,26 @@ define([
         }
 
         /**
+         * @description creates a radio group element
+         * @param {string} type - type of object
+         * @param {string} key - item object key
+         * @param {object} schema - the form schema
+         * @param {string} format - type of item
+         * @returns {object} dom object
+         */
+        createRadioGroup(type, key, schema, format) {
+
+            let el = null;
+
+            if (format === 'radio') {
+
+                el = createElementLegacy(null, 'ca-radio-group', {});
+            }
+
+            return el;
+        }
+
+        /**
          * @description create select menu
          * @param {string} type - type of object
          * @param {string} key - item object key
@@ -1439,6 +1459,7 @@ define([
                 this.createEmail,
                 this.createIntSelect,
                 this.createRating,
+                this.createRadioGroup,
                 this.createList,
                 this.createListBuilder,
                 this.createObjectList,
