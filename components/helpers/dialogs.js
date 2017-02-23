@@ -1,6 +1,6 @@
 
 define([
-    './create-element.js',
+    './create-element-legacy.js',
     './parent-by-attribute.js',
     './cancel-event.js',
     './add-event.js',
