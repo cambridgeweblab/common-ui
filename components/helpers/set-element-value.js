@@ -5,7 +5,7 @@ define('set-element-value', [], () =>
 
         switch (tag) {
 
-            case 'input': {
+            case 'input':
 
                 switch (el.type || '') {
 
@@ -20,25 +20,24 @@ define('set-element-value', [], () =>
                             default:
                                 return true;
                         }
-                    } break;
+                        break;
+                    }
 
                     default: {
                         // eslint-disable-next-line no-param-reassign
                         el.value = value;
                     }
                 }
+                break;
 
-            } break;
-
-            case 'textarea': {
+            case 'textarea':
                 // eslint-disable-next-line no-param-reassign
                 el.value = (value.join) ? value.join('\n') : value;
-            } break;
+                break;
 
-            default: {
+            default:
                 // eslint-disable-next-line no-param-reassign
                 el.value = value;
-            }
         }
 
         return null;

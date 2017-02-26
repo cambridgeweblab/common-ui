@@ -84,7 +84,7 @@ define([
             const tag = (el.tagName || '').toLowerCase();
 
             switch (tag) {
-                case 'button': {
+                case 'button':
                     cancelEvent(e);
                     if (!this.imageCaptured) {
                         // capture image from video stream
@@ -94,7 +94,7 @@ define([
                         // clear captured image
                         this.clearCapture();
                     }
-                } break;
+                    break;
 
                 default: break;
             }
