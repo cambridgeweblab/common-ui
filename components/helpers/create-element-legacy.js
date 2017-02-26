@@ -31,11 +31,10 @@ define('create-element', ['./clear-element.js'], (clearElement) =>
         }
 
         if (typeof text !== 'undefined' && typeof text !== 'object') {
-            el.appendChild(document.createTextNode(text));
+            el.textContent = text;
         }
         if (typeof html !== 'undefined') {
-            clearElement(el);
-            el.textContent = html;
+            el.innerHTML = html;
         }
         if (domEl) {
             el.appendChild(domEl);
