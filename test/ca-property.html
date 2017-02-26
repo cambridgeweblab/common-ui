@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA PROPERTY | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-property.css">
+  </head>
+  <body>
+    <test-fixture id="ca-property">
+      <template>
+        <ca-property></ca-property>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-property>', () => {
+            let caProperty;
+
+            // TODO: CREATE TESTS, there were non associated with the original component
+            setup(done => {
+                SystemJS.import('ca-property.js').then(() => {
+                    caProperty = fixture('ca-property');
+                    done();
+                });
+            });
+        });
+        a11ySuite('ca-property');
+    </script>
+  </body>
+</html>
