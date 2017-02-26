@@ -1,0 +1,83 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CA TEL | Web Lab Common UI</title>
+        <script src="/bower_components/system.js/dist/system.js"></script>
+        <script src="/components/config/index.js"></script>
+        <link rel="stylesheet" type="text/css" href="/examples/index.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-select.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-tel.css">
+    </head>
+
+    <body>
+        <div class="ca-home">
+            <a id="home" href="../"></a>
+        </div>
+
+        <div class="ca-title">CA TEL EXAMPLE</div>
+        <ca-tel></ca-tel>
+
+        <script>
+            SystemJS.import('ca-tel.js').then(() => {
+                console.log(document.querySelector('ca-tel'));
+                SystemJS.import('helpers/component-support.js').then((componentSupport) => {
+                    componentSupport.countryData = [
+                        {
+                            "name": "Belgium",
+                            "code": ["32"],
+                            "iso": "BE",
+                            "languages": ["nl", "fr", "de"],
+                            "population": 11248330,
+                            "currency": {
+                                "EUR": {
+                                    "symbol": "€"
+                                }
+                            }
+                        },
+                        {
+                            "name": "Germany",
+                            "code": ["49"],
+                            "iso": "DE",
+                            "languages": ["de"],
+                            "population": 81083600,
+                            "currency": {
+                                "EUR": {
+                                    "symbol": "€"
+                                }
+                            },
+                            "links": []
+                        },
+                        {
+                            "name": "Jersey",
+                            "code": ["44"],
+                            "iso": "JE",
+                            "languages": ["en", "fr"],
+                            "population": 99000,
+                            "currency": {
+                                "GBP": {
+                                    "symbol": "GBP"
+                                }
+                            },
+                            "links": []
+                        },
+                        {
+                            "name": "United Kingdom",
+                            "code": ["44"],
+                            "iso": "GB",
+                            "languages": ["en"],
+                            "population": 64800000,
+                            "currency": {
+                                "GBP": {
+                                    "symbol": "£"
+                                }
+                            },
+                            "links": []
+                        }
+                    ];
+                    document.querySelector('ca-tel').data = componentSupport.getTelephoneCodes();
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -13,7 +13,7 @@ define('component-support', ['./create-element.js', './secureajax.js'], (createE
             componentSupport.request = req || componentSupport.request;
 
             // get country data from html attribute
-            const countriesUrl = root.getAttribute('data-countries-url') || '';
+            const countriesUrl = document.body.getAttribute('data-countries-url') || '';
 
             if (countriesUrl !== '') {
                 ajax.execute({ url: countriesUrl, dataType: 'json' })
@@ -23,7 +23,7 @@ define('component-support', ['./create-element.js', './secureajax.js'], (createE
             }
 
             // get country data from html attribute
-            const feedbackSchemaUrl = root.getAttribute('data-feedback-schema-url') || '';
+            const feedbackSchemaUrl = document.body.getAttribute('data-feedback-schema-url') || '';
 
             if (feedbackSchemaUrl !== '') {
                 setTimeout(() => {
