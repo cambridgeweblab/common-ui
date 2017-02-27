@@ -47,6 +47,7 @@
                 expect(root.getAttribute('name')).to.equal('radioTest');
 
                 radioGroup.data = { title: 'Test me' };
+                console.log(radioGroup.data.title);
                 expect(radioGroup.data).to.be.empty;
 
                 radioGroup.data = {};

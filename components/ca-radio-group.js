@@ -13,7 +13,7 @@ define([], () => {
         createdCallback() {
 
             this.name = `radiogroup_${new Date().getTime()}`;
-            this.data = [];
+            this.data = {};
         }
 
         /**
@@ -22,7 +22,7 @@ define([], () => {
          */
         render() {
 
-            if (!this.data || !this.data.type || this.data.type.length === 0) return;
+            if (!this.data) return;
 
             this.destroy();
 
@@ -64,7 +64,7 @@ define([], () => {
          */
         set data(data) {
 
-            this._data = data || [];
+            this._data = data || {};
 
             try {
 
@@ -72,7 +72,7 @@ define([], () => {
             } catch (e) {
 
                 this.destroy();
-                this._data = [];
+                this._data = {};
             }
         }
 
