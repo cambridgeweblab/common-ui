@@ -420,9 +420,9 @@ define([
                                 doc.execCommand('Stop');
                             }
                         }
-                    }
-                    // eslint-disable-next-line
-                    catch (e) {}
+                        // eslint-disable-next-line
+                    } catch (e) {}
+
                 };
 
                 dlg.show = function() {
@@ -503,18 +503,17 @@ define([
                 if (url) {
 
                     switch (dlg.params.method) {
-                        case 'iframe': {
+                        case 'iframe':
                             // insert the iframe
                             this.body.appendChild(dlg.iframe);
 
                             // load the url
                             dlg.load(url, dlg.params.title);
+                            break;
 
-                        } break;
-
-                        case 'ajax': {
-                          // add ajax loading logic here
-                        } break;
+                        case 'ajax':
+                            // add ajax loading logic here
+                            break;
 
                         default: break;
                     }
