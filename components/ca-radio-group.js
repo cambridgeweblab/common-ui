@@ -14,7 +14,6 @@ define([], () => {
 
             this.name = `radiogroup_${new Date().getTime()}`;
             this.data = [];
-
         }
 
         /**
@@ -23,33 +22,27 @@ define([], () => {
          */
         render() {
 
-            if (!this.data || this.data.length === 0) return;
+            if (!this.data || !this.data.type || this.data.type.length === 0) return;
 
             this.destroy();
 
             const container = document.createElement('fieldset');
+            const questionText = document.createElement('h2');
 
-            this.data.forEach(item => {
+            questionText.innerText = this.data.description;
+            container.appendChild(questionText);
 
-                const questionText = document.createElement('h2');
-                questionText.innerText = item.properties.options.description;
-                container.appendChild(questionText);
+            this.data.type.forEach(question => {
 
-                const questions = item.properties.options.type;
+                const label = document.createElement('label');
+                label.innerText = question.title;
+                container.appendChild(label);
 
-                for (let i = 0; i < questions.length; i++) {
-
-                    const label = document.createElement('label');
-                    label.innerText = questions[i].title;
-                    container.appendChild(label);
-
-                    const radioButton = document.createElement('input');
-                    radioButton.value = questions[i].enum[0];
-                    radioButton.type = 'radio';
-                    radioButton.name = this.name;
-                    label.appendChild(radioButton);
-                }
-
+                const radioButton = document.createElement('input');
+                radioButton.value = question.enum[0];
+                radioButton.type = 'radio';
+                radioButton.name = this.name;
+                label.appendChild(radioButton);
             });
 
             this.appendChild(container);
@@ -66,7 +59,7 @@ define([], () => {
 
         /**
          * Sets data
-         * @param {array} data data
+         * @param {object} data data
          * @returns {void} void
          */
         set data(data) {
@@ -85,7 +78,7 @@ define([], () => {
 
         /**
          * Gets data
-         * @returns {array} data
+         * @returns {object} data
          */
         get data() {
 

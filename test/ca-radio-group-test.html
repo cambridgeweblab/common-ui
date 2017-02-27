@@ -46,12 +46,10 @@
                 root.setAttribute('name', 'radioTest');
                 expect(root.getAttribute('name')).to.equal('radioTest');
 
-                radioGroup.data = [{
-                    title: 'Test me'
-                }];
+                radioGroup.data = { title: 'Test me' };
                 expect(radioGroup.data).to.be.empty;
 
-                radioGroup.data = [];
+                radioGroup.data = {};
                 expect(radioGroup.data).to.be.empty;
             });
 
@@ -66,7 +64,7 @@
 
                 const questionText = document.querySelector('h2');
                 expect(questionText).to.exist;
-                expect(questionText.innerText).equal(radioGroup.data[0].properties.options.description);
+                expect(questionText.innerText).equal(radioGroup.data.description);
 
                 const radioLabels = document.querySelectorAll('label');
                 expect(radioLabels).to.be.lengthOf(4);
@@ -75,7 +73,7 @@
 
                     expect(radioLabels[i]).to.exist;
                     expect(radioLabels[i].innerText).to.exist;
-                    expect(radioLabels[i].innerText).to.equal(radioGroup.data[0].properties.options.type[i].title);
+                    expect(radioLabels[i].innerText).to.equal(radioGroup.data.type[i].title);
                 }
 
                 const radioInputs = document.querySelectorAll('input');
@@ -84,7 +82,7 @@
                 for (let i=0; i < radioLabels.length; i++) {
 
                     expect(radioInputs[i].value).to.exist;
-                    expect(radioInputs[i].value).to.equal(radioGroup.data[0].properties.options.type[i].enum[0]);
+                    expect(radioInputs[i].value).to.equal(radioGroup.data.type[i].enum[0]);
                     
                     expect(radioInputs[i].name).to.exist;
                     expect(radioInputs[i].type).to.equal('radio');
@@ -173,47 +171,31 @@
 
         a11ySuite('radio-group');
 
-        const getSampleDataset = () => [{
-            "type": "object",
-            "id": "urn:digitalteacher:question:7dfab399-96d7-8fce-a4b2-73900516a276",
-            "description": "question description",
-            "title": "Digital-teacher self assessment",
-            "properties": {
-                "options": {
-                "type": [
-                    {
+        const getSampleDataset = () => ({
+            "type": [
+                {
                     "type": "string",
                     "title": "answer 1",
-                    "enum": [
-                        "0f54525f-06f0-7fe8-689c-2894c1ef08d3"
-                    ]
-                    },
-                    {
+                    "enum": [ "0f54525f-06f0-7fe8-689c-2894c1ef08d3" ]
+                },
+                {
                     "type": "string",
                     "title": "answer 2",
-                    "enum": [
-                        "77eccfb7-1e6f-8b1c-425b-85be87e10c73"
-                    ]
-                    },
-                    {
+                    "enum": [ "77eccfb7-1e6f-8b1c-425b-85be87e10c73" ]
+                },
+                {
                     "type": "string",
                     "title": "answer 3",
-                    "enum": [
-                        "3adedfba-dfd6-44d4-a965-e9dde6387d10"
-                    ]
-                    },
-                    {
+                    "enum": [ "3adedfba-dfd6-44d4-a965-e9dde6387d10" ]
+                },
+                {
                     "type": "string",
                     "title": "answer 4",
-                    "enum": [
-                        "0b4babf4-cd07-fbc5-02fc-624046f835a6"
-                    ]
-                    }
-                ],
-                "description": "what if?"
+                    "enum": [ "0b4babf4-cd07-fbc5-02fc-624046f835a6" ]
                 }
-            }
-        }];
+            ],
+            "description": "what if?"
+        });
     </script>
   </body>
 </html>
