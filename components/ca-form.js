@@ -1094,6 +1094,7 @@ define([
             if (format === 'radio') {
 
                 el = createElementLegacy(null, 'ca-radio-group', {});
+                el.data = schema;
             }
 
             return el;
