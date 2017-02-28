@@ -27,16 +27,18 @@ define([], () => {
             this.destroy();
 
             const container = document.createElement('fieldset');
-            const questionText = document.createElement('h2');
+            const questionText = document.createElement('legend');
+            const innerContainer = document.createElement('div');
 
-            questionText.innerText = this.data.description;
+            questionText.innerHTML = this.data.description;
             container.appendChild(questionText);
+            container.appendChild(innerContainer);
 
             this.data.type.forEach(question => {
 
                 const label = document.createElement('label');
-                label.innerText = question.title;
-                container.appendChild(label);
+                label.innerHTML = question.title;
+                innerContainer.appendChild(label);
 
                 const radioButton = document.createElement('input');
                 radioButton.value = question.enum[0];
