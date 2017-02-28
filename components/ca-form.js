@@ -1095,6 +1095,7 @@ define([
 
                 el = createElementLegacy(null, 'ca-radio-group', {});
                 el.data = schema.extends[0];
+                el.name = key;
             }
 
             return el;
