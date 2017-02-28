@@ -8,6 +8,7 @@
     "ActiveXObject": true
   },
   "rules": {
-    "import/no-amd": 0
+    "import/no-amd": 0,
+    "no-param-reassign": 0
   }
 }

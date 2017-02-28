@@ -44,6 +44,15 @@ define([], () => {
                 radioButton.value = question.enum[0];
                 radioButton.type = 'radio';
                 radioButton.name = this.name;
+                radioButton.addEventListener('change', () => {
+
+                    this.querySelectorAll('label').forEach(item => {
+
+                        item.className = '';
+                    });
+
+                    label.className = 'active';
+                });
                 label.appendChild(radioButton);
             });
 
