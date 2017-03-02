@@ -83,9 +83,9 @@ define([
                 switch (attrName) {
 
                     case 'columns':
-                    case 'placeholder-maxlength': {
+                    case 'placeholder-maxlength':
                         this.render();
-                    } break;
+                        break;
                     default: break;
                 }
             }
@@ -650,7 +650,7 @@ define([
 
                             switch (schemaItem.type) {
 
-                                case 'array': {
+                                case 'array':
 
                                     if (schemaItem.items.format === 'textarea') {
                                         formData[key] = (element.value !== '') ? element.value.split('\n') : [];
@@ -666,30 +666,29 @@ define([
                                     } else {
                                         formData[key] = element.value;
                                     }
+                                    break;
 
-                                } break;
-
-                                case 'boolean': {
+                                case 'boolean':
                                     formData[key] = (element.checked);
-                                } break;
+                                    break;
 
-                                case 'integer': {
+                                case 'integer':
                                     formData[key] = element.value ? parseInt(element.value, 10) : '';
-                                } break;
+                                    break;
 
-                                case 'number': {
+                                case 'number':
                                     formData[key] = element.value ? parseFloat(element.value) : '';
-                                } break;
+                                    break;
 
                                 default: {
 
                                     switch (schemaItem.format) {
 
                                         case 'file':
-                                        case 'multi-file': {
+                                        case 'multi-file':
 
                                             formData[key] = element.value;
-                                        } break;
+                                            break;
 
                                         default: {
 
@@ -743,28 +742,26 @@ define([
 
                         switch (item.type) {
 
-                            case 'array': {
+                            case 'array':
 
                                 if (item.items.format === 'uri' || item.items.type === 'object') {
                                     formData[key] = element.data;
                                 } else {
                                     formData[key] = element.value;
                                 }
+                                break;
 
-                            } break;
-
-                            case 'boolean': {
+                            case 'boolean':
                                 formData[key] = (element.checked);
-                            } break;
+                                break;
 
-                            default: {
+                            default:
 
                                 formData[key] = (element.value || '').trim();
 
                                 if (item.format && item.format === 'currency' && !formData.$currency) {
                                     formData.$currency = componentSupport.getUserCurrency().code;
                                 }
-                            }
                         }
                     }
                 }
@@ -1326,11 +1323,11 @@ define([
             switch (type) {
 
                 case 'number':
-                case 'integer': {
+                case 'integer':
                     el = createElementLegacy(null, 'input', { name: key, id: key, type: 'number', value: '' });
-                } break;
+                    break;
 
-                case 'object': {
+                case 'object':
                     if (schema.type === 'array') {
 
                         const keys = Object.keys(schema.items.properties);
@@ -1348,14 +1345,14 @@ define([
                         el.headers = headers;
                         el.firstRow = descriptions; // descriptions are used as first example row in download template
                     }
-                } break;
+                    break;
 
                 default: {
 
                     // switch types for special formats or fallback to type text
                     switch (format.toLowerCase()) {
 
-                        case 'file': {
+                        case 'file':
                             el = createElementLegacy(null, 'ca-file-input', {
                                 name: key,
                                 id: key,
@@ -1364,9 +1361,9 @@ define([
                                 mediatype: schema.mediaType || '',
                                 maxLength: schema.maxLength
                             });
-                        } break;
+                            break;
 
-                        case 'multi-file': {
+                        case 'multi-file':
                             el = createElementLegacy(null, 'ca-file-input', {
                                 name: key,
                                 id: key,
@@ -1376,61 +1373,61 @@ define([
                                 multiple: true,
                                 maxLength: schema.maxLength
                             });
-                        } break;
+                            break;
 
-                        case 'barcode-scanner': {
+                        case 'barcode-scanner':
                             el = createElementLegacy(null, 'ca-barcode-scanner', { name: key, id: key, title: schema.title });
-                        } break;
+                            break;
 
-                        case 'confirm-email': {
+                        case 'confirm-email':
                             el = createElementLegacy(null, 'ca-confirm-input', { name: key, id: key, type: 'email', label: schema.title || key });
-                        } break;
+                            break;
 
-                        case 'uri': {
+                        case 'uri':
                             el = createElementLegacy(null, 'input', { name: key, id: key, type: 'url', value: '' });
-                        } break;
+                            break;
 
                         // the .value of this component returns the UI path captures by reading the dom elements
-                        case 'current-view-context': {
+                        case 'current-view-context':
                             el = createElementLegacy(null, 'ca-context', { name: key, id: key });
-                        } break;
+                            break;
 
-                        case 'local-date-time': {
+                        case 'local-date-time':
                             el = createElementLegacy(null, 'ca-datetime', { name: key, id: key, type: 'datetime-local' });
-                        } break;
+                            break;
 
-                        case 'birth-date': {
+                        case 'birth-date':
                             el = createElementLegacy(null, 'ca-datetime', { name: key, id: key, type: 'birth-date' });
-                        } break;
+                            break;
 
-                        case 'date-time': {
+                        case 'date-time':
                             el = createElementLegacy(null, 'ca-datetime', { name: key, id: key, type: 'datetime' });
-                        } break;
+                            break;
 
-                        case 'date': {
+                        case 'date':
                             el = createElementLegacy(null, 'ca-datetime', { name: key, id: key, type: 'date' });
-                        } break;
+                            break;
 
-                        case 'time': {
+                        case 'time':
                             el = createElementLegacy(null, 'ca-datetime', { name: key, id: key, type: 'time' });
-                        } break;
+                            break;
 
-                        case 'phone': {
+                        case 'phone':
                             el = createElementLegacy(null, 'ca-tel', { name: key, id: key });
                             el.data = componentSupport.getTelephoneCodes();
-                        } break;
+                            break;
 
-                        case 'currency': {
+                        case 'currency':
                             el = createElementLegacy(null, 'ca-currency', { name: key, id: key });
                             el.setAttribute('symbol', componentSupport.getUserCurrency().symbol); // TODO: use existing currency on data
-                        } break;
+                            break;
 
-                        case 'textarea': {
+                        case 'textarea':
                             el = createElementLegacy(null, 'textarea', { name: key, id: key, value: '', rows: 3 });
-                        } break;
-                        default: {
+                            break;
+
+                        default:
                             el = createElementLegacy(null, 'input', { name: key, id: key, type: 'text', value: '' });
-                        }
                     }
                 }
             }
@@ -1447,7 +1444,7 @@ define([
         schemaItemToHtmlElement(key, item) {
 
             const dataType = (item.items && item.items.type) || item.type;
-            const format = (item.items && item.items.format || item.format || '').toLowerCase();
+            const format = ((item.items && item.items.format) || item.format || '').toLowerCase();
             const itemDesc = item.description || '';
             const itemDescHasHtml = /<[^>]*>/gi.test(itemDesc || '');
             let el = null;

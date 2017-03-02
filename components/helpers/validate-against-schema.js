@@ -37,15 +37,16 @@ define('validate-against-schema', ['./get-property-by-path.js'], (getPropertyByP
                 return `Please select a maximum of ${schemaItem.maxItems} item(s)`;
             }
 
-            if (value && schemaItem.pattern && !(value.toString()).matches(schemaItem.pattern)) {
+            if (value && schemaItem.pattern && !(new RegExp(schemaItem.pattern, 'gm').test(value.toString()))) {
                 return 'The value is not in the expected format';
             }
 
             if (schemaItem.type === 'array' && schemaItem.items && schemaItem.items.pattern) {
 
                 // find invalid items
+                const validPattern = new RegExp(schemaItem.items.pattern, 'gm');
                 const invalidItems = value.filter((val) =>
-                    !(val.toString()).matches(schemaItem.items.pattern)
+                    !(validPattern.test(val.toString()))
                 );
 
                 if (invalidItems.length > 0) {

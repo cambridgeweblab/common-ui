@@ -35,15 +35,15 @@ define([
          */
         attributeChangedCallback(attrName, oldVal, newVal) {
             switch (attrName) {
-                case 'data-src': {
+                case 'data-src':
                     if (newVal !== '') {
                         this.loadData();
                     }
-                } break;
+                    break;
 
-                case 'data-root': {
+                case 'data-root':
                     this.root = newVal;
-                } break;
+                    break;
 
                 default: break;
             }
