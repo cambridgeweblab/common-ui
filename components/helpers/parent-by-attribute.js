@@ -9,11 +9,12 @@ define('parent-by-attribute', [], () =>
     function getParentByAttribute(el, attName, attValue) {
         const attributeName = (attName === 'class') ? 'className' : attName;
         const attributeValue = (attributeName === 'className') ? `(^|\\s)${attValue}(\\s|$)` : attValue;
+        const attributeValueMatcher = new RegExp(attributeValue, 'gm');
         let tmp = el.parentNode;
         while (tmp !== null && tmp.tagName && tmp.tagName.toLowerCase() !== 'html') {
             if (tmp[attributeName] === attributeValue
                 || tmp.getAttribute(attributeName) === attributeValue
-                || (attributeName === 'className' && tmp[attributeName].matches(attributeValue))) {
+                || (attributeName === 'className' && attributeValueMatcher.test(tmp[attributeName]))) {
                 return tmp;
             }
             tmp = tmp.parentNode;
