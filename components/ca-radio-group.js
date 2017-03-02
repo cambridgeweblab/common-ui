@@ -13,7 +13,7 @@ define([], () => {
         createdCallback() {
 
             this.name = `radiogroup_${new Date().getTime()}`;
-            this.data = [];
+            this.data = {};
         }
 
         /**
@@ -22,26 +22,37 @@ define([], () => {
          */
         render() {
 
-            if (!this.data || !this.data.type || this.data.type.length === 0) return;
+            if (!this.data) return;
 
             this.destroy();
 
             const container = document.createElement('fieldset');
-            const questionText = document.createElement('h2');
+            const questionText = document.createElement('legend');
+            const innerContainer = document.createElement('div');
 
-            questionText.innerText = this.data.description;
+            questionText.innerHTML = this.data.description;
             container.appendChild(questionText);
+            container.appendChild(innerContainer);
 
             this.data.type.forEach(question => {
 
                 const label = document.createElement('label');
-                label.innerText = question.title;
-                container.appendChild(label);
+                label.innerHTML = question.title;
+                innerContainer.appendChild(label);
 
                 const radioButton = document.createElement('input');
                 radioButton.value = question.enum[0];
                 radioButton.type = 'radio';
                 radioButton.name = this.name;
+                radioButton.addEventListener('change', () => {
+
+                    this.querySelectorAll('label').forEach(item => {
+
+                        item.className = '';
+                    });
+
+                    label.className = 'active';
+                });
                 label.appendChild(radioButton);
             });
 
@@ -64,7 +75,7 @@ define([], () => {
          */
         set data(data) {
 
-            this._data = data || [];
+            this._data = data || {};
 
             try {
 
@@ -72,7 +83,7 @@ define([], () => {
             } catch (e) {
 
                 this.destroy();
-                this._data = [];
+                this._data = {};
             }
         }
 
