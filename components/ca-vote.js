@@ -32,7 +32,7 @@ define(['./helpers/create-element.js', './helpers/clear-element.js', 'document-r
          * @param {string} attrName - the name of the attribute to have changed
          * @param {string} oldVal - the old value of the attribute
          * @param {string} newVal - the new value of the attribute
-         * @returns {void} void
+         * @returns {undefined}
          */
         attributeChangedCallback(attrName, oldVal, newVal) {
 
@@ -123,7 +123,7 @@ define(['./helpers/create-element.js', './helpers/clear-element.js', 'document-r
                 this.label = 'Vote for this feature';
             }
 
-            this.button = createElement(this, 'button', null, this.label);
+            this.button = createElement(this, 'button', null, this.label); // TODO: refactor this - helper unecessary
             this.button.onclick = this.eventDelegate.bind(this);
         }
 

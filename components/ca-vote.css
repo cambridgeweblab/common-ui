@@ -15,7 +15,7 @@ ca-vote button::before {
     font-size: 20px;
 }
 
-ca-vote[data-status="enabled"] button{
+ca-vote[data-status="enabled"] button {
     background: #4CAF50;
 }
 
