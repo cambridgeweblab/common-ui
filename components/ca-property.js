@@ -149,7 +149,7 @@ define([
                 const ul = createElement(null, 'ul', {});
 
                 // create an li for each item and inject its value
-                item.forEach((val) => {
+                item.forEach(val => {
                     let li,
                         stringVal;
                     if (typeof val === 'object') {
@@ -208,13 +208,13 @@ define([
 
                         // convert into array of strings
                         // TODO: cast item to a string if not an object, this avoid failing checks on 0 values
-                        text = value.map((item) =>
+                        text = value.map(item =>
                                 item.name || item.title ||
                                 (item !== undefined && typeof item === 'object' ? Property.createSummaryCard(property.items, item) : item.toString()) ||
                                 ''
                             )
                             // remove empty values
-                            .filter((item) => (item !== undefined && item !== ''))
+                            .filter(item => (item !== undefined && item !== ''))
                             // alpha sort
                             // TODO: This sort needs to be opt in as for many arrays ordering is important. If you need sorting, implement the opt in first.
                             /* .sort(function (a, b) {
