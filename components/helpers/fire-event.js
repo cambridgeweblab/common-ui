@@ -11,8 +11,10 @@ define('fire-event', [], () =>
             const e = document.createEvent('Event');
             e.initEvent(eventName, true, true);
             el.dispatchEvent(e);
+
         } else if (document.createEventObject) {
             el.fireEvent(`on${eventName}`);
+
         } else if (typeof el[`on${eventName}`] === 'function') {
             el[`on${eventName}`]();
         }

@@ -20,8 +20,7 @@
 
         <script>
             SystemJS.import('ca-tel.js').then(() => {
-                console.log(document.querySelector('ca-tel'));
-                SystemJS.import('helpers/component-support.js').then((componentSupport) => {
+                SystemJS.import('helpers/component-support.js').then(componentSupport => {
                     componentSupport.countryData = [
                         {
                             "name": "Belgium",
