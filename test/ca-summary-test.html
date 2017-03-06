@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA summary | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-property.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-summary.css">
+  </head>
+  <body>
+    <test-fixture id="summary">
+      <template>
+        <ca-summary></ca-summary>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-summary>', () => {
+            let summary;
+
+            // TODO: ADD TEST - MIGRATED FROM OLD REPO, NO TESTS.
+            setup(done => {
+                SystemJS.import('ca-summary.js').then(() => {
+                    summary = fixture('summary');
+                    done();
+                });
+            });
+        });
+        a11ySuite('summary');
+    </script>
+  </body>
+</html>
