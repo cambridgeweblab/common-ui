@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA RADIO GROUP | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-radio-group.css">
+  </head>
+  <body>
+    <test-fixture id="radio-group">
+      <template>
+        <ca-radio-group></ca-radio-group>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-radio-group>', () => {
+            let radioGroup;
+
+            setup(done => {
+
+                SystemJS.import('ca-radio-group.js').then(() => {
+
+                    radioGroup = fixture('radio-group');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+
+                expect(radioGroup).to.be.ok;
+                expect(radioGroup.tagName).to.equal('CA-RADIO-GROUP');
+            });
+
+            test('should allow all properties and attributes to be set and retrieved', () => {
+
+                const root = document.querySelector('ca-radio-group');
+
+                expect(radioGroup.value).to.not.be.ok;
+                expect(radioGroup.data).to.be.empty;
+                expect(radioGroup.name).to.be.ok;
+
+                expect(root.getAttribute('name')).to.be.ok;
+
+                root.setAttribute('name', 'radioTest');
+                expect(root.getAttribute('name')).to.equal('radioTest');
+
+                radioGroup.data = { title: 'Test me' };
+                console.log(radioGroup.data.title);
+                expect(radioGroup.data).to.be.empty;
+
+                radioGroup.data = {};
+                expect(radioGroup.data).to.be.empty;
+            });
+
+            test('should build the form with correct data', () => {
+
+                radioGroup.data = getSampleDataset();
+
+                expect(radioGroup.data).to.be.ok;
+
+                const fieldset = document.querySelector('fieldset');
+                expect(fieldset).to.exist;
+
+                const questionText = document.querySelector('h2');
+                expect(questionText).to.exist;
+                expect(questionText.innerText).equal(radioGroup.data.description);
+
+                const radioLabels = document.querySelectorAll('label');
+                expect(radioLabels).to.be.lengthOf(4);
+
+                for (let i=0; i < radioLabels.length; i++) {
+
+                    expect(radioLabels[i]).to.exist;
+                    expect(radioLabels[i].innerText).to.exist;
+                    expect(radioLabels[i].innerText).to.equal(radioGroup.data.type[i].title);
+                }
+
+                const radioInputs = document.querySelectorAll('input');
+                expect(radioInputs).to.be.lengthOf(4);
+
+                for (let i=0; i < radioLabels.length; i++) {
+
+                    expect(radioInputs[i].value).to.exist;
+                    expect(radioInputs[i].value).to.equal(radioGroup.data.type[i].enum[0]);
+                    
+                    expect(radioInputs[i].name).to.exist;
+                    expect(radioInputs[i].type).to.equal('radio');
+                }
+            });
+
+            test('should not build if no data is present', () => {
+
+                radioGroup.data = [];
+                expect(radioGroup.data).to.be.empty;
+
+                const fieldset = document.querySelector('fieldset');
+                expect(fieldset).to.not.exist;
+
+                const questionText = document.querySelector('h2');
+                expect(questionText).to.not.exist;
+
+                const radioLabels = document.querySelectorAll('label');
+                expect(radioLabels).to.be.lengthOf(0);
+
+                const radioInputs = document.querySelectorAll('input');
+                expect(radioInputs).to.be.lengthOf(0);
+            });
+
+            test('value should be defaulted to null and radios unchecked', () => {
+
+                radioGroup.data = getSampleDataset();
+
+                expect(radioGroup.data).to.be.ok;
+                expect(radioGroup.value).to.be.null;
+
+                let caRadioInputs = document.querySelector('ca-radio-group').querySelectorAll('input[type="radio"]');
+
+                caRadioInputs.forEach(item => {
+
+                    expect(item.checked).to.be.false;
+                });
+
+            });
+
+            test('radios should be unchecked if value is not recognised and value is set to null', () => {
+
+                radioGroup.data = getSampleDataset();
+
+                expect(radioGroup.value).to.be.null;
+
+                radioGroup.value = 'testing';
+                expect(radioGroup.value).to.be.null;
+                
+                let radioInputs = document.querySelector('ca-radio-group').querySelectorAll('input[type="radio"]');
+
+                radioInputs.forEach(item => {
+
+                    expect(item.checked).to.be.false;
+                });
+            });
+
+            test('when the value is recognised, a radio button should be checked', () => {
+
+                radioGroup.data = getSampleDataset();
+
+                radioGroup.value = '0b4babf4-cd07-fbc5-02fc-624046f835a6';
+                expect(radioGroup.value).to.equal('0b4babf4-cd07-fbc5-02fc-624046f835a6');
+
+                let checkedRadio = document.querySelector('ca-radio-group').querySelector('input[type="radio"]:checked');
+
+                expect(checkedRadio).to.be.ok;
+                expect(checkedRadio.checked).to.be.true;
+            });
+
+            test('when a radio is checked, the checked radio should hold the relevant value', () => {
+
+                const root = document.querySelector('ca-radio-group');
+                radioGroup.data = getSampleDataset();
+
+                root.querySelector('input[value="0f54525f-06f0-7fe8-689c-2894c1ef08d3"]').checked = true;
+
+                const checkedRadio = root.querySelector('input[type="radio"]:checked');
+
+                expect(checkedRadio.checked).to.be.ok;
+                expect(checkedRadio.checked).to.be.true;
+                expect(checkedRadio.value).to.equal('0f54525f-06f0-7fe8-689c-2894c1ef08d3');
+            });
+                
+        });
+
+        a11ySuite('radio-group');
+
+        const getSampleDataset = () => ({
+            "type": [
+                {
+                    "type": "string",
+                    "title": "answer 1",
+                    "enum": [ "0f54525f-06f0-7fe8-689c-2894c1ef08d3" ]
+                },
+                {
+                    "type": "string",
+                    "title": "answer 2",
+                    "enum": [ "77eccfb7-1e6f-8b1c-425b-85be87e10c73" ]
+                },
+                {
+                    "type": "string",
+                    "title": "answer 3",
+                    "enum": [ "3adedfba-dfd6-44d4-a965-e9dde6387d10" ]
+                },
+                {
+                    "type": "string",
+                    "title": "answer 4",
+                    "enum": [ "0b4babf4-cd07-fbc5-02fc-624046f835a6" ]
+                }
+            ],
+            "description": "what if?"
+        });
+    </script>
+  </body>
+</html>

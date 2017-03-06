@@ -27,22 +27,21 @@
 
             test('should be creatable', () => {
                 // Check the  has been created with the correct tag
-                expect(confirmInput).to.be.defined;
+                expect(confirmInput).to.be.ok;
                 expect(confirmInput.tagName).to.equal('CA-CONFIRM-INPUT');
             });
 
             test('should allow all attributes and properties to be get and set', () => {
-                expect(confirmInput.name).to.be.defined;
-                expect(confirmInput.label).to.be.defined;
-                expect(confirmInput.type).to.be.defined;
-                expect(confirmInput.autofocus).to.be.defined;
+                expect(confirmInput.name).to.be.ok;
+                expect(confirmInput.label).to.be.ok;
+                expect(confirmInput.type).to.be.ok;
                 expect(confirmInput.autofocus).to.equal(false);
             });
 
             test('should create the relevant structure', (done) => {
                 setTimeout(() => {
                     const input2 = confirmInput.querySelector('ca-confirm-input .ca-confirm-input-2');
-                    expect(input2).to.be.defined;
+                    expect(input2).to.be.ok;
                     expect(input2.tagName).to.equal('INPUT');
                     expect(input2.type).to.equal(confirmInput.type);
                     expect(input2.id).to.equal('caConfirmInput_Name_confirm');
@@ -52,7 +51,7 @@
                     input2.value = 'Value';
 
                     const input1 = confirmInput.querySelector('ca-confirm-input .ca-confirm-input-1');
-                    expect(input1).to.be.defined;
+                    expect(input1).to.be.ok;
                     expect(input1.tagName).to.equal('INPUT');
                     expect(input1.type).to.equal(confirmInput.type);
                     expect(input1.value).to.equal(confirmInput.value);
