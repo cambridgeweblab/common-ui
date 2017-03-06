@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA NAV | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-nav.css">
+  </head>
+  <body>
+    <test-fixture id="nav">
+      <template>
+        <ca-nav></ca-nav>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-nav>', () => {
+            let nav;
+
+            setup(done => {
+                SystemJS.import('ca-nav.js').then(() => {
+                    nav = fixture('nav');
+                    done();
+                });
+            });
+
+            test('should be creatable', () => {
+                // Check the element has been created with the correct tag
+                expect(nav).to.be.defined;
+                expect(nav.tagName).to.equal('CA-NAV');
+            });
+
+            test('should create the relevant structure', () => {
+
+                nav.links = [
+                    { rel: 'rel1', href: 'href1', title: 'Item 1' },
+                    { rel: 'rel2', href: 'href2', title: 'Item 2' },
+                    { rel: 'rel3', href: 'href3', title: 'Item 3' }
+                ];
+
+                // Get hold of all the anchors elements within the ca-nav component
+                const a = document.querySelectorAll('ca-nav a');
+
+                expect(a.length).to.equal(3);
+
+                expect(a[0].getAttribute('data-action')).to.equal('loadCRUD');
+                expect(a[0].getAttribute('data-rel')).to.equal('rel1');
+                expect(a[0].getAttribute('data-href')).to.equal('href1');
+                expect(a[0].innerHTML).to.equal('Item 1');
+
+                expect(a[1].getAttribute('data-action')).to.equal('loadCRUD');
+                expect(a[1].getAttribute('data-rel')).to.equal('rel2');
+                expect(a[1].getAttribute('data-href')).to.equal('href2');
+                expect(a[1].innerHTML).to.equal('Item 2');
+
+                expect(a[2].getAttribute('data-action')).to.equal('loadCRUD');
+                expect(a[2].getAttribute('data-rel')).to.equal('rel3');
+                expect(a[2].getAttribute('data-href')).to.equal('href3');
+                expect(a[2].innerHTML).to.equal('Item 3');
+            });
+        });
+        a11ySuite('nav');
+    </script>
+  </body>
+</html>
