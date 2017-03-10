@@ -145,7 +145,9 @@ define([
                 itemsPerCol++;
             });
 
-            if (itemsPerCol === 1) numOfCols--; // We didn't add anything to the new column
+            if (itemsPerCol === 1) {
+                numOfCols--; // We didn't add anything to the new column
+            }
 
             if (numOfCols > 0) {
                 this.setAttribute('data-cols', numOfCols);
@@ -183,7 +185,9 @@ define([
 
             sortedKeys.forEach(key => {
                 // skip any properties we dont want to display - TODO use .filter()
-                if (key === 'links' || key.indexOf('$') !== -1) return;
+                if (key === 'links' || key.indexOf('$') !== -1) {
+                    return;
+                }
 
                 // only process items where both schema and data object have a matching key - TODO check necessity of hasOwnProperty()
                 if (Object.prototype.hasOwnProperty.call(schema, key) && Object.prototype.hasOwnProperty.call(data, key)) {
