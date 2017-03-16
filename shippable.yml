@@ -7,7 +7,9 @@ env:
   global:
      - secure: ixAZpnkth9UN34rKrfYWn2CGLplPqv11YWFskyI9l6cbYCma4RInZHIw36QtHaatJwF1OfltLqjWir7vh2SbhK1Rv5uP59OjOHOsCEbTxIjCp2dRSpK0O1vXdP3+9Qxm+l7FEpIqZNM8dEQeBPeeHm2pqMoTZSgt7UcrkLa2zpcbXiMl5K2th8DVzqis5F2jtE8znD1/B3mh4WqpJWVI0v1LBCAXi4EQrFhhhmdzp3SMs2VrROzboRWxEF8T5BUSh61sWxyR5A3MCIptgbuIxryzy2dfDOkJLszp8onDx9NtfqUE7x0j2TaL4ScHmFb4D2f6GvBtaV6GDPoz6fWBYA==
 
-before_install:
+build:
+
+  ci:
   - curl -O https://s3-us-west-1.amazonaws.com/cf-cli-releases/releases/v6.22.2/cf-cli-installer_6.22.2_x86-64.deb
   - SUDO=$(which sudo) && $SUDO dpkg -i cf-cli-installer_6.22.2_x86-64.deb
   - curl -o /tmp/chromedriver.zip -L http://chromedriver.storage.googleapis.com/2.10/chromedriver_linux64.zip
@@ -17,15 +19,12 @@ before_install:
   - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
   - $SUDO chmod +x /usr/bin/google-chrome
 
-install:
   - npm install bower
   - npm install
   - ./node_modules/bower/bin/bower install --allow-root
-
-before_script:
   - mkdir -p shippable/buildoutput
 
-after_success:
+  on_success:
   - cf login -a https://api.eu-gb.bluemix.net -o "Web Lab" -u $BLUEMIX_USER -s dev -p $BLUEMIX_PASSWORD
   - cp -rv package.json server.js server config ./shippable/buildoutput
   - cd shippable/buildoutput && ls -la && cf push common-ui -t 120 -c "node server.js"
