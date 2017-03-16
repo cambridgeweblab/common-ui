@@ -9,7 +9,6 @@
   },
   "scripts": {
     "start": "node index.js",
-    "postinstall": "bower install",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test": "wct"
