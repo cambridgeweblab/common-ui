@@ -37,5 +37,9 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
-# VSCode files
+# IDE files
 .vscode 
+.idea/
+.settings/
+.project
+*~

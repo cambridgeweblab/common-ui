@@ -138,17 +138,17 @@ define(['./helpers/create-element.js', 'document-register-element'], (createElem
             }
 
             switch (type) {
-                case 'blur': {
+                case 'blur':
                     if (this.onblur) {
                         this.onblur.call(this, e);
                     }
-                } break;
+                    break;
 
-                case 'change': {
+                case 'change':
                     if (this.onchange) {
                         this.onchange.call(this, e);
                     }
-                } break;
+                    break;
 
                 default: break;
             }
