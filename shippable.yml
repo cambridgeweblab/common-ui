@@ -17,6 +17,11 @@ before_install:
   - echo 'exec /usr/bin/chrome --no-sandbox --disable-gpu \"$@\"' | $SUDO tee -a /usr/bin/google-chrome
   - $SUDO chmod +x /usr/bin/google-chrome
 
+install:
+  - npm install bower
+  - npm install
+  - ./node_modules/bower/bin/bower install --allow-root
+
 before_script:
   - mkdir -p shippable/buildoutput
 
