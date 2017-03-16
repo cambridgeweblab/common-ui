@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA VOTE | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-vote.css">
+  </head>
+  <body>
+    <test-fixture id="vote">
+      <template>
+        <ca-vote id="test"></ca-vote>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-vote>', () => {
+            let vote;
+
+            setup(done => {
+                SystemJS.import('ca-vote.js').then(() => {
+                    vote = fixture('vote');
+                    done();
+                });
+            });
+        });
+        a11ySuite('vote');
+    </script>
+  </body>
+</html>
