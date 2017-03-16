@@ -28,9 +28,9 @@ build:
   on_success:
   - cf login -a https://api.eu-gb.bluemix.net -o "Web Lab" -u $BLUEMIX_USER -s dev -p $BLUEMIX_PASSWORD
   - cp -rv package.json index.js bower_components/ components/ examples/  ./shippable/buildoutput
-  - cd shippable/buildoutput && ls -la && cf push common-ui -t 120 -c "node server.js"
+  - cd shippable/buildoutput && ls -la && cf push common-ui -t 120 -c "node index.js"
   - cf target -s stable
-  - cf push common-ui -t 120 -c "node server.js"
+  - cf push common-ui -t 120 -c "node index.js"
 
 integrations:
   notifications:
