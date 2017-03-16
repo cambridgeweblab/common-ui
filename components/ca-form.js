@@ -333,6 +333,8 @@ define([
 
                 // erase current form
                 clearElement(this.form);
+                this.removeAttribute('create-url');
+                this.removeAttribute('update-url');
 
                 // grab a handle to elements for rendering
                 const schema = this.selectedSchema;
