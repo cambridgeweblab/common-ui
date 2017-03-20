@@ -1,4 +1,4 @@
-define('create-element', ['./clear-element.js'], (clearElement) =>
+define('create-element', ['./clear-element.js', './html-to-dom.js'], (clearElement, htmlToDom) =>
     function createEl (parentEl, tagName, attrs, text, html, domEl) {
 
         const el = document.createElement(tagName);
@@ -34,7 +34,8 @@ define('create-element', ['./clear-element.js'], (clearElement) =>
             el.textContent = text;
         }
         if (typeof html !== 'undefined') {
-            el.innerHTML = html;
+            clearElement(el);
+            htmlToDom(html, el);
         }
         if (domEl) {
             el.appendChild(domEl);
