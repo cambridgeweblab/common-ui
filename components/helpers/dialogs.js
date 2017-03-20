@@ -300,7 +300,7 @@ define([
                             cancelEvent(e);
 
                             // TODO: Add check here to only call close if callback did not return false!
-                            dlg.close.call(null, el.innerText || el.textContent);
+                            dlg.close.call(null, el[dialogs._.txtProp]);
                         };
 
                         for (let i = 0, l = buttons.length; i < l; i++) {
