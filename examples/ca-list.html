@@ -1,0 +1,129 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA FORM | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link href="/examples/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/components/ca-list.css">
+    <style>
+        /* ca-list custom style overrides */
+
+        ca-list {
+            width: 50%;
+        }
+
+        ca-list.learners col {
+            width: 0;
+        }
+
+        ca-list.learners col[data-key="gender"] {
+            width: 10%;
+        }
+
+        ca-list.learners col[data-key="dateOfBirth"] {
+            width: 18%;
+        }
+
+        ca-list.learners col[data-key="name"] {
+            width: 45%;
+        }
+
+        ca-list.learners col[data-key="learnerGroups"] {
+            width: 11%;
+        }
+
+        ca-list.learners col[data-key="localSchoolLearnerId"] {
+            width: auto;
+        }
+
+        ca-list.learners th span {
+            display: none;
+        }
+
+        ca-list.learners th[data-key="name"]:before {
+            content: "Name";
+        }
+
+        ca-list.learners th[data-key="gender"]:before {
+            content: "Gender";
+        }
+
+        ca-list.learners th[data-key="dateOfBirth"]:before {
+            content: "Date of birth";
+        }
+
+        ca-list.learners th[data-key="localSchoolLearnerId"]:before {
+            content: "Learner ID";
+        }
+
+        ca-list.learners th[data-key="lastUpdateDate"]:before {
+            content: "Updated";
+        }
+
+        ca-list.learners th[data-key="learnerGroups"]:before {
+            content: "In group";
+        }
+
+        /* all items have tick unless count = 0 in which case it gets a cross icon */
+        ca-list.learners td[data-count] {
+            text-indent: -999em;
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDUxMiA1MTIiIGhlaWdodD0iMzJweCIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjMycHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgoJPHBvbHlnb24gZmlsbD0iIzAwYjIwMCIgc3Ryb2tlPSIjMDBiMjAwIiBzdHJva2Utd2lkdGg9IjI0cHgiIHBvaW50cz0iMzg0LjIzNSwxNTguMTkyIDIxNi45MTksMzI1LjUxOCAxMjcuODYyLDIzNi40ODEgMTEzLjcyLDI1MC42MjQgMjE2LjkxOSwzNTMuODAzIDM5OC4yOCwxNzIuMzM0Ii8+Cjwvc3ZnPg==');
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        ca-list.learners td[data-count="0"] {
+            background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDUxMiA1MTIiIGhlaWdodD0iMjhweCIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgd2lkdGg9IjI4cHgiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgoJPHBvbHlnb24gc3Ryb2tlPSIjODg4IiBmaWxsPSIjODg4IiBzdHJva2Utd2lkdGg9IjE2cHgiIHBvaW50cz0iMzY4LjU0NSwxNTcuMDczIDM1NC40NjEsMTQyLjk4OCAyNTUuODYzLDI0MS41ODcgMTU3LjczMywxNDMuNDU2IDE0My42NDgsMTU3LjU0IDI0MS43OCwyNTUuNjcyICAgMTQzLjY0OCwzNTMuODA5IDE1Ny43MzMsMzY3Ljg5MyAyNTUuODYzLDI2OS43NSAzNTQuNDYxLDM2OC4zNjEgMzY4LjU0NSwzNTQuMjc1IDI2OS45NDcsMjU1LjY3MiAiLz4KPC9zdmc+') !important;
+        }
+
+        ca-list.learnergroups col {
+            width: 0;
+        }
+
+        ca-list.learnergroups col[data-key="stage"] {
+            width: 8%;
+        }
+
+        ca-list.learnergroups col[data-key="title"],
+        ca-list.learnergroups col[data-key="description"] {
+            width: 33%;
+        }
+
+        .title {
+            font-size: 1.3em;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="ca-home">
+    <a id="home" href="/"></a>
+</div>
+
+<div class="ca-title">CA LIST</div>
+
+<!-- example passing schema as source (auto resolves HATEOAS data link) -->
+<ca-list src="/examples/data/learner-schema.json" class="learners" searchable="false"></ca-list>
+
+<!-- example passing data as source (auto resolves HATEOAS schema link) -->
+<ca-list src="/examples/data/learner-data.json" class="learners" searchable="true"></ca-list>
+
+<script>
+    SystemJS.import('ca-list.js').then(() => {
+        // example creation via JavaScript
+        var caList = document.createElement('ca-list');
+
+        // set ca-list properties
+        caList.className = 'learners';
+        caList.src = '/examples/data/learner-schema.json';
+        caList.searchable = true;
+
+        // add to the DOM
+        document.body.appendChild(caList);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA FORM | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-list.css">
+</head>
+<body>
+<test-fixture id="list">
+    <template>
+        <ca-list></ca-list>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-list>', () => {
+        let caList;
+        const testData = {
+            caListSchema: {
+                "type": "object",
+                "id": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema",
+                "$schema": "http://json-schema.org/draft-03/schema#",
+                "links": [
+                    {
+                        "href": "http://localhost:8080/examples/data/learner-data.json",
+                        "rel": "instances",
+                        "method": "GET"
+                    }
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "id": "order:010_id",
+                        "readonly": true,
+                        "description": "System generated unique identifier"
+                    },
+                    "name": {
+                        "type": "string",
+                        "id": "order:020_name",
+                        "required": true,
+                        "description": "Name of learner",
+                        "maxLength": 60,
+                        "minLength": 1
+                    },
+                    "gender": {
+                        "type": "string",
+                        "id": "order:030_gender",
+                        "required": true,
+                        "description": "[M]ale, [F]emale, or [N]ot Specified",
+                        "format": "list",
+                        "maxLength": 1,
+                        "minLength": 1,
+                        "pattern": "^[MFN]$",
+                        "extends": [
+                            {
+                                "type": "string",
+                                "$ref": "data:application/schema+json;charset=UTF-8;base64,eyJ0eXBlIjpbeyJ0eXBlIjoic3RyaW5nIiwidGl0bGUiOiJNYWxlIiwiZW51bSI6WyJNIl19LHsidHlwZSI6InN0cmluZyIsInRpdGxlIjoiRmVtYWxlIiwiZW51bSI6WyJGIl19LHsidHlwZSI6InN0cmluZyIsInRpdGxlIjoiTm90IFNwZWNpZmllZCIsImVudW0iOlsiTiJdfV19"
+                            }
+                        ]
+                    },
+                    "dateOfBirth": {
+                        "type": "string",
+                        "id": "order:040_dateOfBirth",
+                        "required": true,
+                        "description": "Date of Birth",
+                        "format": "birth-date"
+                    },
+                    "localSchoolLearnerId": {
+                        "type": "string",
+                        "id": "order:050_localSchoolLearnerId",
+                        "description": "Optionally add a unique identifier for a learner at this school"
+                    },
+                    "createdDate": {
+                        "type": "string",
+                        "id": "order:060_createdDate",
+                        "readonly": true,
+                        "description": "Created Date",
+                        "format": "date"
+                    },
+                    "lastUpdateDate": {
+                        "type": "string",
+                        "id": "order:070_lastUpdateDate",
+                        "readonly": true,
+                        "description": "Last updated date",
+                        "format": "date"
+                    },
+                    "learnerGroups": {
+                        "type": "array",
+                        "id": "order:999_learnerGroups",
+                        "readonly": true,
+                        "description": "Learners",
+                        "title": "Learner groups",
+                        "items": {
+                            "type": "object",
+                            "id": "urn:jsonschema:ucles:weblab:learners:web:LearnerGroupResource",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "id": "order:020_title",
+                                    "required": true,
+                                    "description": "Name of learner group, must be unique",
+                                    "title": "Name"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "id": "order:025_description",
+                                    "description": "Description of the learner group",
+                                    "title": "Description"
+                                },
+                                "stage": {
+                                    "type": "integer",
+                                    "id": "order:030_stage",
+                                    "description": "Stage",
+                                    "title": "Stage",
+                                    "format": "list",
+                                    "maximum": 9.0,
+                                    "minimum": 1.0
+                                },
+                                "createdDate": {
+                                    "type": "string",
+                                    "id": "order:040_createdDate",
+                                    "readonly": true,
+                                    "description": "Created Date",
+                                    "title": "Created Date",
+                                    "format": "date"
+                                },
+                                "lastUpdateDate": {
+                                    "type": "string",
+                                    "id": "order:050_lastUpdateDate",
+                                    "readonly": true,
+                                    "description": "Last updated date",
+                                    "title": "Last Updated Date",
+                                    "format": "date"
+                                },
+                                "id": {
+                                    "type": "string",
+                                    "id": "order:060_id",
+                                    "readonly": true,
+                                    "description": "System generated unique identifier",
+                                    "title": "ID"
+                                },
+                                "learners": {
+                                    "type": "array",
+                                    "id": "order:060_learners",
+                                    "description": "Learners",
+                                    "title": "Learners",
+                                    "items": {
+                                        "type": "object",
+                                        "$ref": "urn:jsonschema:ucles:weblab:learners:web:LearnerResource"
+                                    }
+                                },
+                                "teachers": {
+                                    "type": "array",
+                                    "id": "order:070_teachers",
+                                    "description": "Teacher(s) to Learner Group",
+                                    "title": "Teachers",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "uri",
+                                        "extends": [
+                                            {
+                                                "type": "string",
+                                                "$ref": "http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$links"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "teacherUrns": {
+                                    "type": "array",
+                                    "id": "order:999_teacherUrns",
+                                    "readonly": true,
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "new": {
+                        "type": "boolean",
+                        "id": "order:999_new"
+                    }
+                }
+            },
+            caListData: {
+                "list": [
+                    {
+                        "id": "8644a3ef-1b42-4d3a-8789-0c285bc861b1",
+                        "name": "Arthur Grant",
+                        "gender": "M",
+                        "dateOfBirth": "2007-09-10",
+                        "createdDate": "2016-03-18T11:02:01.614Z",
+                        "lastUpdateDate": "2016-03-18T11:02:01.614Z",
+                        "learnerGroups": [
+                            {
+                                "id": "30f05ac7-ba92-4588-9d9d-4a91fd1fdd28",
+                                "title": "Gamma 3",
+                                "stage": 3,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "c692d3c0-9759-4407-bf70-9ef2da7d8bf9",
+                                "title": "Gamma 6",
+                                "stage": 6,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "9e996cff-660e-4cd7-8714-b68e19a6f6d9",
+                                "title": "Gamma 4",
+                                "stage": 4,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "dc5551d5-c0d6-4ec5-8579-3c512dfbd0cb",
+                                "title": "Gamma 5",
+                                "stage": 5,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            }
+                        ],
+                        "links": [
+                            {
+                                "rel": "describedby",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                            },
+                            {
+                                "rel": "related",
+                                "href": "json/api/learners/40201/history.json",
+                                "title": "View Report"
+                            },
+                            {
+                                "rel": "self",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/8644a3ef-1b42-4d3a-8789-0c285bc861b1"
+                            }
+                        ],
+                        "new": true
+                    },
+                    {
+                        "id": "39efe2a9-256f-4e29-ab35-4364984d6832",
+                        "name": "Arthur Green",
+                        "gender": "M",
+                        "dateOfBirth": "2007-10-22",
+                        "createdDate": "2016-03-18T11:02:01.615Z",
+                        "lastUpdateDate": "2016-03-18T11:02:01.615Z",
+                        "learnerGroups": [],
+                        "links": [
+                            {
+                                "rel": "describedby",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                            },
+                            {
+                                "rel": "related",
+                                "href": "json/api/learners/40203/history.json",
+                                "title": "View Report"
+                            },
+                            {
+                                "rel": "self",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/39efe2a9-256f-4e29-ab35-4364984d6832"
+                            }
+                        ],
+                        "new": true
+                    },
+                    {
+                        "id": "a3ad3538-9f0b-4cbf-a98c-c6b62a124182",
+                        "name": "Billy Sims",
+                        "gender": "M",
+                        "dateOfBirth": "2007-07-13",
+                        "createdDate": "2016-03-18T11:02:01.613Z",
+                        "lastUpdateDate": "2016-03-18T11:02:01.613Z",
+                        "learnerGroups": [
+                            {
+                                "id": "092e7d39-7f41-4bbc-8a5a-91163ca43156",
+                                "title": "Beta 5",
+                                "stage": 5,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "0fb4f4f4-5fb2-4200-ab4a-c17a9182a595",
+                                "title": "Beta 3",
+                                "stage": 3,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "eb8ad50f-a579-47d9-b746-f750a6e4d3f0",
+                                "title": "Beta 4",
+                                "stage": 4,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "632ecd4d-9c13-44b1-b8de-4c031b0b8488",
+                                "title": "Beta 6",
+                                "stage": 6,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            }
+                        ],
+                        "links": [
+                            {
+                                "rel": "describedby",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                            },
+                            {
+                                "rel": "related",
+                                "href": "json/api/learners/40101/history.json",
+                                "title": "View Report"
+                            },
+                            {
+                                "rel": "self",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/a3ad3538-9f0b-4cbf-a98c-c6b62a124182"
+                            }
+                        ],
+                        "new": true
+                    },
+                    {
+                        "id": "4717c0ef-05a6-4a45-8369-dc995caaf61f",
+                        "name": "Cynthia Crawford",
+                        "gender": "F",
+                        "dateOfBirth": "2007-01-20",
+                        "createdDate": "2016-03-18T11:02:01.614Z",
+                        "lastUpdateDate": "2016-03-18T11:02:01.614Z",
+                        "learnerGroups": [
+                            {
+                                "id": "30f05ac7-ba92-4588-9d9d-4a91fd1fdd28",
+                                "title": "Gamma 3",
+                                "stage": 3,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "c692d3c0-9759-4407-bf70-9ef2da7d8bf9",
+                                "title": "Gamma 6",
+                                "stage": 6,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "9e996cff-660e-4cd7-8714-b68e19a6f6d9",
+                                "title": "Gamma 4",
+                                "stage": 4,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            },
+                            {
+                                "id": "dc5551d5-c0d6-4ec5-8579-3c512dfbd0cb",
+                                "title": "Gamma 5",
+                                "stage": 5,
+                                "createdDate": "2016-03-22T12:01:35.361Z",
+                                "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                            }
+                        ],
+                        "links": [
+                            {
+                                "rel": "describedby",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                            },
+                            {
+                                "rel": "related",
+                                "href": "json/api/learners/40200/history.json",
+                                "title": "View Report"
+                            },
+                            {
+                                "rel": "self",
+                                "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/4717c0ef-05a6-4a45-8369-dc995caaf61f"
+                            }
+                        ],
+                        "new": true
+                    }
+                ],
+                "links": [
+                    {
+                        "rel": "describedby",
+                        "href": "http://localhost:8080/examples/data/learner-schema.json"
+                    },
+                    {
+                        "rel": "related",
+                        "href": "json/api/learners/40200/history.json",
+                        "title": "View Report"
+                    },
+                    {
+                        "rel": "self",
+                        "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/4717c0ef-05a6-4a45-8369-dc995caaf61f"
+                    }
+                ]
+            }
+        };
+
+        setup(done => {
+            SystemJS.import('ca-list.js').then(() => {
+                caList = fixture('list');
+                done();
+            });
+        });
+
+        test('should be created and appended', () => {
+            expect(caList.attached).to.be.true;
+        });
+
+        test('should return default properties for new attached instance', () => {
+
+            expect(caList.searchable).to.be.false;
+            expect(caList.data.length).to.equal(0);
+            expect(caList.schema).to.be.null;
+            expect(caList.sortedKeys.length).to.equal(0);
+        });
+
+
+        test('should contain the correct tags for new instance', () => {
+            expect(caList.filterEl).to.not.be.undefined;
+            expect(caList.table).to.not.be.undefined;
+            expect(caList.colgroup).to.not.be.undefined;
+            expect(caList.thead).to.not.be.undefined;
+            expect(caList.tbody).to.not.be.undefined;
+        });
+
+
+        test('should return .sortedKeys matching schema keys', () => {
+
+            // set the schema which should update .sortedKeys property
+            caList.schema = testData.caListSchema;
+
+            // grab the schema keys so we have something to compare with
+            const schemaKeys = Object.keys(caList.schema.properties);
+
+            // check .sortedKeys matches schema keys
+            expect(caList.sortedKeys.join(',')).to.equal(schemaKeys.join(','));
+        });
+
+        test('should create the table structure matching the schema', () => {
+
+            // set the schema which should trigger createTable
+            caList.schema = testData.caListSchema;
+
+            // grab the schema keys so we can query the element
+            const schemaKeys = Object.keys(caList.schema.properties);
+
+            // go through each schema property name
+            schemaKeys.forEach(function (key) {
+
+                // check we have a matching col tag (use overly expressive query selector so we can also validate structure)
+                expect(caList.querySelector('table colgroup col[data-key="' + key + '"]')).to.not.be.undefined;
+
+                // check we have a matching th (use overly expressive query selector so we can also validate structure)
+                expect(caList.querySelector('table thead tr th[data-key="' + key + '"]')).to.not.be.undefined;
+            });
+        });
+
+        test('should create table with rows matching data values', () => {
+
+            // assign schema and data
+            caList.schema = testData.caListSchema;
+            caList.data = testData.caListData.list;
+
+            // get all rendered table rows
+            const rows = Array.prototype.slice.call(caList.querySelectorAll('table tbody tr'));
+
+            // go through each row in the table
+            rows.forEach(function (row, rowIndex) {
+
+                const dataRow = testData.caListData.list[rowIndex], // get related data object for this row
+                        cols = Array.prototype.slice.call(row.cells); // go columns in this table row as an array
+
+                // go through all sortedKeys of the object
+                caList.sortedKeys.forEach(function (key, colIndex) {
+
+                    // get either the data-raw value or text content
+                    const cellValue = cols[colIndex].getAttribute('data-raw') || cols[colIndex].textContent,
+                            dataValue = dataRow[key] || ''; // get the value from the data row by related key
+
+                    if (Array.isArray(dataValue)) {
+                        // arrays are rendered as count of children, therefore check data-count with array length
+                        expect(parseInt(cols[colIndex].getAttribute('data-count'))).to.equal(dataValue.length);
+                    } else if (typeof(dataValue) === 'boolean') {
+                        // bools are rendered as yes/no so check data-boolean attribute for correct value
+                        expect(cols[colIndex].getAttribute('data-boolean') === "true").to.equal(dataValue);
+                    } else {
+                        // plain match should be fine
+                        expect(cellValue).to.equal(dataValue);
+                    }
+                });
+
+            });
+
+        });
+
+    });
+    a11ySuite('list');
+</script>
+</body>
+</html>
