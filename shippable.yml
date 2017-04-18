@@ -9,12 +9,13 @@ services:
   - selenium
 
 addons:
-    firefox: "49.0"
+    firefox: "41.0"
 
 env:
   global:
-      # BLUEMIX_USER and BLUEMIX_PASSWORD encrypted as cambridgeweblab
-     - secure: Gpzuk51B3s6Ew2Z+29YqzFmEhGz7bwt8Lm9ak8mzOWmLHiKIQ8GLdSff/IV5pdjAbSe3OyVi8ywRy5LFE5X1pDvuW4LCviKUyMj3hl6J6I3DWMausXPoea8ToYeSrZzVF9rO4WL39kIO80NSV4fGVD1nLWrk3kuBFoeebrdgqlovP7A8Wa4CTKNcAaq7IIgtRuM5TyBgcAJKYDLv/IepdfJdFvhdDyuo/KNK9MxQRSURwckHHkczau7guY7SfhY9zv5IFX0HmIyrjFlY0eAE/HYwjha47CIS2IBMhtecQrgR5EeVOdac9EsMOt0Tj8+U124SIkFP6X2bFArNeB3QxQ==
+    # BLUEMIX_USER and BLUEMIX_PASSWORD encrypted as cambridgeweblab
+    - secure: Gpzuk51B3s6Ew2Z+29YqzFmEhGz7bwt8Lm9ak8mzOWmLHiKIQ8GLdSff/IV5pdjAbSe3OyVi8ywRy5LFE5X1pDvuW4LCviKUyMj3hl6J6I3DWMausXPoea8ToYeSrZzVF9rO4WL39kIO80NSV4fGVD1nLWrk3kuBFoeebrdgqlovP7A8Wa4CTKNcAaq7IIgtRuM5TyBgcAJKYDLv/IepdfJdFvhdDyuo/KNK9MxQRSURwckHHkczau7guY7SfhY9zv5IFX0HmIyrjFlY0eAE/HYwjha47CIS2IBMhtecQrgR5EeVOdac9EsMOt0Tj8+U124SIkFP6X2bFArNeB3QxQ==
+    - SHIPPABLE_SELENIUM_BINARY=/usr/local/selenium/selenium-server-standalone-2.45.0.jar
 
 build:
 
