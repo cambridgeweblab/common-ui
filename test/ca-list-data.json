@@ -1,0 +1,206 @@
+{
+    "list": [
+        {
+            "id": "8644a3ef-1b42-4d3a-8789-0c285bc861b1",
+            "name": "Arthur Grant",
+            "gender": "M",
+            "dateOfBirth": "2007-09-10",
+            "createdDate": "2016-03-18T11:02:01.614Z",
+            "lastUpdateDate": "2016-03-18T11:02:01.614Z",
+            "learnerGroups": [
+                {
+                    "id": "30f05ac7-ba92-4588-9d9d-4a91fd1fdd28",
+                    "title": "Gamma 3",
+                    "stage": 3,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "c692d3c0-9759-4407-bf70-9ef2da7d8bf9",
+                    "title": "Gamma 6",
+                    "stage": 6,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "9e996cff-660e-4cd7-8714-b68e19a6f6d9",
+                    "title": "Gamma 4",
+                    "stage": 4,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "dc5551d5-c0d6-4ec5-8579-3c512dfbd0cb",
+                    "title": "Gamma 5",
+                    "stage": 5,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                }
+            ],
+            "links": [
+                {
+                    "rel": "describedby",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                },
+                {
+                    "rel": "related",
+                    "href": "json/api/learners/40201/history.json",
+                    "title": "View Report"
+                },
+                {
+                    "rel": "self",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/8644a3ef-1b42-4d3a-8789-0c285bc861b1"
+                }
+            ],
+            "new": true
+        },
+        {
+            "id": "39efe2a9-256f-4e29-ab35-4364984d6832",
+            "name": "Arthur Green",
+            "gender": "M",
+            "dateOfBirth": "2007-10-22",
+            "createdDate": "2016-03-18T11:02:01.615Z",
+            "lastUpdateDate": "2016-03-18T11:02:01.615Z",
+            "learnerGroups": [],
+            "links": [
+                {
+                    "rel": "describedby",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                },
+                {
+                    "rel": "related",
+                    "href": "json/api/learners/40203/history.json",
+                    "title": "View Report"
+                },
+                {
+                    "rel": "self",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/39efe2a9-256f-4e29-ab35-4364984d6832"
+                }
+            ],
+            "new": true
+        },
+        {
+            "id": "a3ad3538-9f0b-4cbf-a98c-c6b62a124182",
+            "name": "Billy Sims",
+            "gender": "M",
+            "dateOfBirth": "2007-07-13",
+            "createdDate": "2016-03-18T11:02:01.613Z",
+            "lastUpdateDate": "2016-03-18T11:02:01.613Z",
+            "learnerGroups": [
+                {
+                    "id": "092e7d39-7f41-4bbc-8a5a-91163ca43156",
+                    "title": "Beta 5",
+                    "stage": 5,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "0fb4f4f4-5fb2-4200-ab4a-c17a9182a595",
+                    "title": "Beta 3",
+                    "stage": 3,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "eb8ad50f-a579-47d9-b746-f750a6e4d3f0",
+                    "title": "Beta 4",
+                    "stage": 4,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "632ecd4d-9c13-44b1-b8de-4c031b0b8488",
+                    "title": "Beta 6",
+                    "stage": 6,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                }
+            ],
+            "links": [
+                {
+                    "rel": "describedby",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                },
+                {
+                    "rel": "related",
+                    "href": "json/api/learners/40101/history.json",
+                    "title": "View Report"
+                },
+                {
+                    "rel": "self",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/a3ad3538-9f0b-4cbf-a98c-c6b62a124182"
+                }
+            ],
+            "new": true
+        },
+        {
+            "id": "4717c0ef-05a6-4a45-8369-dc995caaf61f",
+            "name": "Cynthia Crawford",
+            "gender": "F",
+            "dateOfBirth": "2007-01-20",
+            "createdDate": "2016-03-18T11:02:01.614Z",
+            "lastUpdateDate": "2016-03-18T11:02:01.614Z",
+            "learnerGroups": [
+                {
+                    "id": "30f05ac7-ba92-4588-9d9d-4a91fd1fdd28",
+                    "title": "Gamma 3",
+                    "stage": 3,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "c692d3c0-9759-4407-bf70-9ef2da7d8bf9",
+                    "title": "Gamma 6",
+                    "stage": 6,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "9e996cff-660e-4cd7-8714-b68e19a6f6d9",
+                    "title": "Gamma 4",
+                    "stage": 4,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                },
+                {
+                    "id": "dc5551d5-c0d6-4ec5-8579-3c512dfbd0cb",
+                    "title": "Gamma 5",
+                    "stage": 5,
+                    "createdDate": "2016-03-22T12:01:35.361Z",
+                    "lastUpdateDate": "2016-03-22T12:01:35.361Z"
+                }
+            ],
+            "links": [
+                {
+                    "rel": "describedby",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema"
+                },
+                {
+                    "rel": "related",
+                    "href": "json/api/learners/40200/history.json",
+                    "title": "View Report"
+                },
+                {
+                    "rel": "self",
+                    "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/4717c0ef-05a6-4a45-8369-dc995caaf61f"
+                }
+            ],
+            "new": true
+        }
+    ],
+    "links": [
+        {
+            "rel": "describedby",
+            "href": "http://localhost:8080/examples/data/learner-schema.json"
+        },
+        {
+            "rel": "related",
+            "href": "json/api/learners/40200/history.json",
+            "title": "View Report"
+        },
+        {
+            "rel": "self",
+            "href": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/4717c0ef-05a6-4a45-8369-dc995caaf61f"
+        }
+    ]
+}
