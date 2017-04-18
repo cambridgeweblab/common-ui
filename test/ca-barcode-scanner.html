@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA BARCODE SCANNER | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+  </head>
+  <body>
+    <test-fixture id="barcode-scanner">
+      <template>
+        <ca-barcode-scanner test="test"></ca-barcode-scanner>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-barcode-scanner>', () => {
+            let barcodeScanner;
+
+            setup(done => {
+                SystemJS.import('ca-vote.js').then(() => {
+                    barcodeScanner = fixture('barcode-scanner');
+                    done();
+                });
+            });
+        });
+        a11ySuite('barcode-scanner');
+    </script>
+  </body>
+</html>
