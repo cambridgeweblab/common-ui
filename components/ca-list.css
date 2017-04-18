@@ -1,0 +1,199 @@
+ca-list {
+    display: block;
+    padding: 0 0 10px 0;
+}
+
+ca-list.hidden {
+    display: none;
+}
+
+ca-list .button-group {
+    position: relative;
+}
+
+ca-list .button-group .dropdown-toggle {
+    background-color: #e6e6e6;
+    color: #333;
+    border-color: #b3b3b3;
+    cursor: default;
+    margin-bottom: 0px;
+    text-shadow: none;
+}
+
+ca-list .button-group .dropdown-toggle:after {
+    content: "\25BC";
+    display: none;
+}
+
+ca-list .button-group .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    display: none;
+    float: left;
+    min-width: 160px;
+    padding: 5px 0;
+    margin: 2px 0 0;
+    font-size: 14px;
+    text-align: left;
+    list-style: none;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+ca-list .button-group .dropdown-menu[data-expanded=true] {
+    display: block;
+}
+
+ca-list .button-group .dropdown-menu > li > a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+ca-list .button-group .dropdown-menu > li:hover {
+    background-color: #e6e6e6;
+}
+
+ca-list .ca-list-filter {
+    display: none;
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIxNnB4IiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjE2cHgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiPiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtNTM5LjAwMDAwMCwgLTQwNy4wMDAwMDApIj4gICAgICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIxNS4wMDAwMDAsIDExOS4wMDAwMDApIi8+ICAgICAgICA8cGF0aCBkPSJNNTU1LjQ3NzI3Niw0MjEuMzU1OTU2IEM1NTYuNDM3MTIsNDE5Ljk3OTM4MyA1NTcsNDE4LjMwNTQyNSA1NTcsNDE2LjUgQzU1Nyw0MTEuODA1NTc5IDU1My4xOTQ0MjEsNDA4IDU0OC41LDQwOCBDNTQzLjgwNTU3OSw0MDggNTQwLDQxMS44MDU1NzkgNTQwLDQxNi41IEM1NDAsNDIxLjE5NDQyMSA1NDMuODA1NTc5LDQyNSA1NDguNSw0MjUgQzU1MC4zMDUxNDgsNDI1IDU1MS45Nzg4NjgsNDI0LjQzNzI5MyA1NTMuMzU1MzIxLDQyMy40Nzc3MTkgTDU1My4zNTU4OTIsNDIzLjQ3NzIxMiBMNTU5LjY1OTQzMyw0MjkuNzgwNzUzIEM1NTkuNzc2MzA5LDQyOS44OTc2MjkgNTU5Ljk2MjIwNiw0MjkuOTAxMjI1IDU2MC4wODIyMTEsNDI5Ljc4MTIyIEw1NjEuNzgxMjIsNDI4LjA4MjIxMSBDNTYxLjg5NzgzOCw0MjcuOTY1NTkzIDU2MS44OTI0MTcsNDI3Ljc3MTA5NyA1NjEuNzgwNzUzLDQyNy42NTk0MzMgTDU1NS40NzcyNzYsNDIxLjM1NTk1NiBaIE01NDguNSw0MjMgQzU1Mi4wODk4NTEsNDIzIDU1NSw0MjAuMDg5ODUxIDU1NSw0MTYuNSBDNTU1LDQxMi45MTAxNDkgNTUyLjA4OTg1MSw0MTAgNTQ4LjUsNDEwIEM1NDQuOTEwMTQ5LDQxMCA1NDIsNDEyLjkxMDE0OSA1NDIsNDE2LjUgQzU0Miw0MjAuMDg5ODUxIDU0NC45MTAxNDksNDIzIDU0OC41LDQyMyBaIiBmaWxsPSIjMzMzIi8+ICAgICAgICA8L2c+ICAgIDwvZz48L3N2Zz4=) no-repeat 98% center;
+}
+
+ca-list[searchable="true"] .ca-list-filter {
+    display: block;
+}
+
+ca-list[searchable="true"][data-count="0"] .ca-list-filter,
+ca-list[searchable="true"][data-count="1"] .ca-list-filter {
+    /* Hide the list filter if searchable AND 0 or 1 rows in the table */
+    display: none;
+}
+
+ca-list input.ca-list-filter {
+    box-sizing: border-box;
+    width: 100%;
+    display: block;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    display: none;
+}
+
+ca-list table[data-count]:after {
+    content: attr(data-count) " items in total";
+    display: block;
+    line-height: 1.5em;
+    position: absolute;
+    right: 2px;
+    bottom: -22px;
+    font-size: 0.9em;
+    color: #888;
+}
+
+ca-list table[data-count="1"]:after {
+    content: attr(data-count) " item in total";
+}
+
+ca-list table[data-hidden-count]:after {
+    content: attr(data-visible-count) " out of " attr(data-count) " items match your search";
+}
+
+ca-list table {
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 14px 0;
+}
+
+ca-list table th {
+    background: #e6e6e6;
+    color: #333;
+    text-align: left;
+    position: relative;
+    cursor: pointer;
+}
+
+ca-list table td,
+ca-list table th {
+    padding: 0.5em;
+    border: 1px solid #b3b3b3;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 14px;
+}
+
+ca-list table td:empty:before {
+    content: " ";
+    font-style: italic;
+    color: #444;
+    font-size: 11px;
+}
+
+ca-list table tbody tr:hover td {
+    background: #eee;
+    cursor: pointer;
+}
+
+ca-list tr[data-hidden="true"] {
+    display: none;
+}
+
+ca-list th[data-sort-dir]:after {
+    content: " ";
+    position: absolute;
+    right: 6px;
+    top: 40%;
+    width: 0;
+    height: 0;
+}
+
+ca-list th[data-sort-dir="desc"]:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+}
+
+ca-list th[data-sort-dir="asc"]:after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #333;
+}
+
+/*ca-list table[data-count="1"] th[data-sort-dir]:after */
+ca-list[data-count="0"] th[data-sort-dir]:after,
+ca-list[data-count="1"] th[data-sort-dir]:after {
+    /* Hide the sort indicators when 0 or 1 rows in the list */
+    visibility: hidden;
+}
+
+ca-list th[data-sort-dir]:before {
+    content: " ";
+    /*position: absolute;*/ /* this will need re-visiting */
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: #e6e6e6;
+    width: 22px;
+}
