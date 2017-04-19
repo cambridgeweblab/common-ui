@@ -9,7 +9,7 @@ services:
   - selenium
 
 addons:
-    firefox: "41.0"
+    firefox: "49.0"
 
 env:
   global:
@@ -27,6 +27,12 @@ build:
 
   - npm install bower
   - npm install
+  # Change geckodriver to one that is appropriate for version of Firefox
+  - npm uninstall geckodriver
+  - npm install geckodriver@1.4.0
+  # Version of Chromedriver that has support for Chrome 48. See https://chromedriver.storage.googleapis.com/2.27/notes.txt
+  - npm uninstall chromedriver
+  - npm install chromedriver@2.21
   - ./node_modules/bower/bin/bower install --allow-root
   - mkdir -p shippable/buildoutput
   - xvfb-run --server-args="-ac" npm test
