@@ -18,7 +18,7 @@
             let barcodeScanner;
 
             setup(done => {
-                SystemJS.import('ca-vote.js').then(() => {
+                SystemJS.import('ca-barcode-scanner.js').then(() => {
                     barcodeScanner = fixture('barcode-scanner');
                     done();
                 });
