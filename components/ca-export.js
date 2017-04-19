@@ -1,283 +1,329 @@
-// // <reference path="../js/helpers.js" />
-// // <reference path="../js/component-support.js" />
+define([
+    './helpers/create-element.js',
+    './helpers/cancel-event.js',
+    './helpers/json-to-csv.js',
+    './helpers/component-support.js',
+    './helpers/post-via-iframe.js',
+    'document-register-element'
+], (createElement, cancelEvent, jsonToCSV, componentSupport, postViaIframe) => {
+    /**
+     * Class export
+     * @description A custom HTML element (Web Component) that can be created using
+     * document.createElement('ca-export') or included in a HTML page as an element.
+     */
+    class Export extends HTMLElement {
+        /**
+         * createdCallback - called when the component created, (not yet attached to the DOM).
+         * @returns {undefined} initalises the component.
+         */
+        createdCallback() {
+            this.showRecordCount = true;
+            // insert download button
+            this.button = createElement(
+                this,
+                'a',
+                {
+                    class: 'ca-export-button',
+                    href: '#',
+                    target: '_blank',
+                    download: this.filename
+                },
+                this.label || ''
+            );
+            this.button.onclick = this.downloadHandler.bind(this);
+        }
 
-// (function(base, document, helpers, componentSupport)
-// {
-//     /**
-//      * @exports ca-export
-//      * @description A custom HTML element (Web Component) that can be created using 
-//      * document.createElement('ca-export') or included in a HTML page as an element. 
-//      */
-//     var componentName = 'ca-export',
-//         txtProp = ('textContent' in document.createElement('i')) ? 'textContent' : 'innerText';
+        /**
+         * @description Executes when any attribute is changed on the element
+         * @type {Event}
+         * @param {string} attrName - the name of the attribute to have changed
+         * @param {string} oldVal - the old value of the attribute
+         * @param {string} newVal - the new value of the attribute
+         * @returns {undefined}
+         */
+        attributeChangedCallback(attrName, oldVal, newVal) {
+            switch (attrName) {
+                case 'label':
+                    this.button.textContent = this.label;
+                    break;
 
-//     // Create a prototype for our new element that extends HTMLElement
-//     var proto = Object.create(base, {
-//         /** @property {string} ca-export.src - the url of the json schema */
-//         src: {
-//             get: function() {
-//                 return this.getAttribute('src') || '';
-//             },
-//             set: function(src) {
+                case 'filename':
+                    this.button.setAttribute('download', this.filename);
+                    break;
 
-//                 src = src || '';
+                default: break;
+            }
+        }
 
-//                 var self = this;
+        /**
+         * Gets src of schema
+         * @returns {string} src of schema
+         */
+        get src() {
+            return this.getAttribute('src') || '';
+        }
 
-//                 if (src !==''){
+        /**
+         * Set src of schema
+         * @param {string} src - where to fetch the schema from
+         */
+        set src(src = '') {
+            if (src !== '') {
+                componentSupport
+                .request({ url: src, dataType: 'json' })
+                // eslint-disable-next-line consistent-return
+                .then(res => {
+                    if (res) {
+                        // store data
+                        this.data = res.list || [];
+                        // get the schema link
+                        const schemaUrl = ((res.links || []).find(item => item.rel === 'describedby') || {}).href || '';
+                        // go get the schema to we know how to layout the export
+                        return componentSupport.request({ url: schemaUrl, dataType: 'json' });
+                    }
+                })
+                .then(schema => {
+                    this.schema = schema;
+                });
+            }
 
-//                     componentSupport.request({url: src, dataType:'json'}).then(function(res){
+            this.setAttribute('src', src);
+        }
 
-//                         if (res){
+        /**
+         * Gets setting for display record count
+         * @returns {boolean} flag to determine whether to show the record count or not
+         */
+        get showRecordCount() {
+            return (this._showRecordCount === true);
+        }
 
-//                             // store data
-//                             self.data = res.list || [];
+        /**
+         * Sets setting for display record count
+         * @param {boolean} value - setting for display count
+         */
+        set showRecordCount(value) {
+            this._showRecordCount = (value === true);
+        }
 
-//                             // get the schema link
-//                             var schemaUrl = ((res.links || []).where('rel','describedby', true) || {}).href || '';
+        /**
+         * Gets label attribute
+         * @returns {string} label attribute
+         */
+        get label() {
+            return this.getAttribute('label');
+        }
 
-//                             // go get the schema to we know how to layout the export
-//                             return componentSupport.request({url: schemaUrl, dataType:'json'})
-//                         }
-//                     })
-//                     .then(function(schema){
-//                         self.schema = schema;
-//                     });
-//                 }
+        /**
+         * Sets label attribute
+         * @param {string} value - sets the label to value
+         */
+        set label(value) {
+            this.setAttribute('label', value);
+        }
 
-//                 self.setAttribute('src', src);
-//             }
-//         },
-//         /** @property {boolean} ca-export.showRecordCount - flag to determine whether to show the record count or not */
-//         showRecordCount:{
-//             get: function() {
-//                 return (this._showRecordCount === true);
-//             },
-//             set: function(value) {
-//                 this._showRecordCount = (value === true);
-//             }
-//         },
-//         /** @property {string} ca-export.label - the text to go on the export button */
-//         label: {
-//             get: function() {
-//                 return this.getAttribute('label');
-//             },
-//             set: function(value) {
-//                 this.setAttribute('label', value);
-//             }
-//         },
-//         /** @property {string} ca-export.filename - the name of the file to export */
-//         filename: {
-//             get: function() {
-//                 return this.getAttribute('filename');
-//             },
-//             set: function(value) {
-//                 this.setAttribute('filename', value);
-//             }
-//         },
-//         /** @property {string} ca-export.schema - the url that points to the JSON schema */
-//         schema: {
-//             get: function(){
-//                 return this._schema;
-//             },
-//             set: function(value){
-//                 this._schema = value || {};
-//             }
-//         },
-//         /** @property {object} ca-export.data -  */
-//         data: {
-//             get: function(){
-//                 return this._data || [];
-//             },
-//             set: function(value){
-//                 this._data = value;
+        /**
+         * Gets file name
+         * @returns {string} filename
+         */
+        get filename() {
+            return this.getAttribute('filename');
+        }
 
-//                 if (this._data && this._data.length>0){
-//                     this.hasData = true;
-//                 }
-//                 else {
-//                     this.hasData = false;
-//                 }
+        /**
+         * Sets file name
+         * @param {string} value - filename setting
+         */
+        set filename(value) {
+            this.setAttribute('filename', value);
+        }
 
-//                 if (this.showRecordCount){
-//                     this.button[txtProp] += ' (' + (this.data||[]).length + ' records)';
-//                 }
-//             }
-//         },
-//         /** @property {boolean} ca-export.hasData - flag to indicate whether there is any data to export */
-//         hasData: {
-//             get: function() {
-//                 return this.getAttribute('has-data');
-//             },
-//             set: function(value) {
-//                 this.setAttribute('has-data', value==true);
-//             }
-//         },
-//         /** @property {string} ca-export.type - the type of file to export */
-//         type: {
-//             get: function() {
-//                 return this.getAttribute('type') || 'csv';
-//             },
-//             set: function(value) {
+        /**
+         * Gets cached schema
+         * @returns {object} schema
+         */
+        get schema() {
+            return this._schema;
+        }
 
-//                 // ensure its always csv or xls
-//                 value = (value != 'xlsx') ? value = 'csv' : 'xlsx';
+        /**
+         * Sets the cache schema
+         * @param {object} value - schema as object
+         */
+        set schema(value = {}) {
+            this._schema = value;
+        }
 
-//                 this.setAttribute('type', value);
-//             }
-//         },
-//         /** @property {string} ca-export.templateConversionUrl - end point that creates excel file from headers - only required for type=xls */
-//         templateConversionUrl:{
-//             get: function() {
-//                 return this.getAttribute('template-conversion-url') || '/excel-download';
-//             },
-//             set: function(value) {
+        /**
+         * Gets cache data
+         * @returns {array} data to export.
+         */
+        get data() {
+            return this._data || [];
+        }
 
-//                 value = value || '/excel-download';
+        /**
+         * Gets cached schema
+         * @param {array} value, array of data to export.
+         */
+        set data(value) {
+            this._data = value;
 
-//                 this.setAttribute('template-conversion-url', value);
-//                 this.form.action = value;
-//             }
-//         }
-//     });
+            if (this._data && this._data.length > 0) {
+                this.hasData = true;
+            } else {
+                this.hasData = false;
+            }
 
-//     /**
-//      * @description Executes when the element is first created
-//      * @access private
-//      * @type {Event}
-//      * @this {ca-export} - current instance of ca-export
-//      */
-//     proto.createdCallback = function() {
+            if (this.showRecordCount) {
+                this.button.textContent += ` (${(this.data || []).length} records)`;
+            }
+        }
 
-//         var self = this;
+        /**
+         * Gets has data attribute
+         * @returns {boolean} setting for has data status
+         */
+        get hasData() {
+            return this.getAttribute('has-data');
+        }
 
-//         self.showRecordCount = true;
+        /**
+         * Sets hasData vflag
+         * @param {boolean} value, boolean to trigger has data/
+         */
+        set hasData(value) {
+            this.setAttribute('has-data', value === true);
+        }
 
-//         // insert download button
-//         self.button = helpers.createEl(self, 'a', {'class':'ca-export-button', 'href':'#', 'target':'_blank', 'download': self.filename}, self.label || '');
-//         self.button.onclick = self.downloadHandler.bind(self);
-//     };
+        /**
+         * Gets export type
+         * @returns {string} export setting
+         */
+        get type() {
+            return this.getAttribute('type') || 'csv';
+        }
 
-//     /**
-//      * @description Executes when any attribute is changed on the element
-//      * @access private
-//      * @type   {Event}
-//      * @this   {ca-export} - current instance of ca-export
-//      * @param  {string} attrName - the name of the attribute to have changed
-//      * @param  {string} oldVal - the old value of the attribute
-//      * @param  {string} newVal - the new value of the attribute
-//      */
-//     proto.attributeChangedCallback = function(attrName, oldVal, newVal){
+        /**
+         * Sets the type of export
+         * @param {string} value, sets the export type attribute.
+         */
+        set type(value) {
+            // ensure its always csv or xls
+            const fileType = value !== 'xlsx' ? 'csv' : 'xlsx';
+            this.setAttribute('type', fileType);
+        }
 
-//         switch (attrName){
-//             case 'label':{
-//                 this.button[txtProp] = this.label;
-//             } break;
+        /**
+         * Gets the template converstion url
+         * @returns {string} url for conversion
+         */
+        get templateConversionUrl() {
+            return this.getAttribute('template-conversion-url') || '/excel-download';
+        }
 
-//             case 'filename':{
-//                 this.button.setAttribute('download', this.filename);
-//             } break;
-//         }
-//     }
+        /**
+         * Sets the type of export
+         * @param {string} value, conversion url, default to /excel-download
+         */
+        set templateConversionUrl(value = '/excel-download') {
+            this.setAttribute('template-conversion-url', value);
+            this.form.action = value;
+        }
 
-//     /**
-//      * Called before download, returning false cancels the download
-//      */
-//     proto.onbeforedownload = function(){
+       /**
+        * onbeforedownload - Called before download, returning false cancels the download
+        * @param {Event} e, event object.
+        * @returns {undefined} void function.
+        */
+        onbeforedownload() {
 
-//     };
+        }
 
-//     /**
-//      * @description Fires once the download has completed (it's all local);
-//      * @access private
-//      * @type {Event}
-//      * @this {ca-export} - current instance of ca-export
-//      */
-//     proto.ondownloadcomplete = function(){
+       /**
+        * ondownloadcomplete - Fires once the download has completed (it's all local);
+        * @param {Event} e, event object.
+        * @returns {undefined} void function.
+        */
+        ondownloadcomplete() {
 
-//     };
+        }
 
-//     /**
-//      * @description Executes when the user clicks the download button
-//      * @access private
-//      * @type {Event}
-//      * @this {ca-export} - current instance of ca-export
-//      */
-//     proto.downloadHandler = function(e){
-//         e = e || event;
-//         var self = this,
-//             el = e.target || e.srcElement;
+        /**
+         * Event handler - Executes when the user clicks the download button
+         * @param {Event} e, event object.
+         * @returns {undefined} void function.
+         */
+        downloadHandler(e = event) {
+            const el = e.target || e.srcElement;
 
-//         // if onbeforedownload is not a function or if that handler returns anything other than false
-//         if (!self.onbeforedownload || self.onbeforedownload()!==false){
+            // if onbeforedownload is not a function or if that handler returns anything other than false
+            if (!this.onbeforedownload || this.onbeforedownload() !== false) {
 
-//             switch (self.type){
+                switch (this.type) {
+                    case 'csv': {
+                        // convert the data into CSV content
+                        const data = jsonToCSV(this.schema, this.data);
 
-//                 case "csv":{
+                        // trigger the download using a datauri (encoding content)
+                        el.href = `data:text/plain;charset=utf-8,${encodeURIComponent(data)}`;
 
-//                     // convert the data into CSV content
-//                     var data = helpers.jsonToCSV(self.schema, self.data);
+                    } break;
 
-//                     // trigger the download using a datauri (encoding content)
-//                     el.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(data);
+                    case 'xlsx': {
+                        cancelEvent(e);
 
-//                 } break;
+                        const schema = (this.schema || {}).properties || {}; // get schema keys
+                        const keys = []; // actual schema object keys
+                        const headers = []; // headers to use in excel file
+                        const data = (this.data.length > 0) ? this.data : [{}]; // ensure we always have at least 1 item (so we can download just the headers)
+                        const rows = []; // rows of data
 
-//                 case "xlsx":{
+                        // get keys we're interested in
+                        Object.keys(schema).forEach((key) => {
+                            if (Object.prototype.hasOwnProperty.call(schema, key) && key !== 'links') {
+                                keys.push(key);
+                            }
+                        });
 
-//                     helpers.cancelEvent(e);
+                        // build headers (use .title if present, otherwise the schema key)
+                        keys.forEach((key) => {
+                            headers.push(schema[key].title || key);
+                        });
 
-//                     var schema = (self.schema || {}).properties || {},  // get schema keys
-//                         keys = [],                                      // actual schema object keys
-//                         headers = [],                                   // headers to use in excel file
-//                         data = (self.data.length>0) ? self.data : [{}], // ensure we always have at least 1 item (so we can download just the headers)
-//                         rows = [];                                      // rows of data
+                        if (headers.length > 0) {
+                            // go through each data item and create new objects using headers as keys
+                            for (let i = 0, l = data.length; i < l; i++) {
+                                const item = {};
 
-//                     // get keys we're interested in
-//                     Object.keys(schema).forEach(function(key){
-//                         if (schema.hasOwnProperty(key) && key !== 'links'){
-//                             keys.push(key);
-//                         }
-//                     });
+                                for (let ii = 0, ll = keys.length; ii < ll; ii++) {
+                                    item[headers[ii]] = data[i][keys[ii]] || '';
+                                }
+                                rows.push(item);
+                            }
 
-//                     // build headers (use .title if present, otherwise the schema key)
-//                     keys.forEach(function(key){
-//                         headers.push(schema[key].title || key);
-//                     });
+                            // post to server via iframe, server will convert to excel and trigger a download
+                            postViaIframe(this.templateConversionUrl, {
+                                json: JSON.stringify(rows)
+                            });
+                        }
 
-//                     if (headers.length > 0) {
+                    } break;
 
-//                         // go through each data item and create new objects using headers as keys
-//                         for (var i=0, l=data.length; i<l; i++){
-//                             var item = {};
+                    default: break;
 
-//                             for (var ii=0,ll=keys.length; ii<ll; ii++){
-//                                 item[headers[ii]] = data[i][keys[ii]] || '';
-//                             }
+                }
 
-//                             rows.push(item);
-//                         }
+                // execute download complete, fire external event handler
+                if (this.ondownloadcomplete) this.ondownloadcomplete();
+            } else {
+                // if onbeforedownload returned false, cancel the event
+                cancelEvent(e);
+            }
+        }
+    }
 
-//                         // post to server via iframe, server will convert to excel and trigger a download
-//                         helpers.postViaIframe(self.templateConversionUrl, {
-//                             json: JSON.stringify(rows)
-//                         });
-//                     }
+    // Register our new element
+    document.registerElement('ca-export', Export);
 
-//                 } break;
-
-//             }
-
-//             // execute download complete, fire external event handler
-//             if (this.ondownloadcomplete) this.ondownloadcomplete();
-//         }
-//         else {
-//             // if onbeforedownload returned false, cancel the event
-//             helpers.cancelEvent(e);
-//         }
-//     };
-
-//     // Register our new element
-//     document.registerElement(componentName, { prototype: proto });
-
-// })(HTMLElement.prototype, document, helpers, componentSupport);
+});
