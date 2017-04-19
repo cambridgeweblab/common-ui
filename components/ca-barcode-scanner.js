@@ -1,7 +1,5 @@
 /* global cordova */
 define(['./helpers/create-element.js', 'document-register-element'], (createElement) => {
-    const txtProp = ('textContent' in document.createElement('i')) ? 'textContent' : 'innerText';
-
     /**
      * @exports ca-barcode-scanner
      * @description A custom HTML element (Web Component) that can be created using
@@ -36,7 +34,7 @@ define(['./helpers/create-element.js', 'document-register-element'], (createElem
          */
         attributeChangedCallback(attrName, oldVal, newVal) {
             switch (attrName) {
-                case 'title': this.button[txtProp] = newVal; break;
+                case 'title': this.button.textContent = newVal; break;
                 default: break;
             }
         }
@@ -52,7 +50,7 @@ define(['./helpers/create-element.js', 'document-register-element'], (createElem
          */
         set title(title) {
             this.setAttribute('title', title);
-            this.button[txtProp] = title;
+            this.button.textContent = title;
         }
 
         /** @property {string} ca-barcode-scanner.value - the value of the barcode scanned */
