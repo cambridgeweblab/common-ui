@@ -33,6 +33,9 @@ build:
   # Version of Chromedriver that has support for Chrome 48. See https://chromedriver.storage.googleapis.com/2.27/notes.txt
   - npm uninstall chromedriver
   - npm install chromedriver@2.21
+  # Make sure we don't get the old ones
+  - rm -rf node_modules/selenium-standalone/.selenium/chromedriver/
+  - rm -rf node_modules/selenium-standalone/.selenium/geckodriver/
   - ./node_modules/bower/bin/bower install --allow-root
   - mkdir -p shippable/buildoutput
   - xvfb-run --server-args="-ac" npm test
