@@ -267,7 +267,7 @@ define([
                 });
                 dlg.closeIcon = (!dlg.params.modal) ? createElement(this.dialog, 'span', {
                     class: 'dialog-close'
-                }, 'x') : null;
+                }, '×') : null;
                 if (params.title !== '') {
                     dlg.title = createElement(this.dialog, 'h1', {
                         class: 'dialog-title'
