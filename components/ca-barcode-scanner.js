@@ -83,7 +83,7 @@ define(['./helpers/create-element.js', 'document-register-element'], (createElem
          * @param {event} e, event object from action.
          * @returns {undefined}
          */
-        eventDelegate(e) {
+        eventDelegate(e = event) {
             const el = e.target || e.srcElement;
             const type = e.type.toLowerCase();
             const tag = el.tagName.toLowerCase();
