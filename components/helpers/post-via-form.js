@@ -1,0 +1,27 @@
+define('post-via-form', ['./create-element.js'], (createElement) =>
+    /**
+     * Posts json data as a regular form post
+     * @param {string} url - url to post to
+     * @param {object} data - json object containing key/value pairs to post
+     * @returns {undefined} nothing
+     */
+    function postViaForm(url, data) {
+
+        const form = createElement(document.body, 'form', {
+            action: url,
+            enctype: 'application/x-www-form-urlencoded',
+            method: 'POST',
+            style: 'display: none !important'
+        });
+
+        Object.keys(data).forEach(key => {
+            createElement(form, 'input', {
+                type: 'hidden',
+                name: key,
+                value: data[key]
+            });
+        });
+
+        form.submit();
+    }
+);
