@@ -1,0 +1,20 @@
+ca-override > *:last-child {
+    display: none;
+}
+
+ca-override[checked='checked'] > *:last-child {
+    display: block;
+}
+
+ca-override > input[type='checkbox'] {
+    float: left;
+    margin-top: 12px;
+}
+
+ca-override > ca-property {
+    margin-left: 24px;
+}
+
+ca-override[checked='checked'] > ca-property > p {
+    opacity: 0.3;
+}
