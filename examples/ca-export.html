@@ -12,7 +12,9 @@
       <a id="home" href="/"></a>
     </div>
     <div class="ca-title">CA EXPORT EXAMPLE</div>
-    <ca-export readonly="false" />
+    <div style="padding: 20px;">
+      <ca-export readonly="false" filename="test.csv" />
+    </div>
     <script>
         SystemJS.import('ca-export.js');
     </script>

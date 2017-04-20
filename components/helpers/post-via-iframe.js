@@ -1,4 +1,4 @@
-define('post-via-iframe', ['./helpers/create-element.js'], (createElement) =>
+define('post-via-iframe', ['./create-element.js'], (createElement) =>
     /**
       * Sends data to the server via a form post in a hidden frame
       * @param {string} url - url to post the data to
