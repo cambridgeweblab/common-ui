@@ -4,7 +4,7 @@ define('json-to-csv', [], () =>
     * @param {object} schema - json schema used to render column headers
     * @param {obejct} data - data array contining items to render as rows
     */
-    function jsonToCSV(schema, data = [], separator = ' ,', lineTerminator = '\n') {
+    function jsonToCSV(schema, data = [], separator = ',', lineTerminator = '\n') {
         // eslint-disable-next-line no-param-reassign
         schema = ((schema && schema.properties) ? schema.properties : schema || {});
 
