@@ -2,14 +2,14 @@
 define([
     './helpers/create-element.js',
     './helpers/cancel-event.js',
-    './helpers/clear-event.js',
     './helpers/clear-element.js',
     './helpers/component-support.js',
     './helpers/post-via-iframe.js',
     './helpers/trace.js',
-    './helpers/validate-against-schema',
+    './helpers/validate-against-schema.js',
+    './helpers/to-camel-case.js',
     'document-register-element'
-], (createElement, cancelEvent, clearEvent, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
+], (createElement, cancelEvent, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema, toCamelCase) => {
 
     //
     // TODO: consider adding method to validate attachment data against headers before firing external events
@@ -35,9 +35,9 @@ define([
             createElement(table, 'thead', {});
             createElement(table, 'tbody', {});
 
-            this.input.onchange = fileHandler.bind(this);
-            this.input.onclick = fileClick.bind(this);
-            this.link.onclick = downloadTemplateHandler.bind(this);
+            this.input.onchange = this.fileHandler.bind(this);
+            this.input.onclick = this.fileClick.bind(this);
+            this.link.onclick = this.downloadTemplateHandler.bind(this);
         }
 
         /**
@@ -331,11 +331,10 @@ define([
             data = data || this._data;
 
             if (data) {
-                const table = $('table', this);
-                const colGroup = $('colgroup', table);
-                const thead = $('thead', table);
-                const tbody = $('tbody', table);
-                let tr = null;
+                const table = this.querySelector('table');
+                const colGroup = this.querySelector('colgroup');
+                const thead = this.querySelector('thead');
+                const tbody = this.querySelector('tbody');
 
                 // remove previous values
                 clearElement(colGroup);
@@ -351,13 +350,13 @@ define([
 
                 if (headers.length > 0) {
 
-                    tr = createElement(null, 'tr');
+                    const tr = createElement(null, 'tr');
 
                     // insert table headers
                     for (let i = 0, l = headers.length; i < l; i++) {
 
                         const label = headers[i].replace('*', '');
-                        const key = label.trim().toCamelCase();
+                        const key = toCamelCase(label.trim());
 
                         // insert selection col/header cell
                         createElement(colGroup, 'col', { 'data-key': key });
@@ -374,7 +373,7 @@ define([
 
                 data.forEach((item, index) => {
 
-                    tr = createElement(null, 'tr');
+                    const tr = createElement(null, 'tr');
 
                     for (let i = 0, l = headers.length; i < l; i++) {
 
@@ -388,334 +387,339 @@ define([
                 });
             }
         }
-    }
 
-   /**
-    * if we have first row values, bind with add them as an example row (to be removed during import)
-    * @returns {array} example row.
-    */
-    function buildExampleRow() {
+        /**
+         * if we have first row values, bind with add them as an example row (to be removed during import)
+         * @returns {array} example row.
+         */
+        buildExampleRow() {
 
-        if (this.firstRow.length > 0) {
+            if (this.firstRow.length > 0) {
 
-            const exampleRow = {};
-            const len = Math.min(this.headers.length, this.firstRow.length);
+                const exampleRow = {};
+                const len = Math.min(this.headers.length, this.firstRow.length);
 
-            for (let i = 0; i < len; i++) {
-                exampleRow[this.headers[i]] = this.firstRow[i] || '';
+                for (let i = 0; i < len; i++) {
+                    exampleRow[this.headers[i]] = this.firstRow[i] || '';
+                }
+
+                return exampleRow;
             }
 
-            return exampleRow;
+            return null;
         }
 
-        return null;
-    }
-
-    function downloadTemplateHandler(e = event) {
-        const el = e.target || e.srcElement;
-
-        switch (this.type) {
-
-            case 'csv': el.href = `data:text/plain;charset=utf-8,${encodeURIComponent(this.headers)}`; break;
-
-            case 'xlsx': {
-
-                cancelEvent(e);
-
-                const rows = [];      // collection of rows
-                const rowData = {};   // individual row item (js object key/values)
-
-                // convert header array into a JSON key/value object
-                for (let i = 0, l = self.headers.length; i < l; i++) {
-                    rowData[self.headers[i]] = '';
-                }
-
-                // get the example row if this.firstRow attribute is set
-                const exampleRow = buildExampleRow.call(this);
-                if (exampleRow) {
-                    rows.push(exampleRow);
-                }
-
-                // as its a template create some blank rows to ensure formatting is respected
-                let numOfBlankRows = 25;
-                while (numOfBlankRows--) {
-                    rows.push(rowData);
-                }
-
-                // post to server via iframe, server will convert to excel and trigger a download
-                postViaIframe(this.templateConversionUrl, {
-                    json: JSON.stringify(rows)
-                });
-
-            } break;
-
-            default: break;
-        }
-    }
-
-    /**
-     * clear the file upload path to allow the same file to trigger the onchange event
-     * @param {event} e, event triggered
-     * @returns {undefined} nothing.
-     */
-    function fileClick(e) {
-        this.input.value = '';
-    }
-
-    /**
-     * File event handler
-     * @param {event} e, event triggered
-     * @returns {undefined} example row.
-     */
-    function fileHandler(e = event) {
-        const el = e.target || e.srcElement;
-
-        if (el && el.files) {
-
-            const file = el.files[0];
+        downloadTemplateHandler(e = event) {
+            const el = e.target || e.srcElement;
 
             switch (this.type) {
-                case 'csv': readFileAsCsv.call(this, file); break;
-                case 'xlsx': convertXlsxToJson.call(this); break;
+
+                case 'csv': el.href = `data:text/plain;charset=utf-8,${encodeURIComponent(this.headers)}`; break;
+
+                case 'xlsx': {
+
+                    cancelEvent(e);
+
+                    const rows = [];      // collection of rows
+                    const rowData = {};   // individual row item (js object key/values)
+
+                     // convert header array into a JSON key/value object
+                    for (let i = 0, l = self.headers.length; i < l; i++) {
+                        rowData[self.headers[i]] = '';
+                    }
+
+                     // get the example row if this.firstRow attribute is set
+                    const exampleRow = this.buildExampleRow.call(this);
+                    if (exampleRow) {
+                        rows.push(exampleRow);
+                    }
+
+                     // as its a template create some blank rows to ensure formatting is respected
+                    let numOfBlankRows = 25;
+                    while (numOfBlankRows--) {
+                        rows.push(rowData);
+                    }
+
+                     // post to server via iframe, server will convert to excel and trigger a download
+                    postViaIframe(this.templateConversionUrl, {
+                        json: JSON.stringify(rows)
+                    });
+
+                } break;
+
                 default: break;
             }
         }
-    }
 
-    /**
-     * check each row against the schema, if its invalid add it to the list or errors returned
-     * @param {object} dataObjects - array of excel data in object (key/value) format
-     * @returns {array} list of errors.
-     */
-    function validateRows(dataObjects) {
-        const errors = [];
-
-        if (this.schema && this.schema.properties) {
-
-            dataObjects.forEach(function(row, index) {
-
-                // eslint-disable-next-line no-restricted-syntax
-                for (const key in row) {
-                    if (Object.prototype.hasOwnProperty.call(row, key)) {
-                        const error = validateAgainstSchema(this.schema, key, row[key]);
-
-                        if (error) {
-                            errors.push([index + 1, key, row[key], error]);
-                        }
-                    }
-                }
-            });
+         /**
+          * clear the file upload path to allow the same file to trigger the onchange event
+          * @param {event} e, event triggered
+          * @returns {undefined} nothing.
+          */
+        fileClick(e) {
+            this.input.value = '';
         }
 
-        return errors;
-    }
+         /**
+          * File event handler
+          * @param {event} e, event triggered
+          * @returns {undefined} example row.
+          */
+        fileHandler(e = event) {
+            const el = e.target || e.srcElement;
 
-    /**
-     * To convert the .xls file we upload it to the server and get an JSON array for each worksheet back
-     * @param {object} file - array of excel data in object (key/value) format
-     * @returns {undefined} nothing.
-     */
-    function convertXlsxToJson(file) {
-        const formData = new FormData();
+            if (el && el.files) {
 
-        // use the browser form object to handle the upload (removes the need to parse the file)
-        formData.append('ca-import-upload', this.input.files[0]);
+                const file = el.files[0];
 
-        // preform the conversion
-        componentSupport.request({
-            url: this.convertUrl,
-            type: 'POST',
-            dataType: 'json',
-            data: formData
-        })
-        .then(data => {
+                switch (this.type) {
+                    case 'csv': this.readFileAsCsv.call(this, file); break;
+                    case 'xlsx': this.convertXlsxToJson.call(this); break;
+                    default: break;
+                }
+            }
+        }
 
-            if (data && data.length > 0 && data[0].length > 0) {
+         /**
+          * check each row against the schema, if its invalid add it to the list or errors returned
+          * @param {object} dataObjects - array of excel data in object (key/value) format
+          * @returns {array} list of errors.
+          */
+        validateRows(dataObjects) {
+            const errors = [];
 
-                // keep a raw copy for debugging
-                this._raw = data;
+            if (this.schema && this.schema.properties) {
 
-                // remove the example row if it exists anywhere in the table of data
-                const dataWithoutExampleRow = (data[0] || []).filter(row => {
+                dataObjects.forEach(function(row, index) {
 
-                    // only do this check if ca-import has .firstRow values
-                    if (this.firstRow && this.firstRow.length > 0) {
+                     // eslint-disable-next-line no-restricted-syntax
+                    for (const key in row) {
+                        if (Object.prototype.hasOwnProperty.call(row, key)) {
+                            const error = validateAgainstSchema(this.schema, key, row[key]);
 
-                        // assume this row is an example row
-                        let isExampleRow = true;
-
-                        // go through each cell value, if we dont get a match flip isExampleRow
-                        for (let i = 0, l = this.firstRow.length; i < l; i++) {
-                            if (row[i] !== this.firstRow[i]) {
-                                isExampleRow = false;
-                                break;
+                            if (error) {
+                                errors.push([index + 1, key, row[key], error]);
                             }
                         }
-
-                        // only return true if this is not an example row (removes it from the array)
-                        return (!isExampleRow);
                     }
-
-                    // we dont have a firstRow so just include all rows
-                    return true;
                 });
-
-                // convert table data into array of objects, key/value object for each row
-                const jsonData = convertExcelJsonToJsonKeyedObjects.call(this, dataWithoutExampleRow);
-
-                // validate if we have a schema
-                const errors = validateRows.call(this, jsonData);
-
-                if (errors.length <= 0) {
-
-                    // convert worksheet row/col data into array of json objects (ignore everything other than the first worksheet - for now!)
-                    this._data = jsonData;
-
-                    // fire an event to let the consumer know a file with data was added
-                    // if the handler returns false, the file will not be rendered
-                    if (this.onfileadded.call(this, this._data) !== false) {
-
-                        // insert a HTML table containing the data
-                        this.render.call(this);
-
-                        // allow CSS to update the UI (removed input and displays table)
-                        this.hasData = true;
-                        this.hasErrors = false;
-                    }
-                } else {
-
-                    // insert a HTML table containing errors
-                    this.render.call(this, ['Row', 'Column', 'Value', 'Error'], errors);
-
-                    // allow CSS to update the UI (shows the table of errors)
-                    this.hasErrors = true;
-
-                    // clear the file upload path to allow the same file to trigger the onchange event
-                    this.input.value = '';
-
-                    console.log(errors);
-                }
             }
 
-        });
-    }
+            return errors;
+        }
 
-    function readFileAsCsv(file) {
+         /**
+          * To convert the .xls file we upload it to the server and get an JSON array for each worksheet back
+          * @param {object} file - array of excel data in object (key/value) format
+          * @returns {undefined} nothing.
+          */
+        convertXlsxToJson(file) {
+            const formData = new FormData();
 
-        const self = this;
+             // use the browser form object to handle the upload (removes the need to parse the file)
+            formData.append('ca-import-upload', this.input.files[0]);
 
-        if (file) {
+             // preform the conversion
+            componentSupport.request({
+                url: this.convertUrl,
+                type: 'POST',
+                dataType: 'json',
+                data: formData
+            })
+             .then(data => {
 
-            const reader = new FileReader();
+                 if (data && data.length > 0 && data[0].length > 0) {
 
-            // once loaded, update the UI
-            reader.onload = function() {
+                     // keep a raw copy for debugging
+                     this._raw = data;
 
-                // if we have some file data, process it
-                if (this.result !== '') {
+                     // remove the example row if it exists anywhere in the table of data
+                     const dataWithoutExampleRow = (data[0] || []).filter(row => {
 
-                    // keep a raw copy
-                    self._raw = this.result;
+                         // only do this check if ca-import has .firstRow values
+                         if (this.firstRow && this.firstRow.length > 0) {
 
-                    // convert CSV into array of JSON object and expose them via this.data property
-                    self._data = convertCsvToJson.call(self, this.result);
+                             // assume this row is an example row
+                             let isExampleRow = true;
 
-                    // fire an event to let the consumer know a file with data was added
-                    // if the handler returns false, the file will not be rendered
-                    if (self.onfileadded.call(self, self._data) !== false) {
+                             // go through each cell value, if we dont get a match flip isExampleRow
+                             for (let i = 0, l = this.firstRow.length; i < l; i++) {
+                                 if (row[i] !== this.firstRow[i]) {
+                                     isExampleRow = false;
+                                     break;
+                                 }
+                             }
 
-                        // insert a HTML table containing the data
-                        self.render.call(self);
+                             // only return true if this is not an example row (removes it from the array)
+                             return (!isExampleRow);
+                         }
 
-                        // allow CSS to update the UI (removed input and displays table)
-                        self.hasData = true;
+                         // we dont have a firstRow so just include all rows
+                         return true;
+                     });
 
+                     // convert table data into array of objects, key/value object for each row
+                     const jsonData = this.convertExcelJsonToJsonKeyedObjects.call(this, dataWithoutExampleRow);
+
+                     // validate if we have a schema
+                     const errors = this.validateRows.call(this, jsonData);
+
+                     if (errors.length <= 0) {
+
+                         // convert worksheet row/col data into array of json objects (ignore everything other than the first worksheet - for now!)
+                         this._data = jsonData;
+
+                         // fire an event to let the consumer know a file with data was added
+                         // if the handler returns false, the file will not be rendered
+                         if (this.onfileadded.call(this, this._data) !== false) {
+
+                             // insert a HTML table containing the data
+                             this.render.call(this);
+
+                             // allow CSS to update the UI (removed input and displays table)
+                             this.hasData = true;
+                             this.hasErrors = false;
+                         }
+                     } else {
+
+                         // insert a HTML table containing errors
+                         this.render.call(this, ['Row', 'Column', 'Value', 'Error'], errors);
+
+                         // allow CSS to update the UI (shows the table of errors)
+                         this.hasErrors = true;
+
+                         // clear the file upload path to allow the same file to trigger the onchange event
+                         this.input.value = '';
+
+                         console.log(errors);
+                     }
+                 }
+
+             });
+        }
+
+         /**
+          * Reads file as CSV and loads the file
+          * @param {file} file to read
+          * @returns {undefined} nothing, reads file as text
+          */
+        readFileAsCsv(file) {
+
+            const self = this;
+
+            if (file) {
+
+                const reader = new FileReader();
+
+                 // once loaded, update the UI
+                reader.onload = function() {
+
+                     // if we have some file data, process it
+                    if (this.result !== '') {
+
+                         // keep a raw copy
+                        self._raw = this.result;
+
+                         // convert CSV into array of JSON object and expose them via this.data property
+                        self._data = self.convertCsvToJson.call(self, this.result);
+
+                         // fire an event to let the consumer know a file with data was added
+                         // if the handler returns false, the file will not be rendered
+                        if (self.onfileadded.call(self, self._data) !== false) {
+
+                             // insert a HTML table containing the data
+                            self.render.call(self);
+
+                             // allow CSS to update the UI (removed input and displays table)
+                            self.hasData = true;
+
+                        }
                     }
-                }
-            };
+                };
 
-            // load the file data
-            reader.readAsText(file);
-        }
-    }
-
-    /**
-     * Takes a JSON Array of worksheet data (returned from server Excel > JSON)
-     * Creates a JSON object for each row of data using column headers as keys
-     * @param {array} data - single worksheet json array containing rows/columns (first row must have headers)
-     * @returns {array} json object array.
-     */
-    function convertExcelJsonToJsonKeyedObjects(data) {
-
-        if (!data) return;
-
-        const result = [];
-        const headers = data[0];
-        const rowLen = data.length;
-        const colLen = headers.length;
-        const schema = (this.schema || {}).properties;
-        let row = [];
-        let item = {};
-        let key = '';
-
-        // go through all rows (skipping the header)
-        for (let i = 1; i < rowLen; i++) {
-
-            row = data[i];
-            item = {};      // clear previous item
-
-            // create line item (a cell at a time)
-            for (let ii = 0; ii < colLen; ii++) {
-
-                // use header item as the key (remove any asterisks which indicate its a mandatory field)
-                key = headers[ii].replace('*', '');
-
-                // set the property value
-                item[key] = row[ii] || '';
-
-                // if the item is not required and is empty, remove it (dont send empty strings to the server as spring attempts to run them through the regex)
-                if (schema && schema[key] && !schema[key].required && item[key] === '') {
-                    delete item[key];
-                }
+                 // load the file data
+                reader.readAsText(file);
             }
-
-            result.push(item);
         }
-        // eslint-disable-next-line consistent-return
-        return result;
-    }
 
-    /**
-     * Takes a JSON Array of worksheet data (returned from server CSV > JSON)
-     * Creates a JSON object for each row of data using column headers as keys
-     * @param {array} text - single worksheet json array containing rows/columns (first row must have headers)
-     * @returns {array} json object array.
-     */
-    function convertCsvToJson(text) {
-        const lines = text.split(/\r\n?|\n/);
-        const headers = lines[0].split(',');
-        const result = [];
+         /**
+          * Takes a JSON Array of worksheet data (returned from server Excel > JSON)
+          * Creates a JSON object for each row of data using column headers as keys
+          * @param {array} data - single worksheet json array containing rows/columns (first row must have headers)
+          * @returns {array} json object array.
+          */
+        convertExcelJsonToJsonKeyedObjects(data) {
 
-        for (let i = 1, l = lines.length; i < l; i++) {
+            if (!data) return;
 
-            const data = lines[i].split(',');
+            const result = [];
+            const headers = data[0];
+            const rowLen = data.length;
+            const colLen = headers.length;
+            const schema = (this.schema || {}).properties;
+            let row = [];
+            let item = {};
+            let key = '';
 
-            if (data.length === headers.length) {
+             // go through all rows (skipping the header)
+            for (let i = 1; i < rowLen; i++) {
 
-                const item = {};
+                row = data[i];
+                item = {};      // clear previous item
 
-                for (let ii = 0, ll = headers.length; ii < ll; ii++) {
-                    const key = headers[ii].trim().toCamelCase();
-                    item[key] = data[ii].trim();
+                 // create line item (a cell at a time)
+                for (let ii = 0; ii < colLen; ii++) {
+
+                     // use header item as the key (remove any asterisks which indicate its a mandatory field)
+                    key = headers[ii].replace('*', '');
+
+                     // set the property value
+                    item[key] = row[ii] || '';
+
+                     // if the item is not required and is empty, remove it (dont send empty strings to the server as spring attempts to run them through the regex)
+                    if (schema && schema[key] && !schema[key].required && item[key] === '') {
+                        delete item[key];
+                    }
                 }
 
                 result.push(item);
             }
+             // eslint-disable-next-line consistent-return
+            return result;
         }
 
-        this.headers = headers;
+         /**
+          * Takes a JSON Array of worksheet data (returned from server CSV > JSON)
+          * Creates a JSON object for each row of data using column headers as keys
+          * @param {array} text - single worksheet json array containing rows/columns (first row must have headers)
+          * @returns {array} json object array.
+          */
+        convertCsvToJson(text) {
+            const lines = text.split(/\r\n?|\n/);
+            const headers = lines[0].split(',');
+            const result = [];
 
-        return result;
+            for (let i = 1, l = lines.length; i < l; i++) {
+
+                const data = lines[i].split(',');
+
+                if (data.length === headers.length) {
+
+                    const item = {};
+
+                    for (let ii = 0, ll = headers.length; ii < ll; ii++) {
+                        const key = toCamelCase(headers[ii].trim());
+                        item[key] = data[ii].trim();
+                    }
+
+                    result.push(item);
+                }
+            }
+
+            this.headers = headers;
+
+            return result;
+        }
     }
 
     document.registerElement('ca-import', Import);

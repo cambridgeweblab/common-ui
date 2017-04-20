@@ -1,0 +1,42 @@
+ca-import { position: relative; }
+
+/* fake upload button */
+ca-import form { display: inline-block; position: relative; overflow: hidden; color: #fff; cursor: pointer; background-color: #333; border: 1px solid #333; margin: 10px 0; padding: 0.5em 2em; border-radius: 5px; text-align: center; }
+ca-import form span { line-height: inherit !important; }
+ca-import form input { position: absolute; top: 0; right: 0; margin: 0; padding: 0; font-size: 20px; cursor: pointer; opacity: 0; filter: alpha(opacity=0); }
+
+ca-import .ca-import-download { display: none; text-decoration: none; overflow: hidden; color: #fff; cursor: pointer; background-color: #333; border: 1px solid #333; margin: 10px; padding: 0.5em 2em; border-radius: 5px; text-align: center; }
+
+ca-import label { display: block; margin: 10px 0 0 0; position: relative; }
+ca-import label span { font-weight: bold; display: block; line-height: 1.75em; text-transform: capitalize; }
+
+ca-import table { display: none; table-layout: fixed; width: 100%; border-collapse: collapse; margin-top: 10px; }
+ca-import table th { background: #e6e6e6; color: #333; text-align: left; }
+ca-import table td,
+ca-import table th { padding: 0.5em; border: 1px solid #b3b3b3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; word-wrap: break-word; }
+
+ca-import[headers] .ca-import-download { display: inline-block; }
+/*ca-import[has-data="true"] form,*/
+/*ca-import[has-data="true"] .ca-import-download { display: none; }*/
+
+ca-import[has-data="true"][has-errors="false"] .ca-import-download,
+ca-import[has-data="true"][has-errors="false"] form { display: inline-block; }
+
+ca-import[has-data="true"][has-errors="false"] label:after {
+    content: 'Here is a preview of the imported file';
+    display: block;
+    color: #990000;
+}
+ca-import[has-errors="true"] label:after {
+    content: 'The imported file contains the following validation errors; please correct and try again';
+    display: block;
+    color: #990000;
+}
+
+ca-import[has-data="true"] table,
+ca-import[has-errors="true"] table { display: table !important; }
+
+ca-import[has-errors="true"] col[data-key="row"] { width: 8% !important; }
+ca-import[has-errors="true"] col[data-key="column"] { width: 16% !important; }
+ca-import[has-errors="true"] col[data-key="value"] { width: 20% !important; }
+ca-import[has-errors="true"] col[data-key="error"] { width: 50% !important; }
