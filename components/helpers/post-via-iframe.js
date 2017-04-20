@@ -1,63 +1,36 @@
-define('json-to-csv', [], () =>
+define('post-via-iframe', ['./helpers/create-element.js'], (createElement) =>
     /**
-    * Converts a JSON schema+data into valid CSV string
-    * @param {object} schema - json schema used to render column headers
-    * @param {obejct} data - data array contining items to render as rows
-    */
-    function jsonToCSV(schema, data = [], separator = ' ,', lineTerminator = '\n') {
-        // eslint-disable-next-line no-param-reassign
-        schema = ((schema && schema.properties) ? schema.properties : schema || {});
+      * Sends data to the server via a form post in a hidden frame
+      * @param {string} url - url to post the data to
+      * @param {object} data - JSON key/value object - a hidden field is created for each key
+      */
+    function postViaIframe(url, data) {
+        const targetName = `_post_via_iframe_${Date.now()}`;
+        // eslint-disable-next-line no-used-vars
+        const iframe = createElement(document.body, 'iframe', {
+            src: '',
+            name: targetName,
+            style: 'display: none; visibility: hidden;'
+        });
+        const form = createElement(document.body, 'form', {
+            action: url,
+            enctype: 'application/x-www-form-urlencoded',
+            method: 'POST',
+            target: targetName,
+            style: 'display: none !important'
+        });
 
-        // TECH-DEBT - sort out this throwing..
-        // eslint-disable-next-line no-throw-literal
-        if (separator.indexOf('"') > -1) throw 'Invalid separator';
-        // eslint-disable-next-line no-throw-literal
-        if (lineTerminator.indexOf('"') > -1) throw 'Invalid lineTerminator';
-
-        const keys = [];
-        let line = [];
-        const rows = [];
-        const headers = [];
-
-        // wraps any value containing separators in quotes
-        // need to also escape double quotes
-        const escapeValue = function (value) {
-            if (value.indexOf(separator) > -1 || value.indexOf(lineTerminator) > -1) {
-                return `"${value.replace(/"/g, '"')}"`;
+        // eslint-disable-next-line no-restricted-syntax
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                createElement(form, 'input', {
+                    type: 'hidden',
+                    name: key,
+                    value: data[key]
+                });
             }
-            return value;
-        };
+        }
 
-        // get keys we're interested in
-        Object.keys(schema).forEach(key => {
-            if (Object.prototype.hasOwnProperty.call(schema, key) && key !== 'links') {
-                keys.push(key);
-            }
-        });
-
-        // build headers
-        keys.forEach(key => {
-            headers.push(schema[key].title || key);
-        });
-
-        // add headers as first rows item
-        rows.push(headers.join(separator));
-
-        // build rows
-        data.forEach(item => {
-
-            line = []; // create new line collection
-
-            // add each data item to the current line
-            keys.forEach(key => {
-                line.push(escapeValue(item[key] || ''));
-            });
-
-            // convert line into CSV row and add to rows collection
-            rows.push(line.join(separator));
-        });
-
-        // split rows onto lines and return
-        return rows.join(lineTerminator);
+        form.submit();
     }
 );

@@ -19,17 +19,7 @@ define([
         createdCallback() {
             this.showRecordCount = true;
             // insert download button
-            this.button = createElement(
-                this,
-                'a',
-                {
-                    class: 'ca-export-button',
-                    href: '#',
-                    target: '_blank',
-                    download: this.filename
-                },
-                this.label || ''
-            );
+            this.button = createElement(this, 'a', { class: 'ca-export-button', href: '#', target: '_blank', download: this.filename }, this.label || '');
             this.button.onclick = this.downloadHandler.bind(this);
         }
 

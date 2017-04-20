@@ -21,12 +21,12 @@ define('json-to-csv', [], () =>
 
         // wraps any value containing separators in quotes
         // need to also escape double quotes
-        const escapeValue = function (value) {
+        function escapeValue(value) {
             if (value.indexOf(separator) > -1 || value.indexOf(lineTerminator) > -1) {
                 return `"${value.replace(/"/g, '"')}"`;
             }
             return value;
-        };
+        }
 
         // get keys we're interested in
         Object.keys(schema).forEach(key => {
