@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA INPUT ARRAY | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-input-array.css">
+  </head>
+  <body>
+    <test-fixture id="ca-input-array">
+      <template>
+        <ca-input-array min-items="5"></ca-input-array>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-input-array>', () => {
+            let caInputArray;
+
+            // TODO: CREATE TESTS, there were non associated with the original component
+            setup(done => {
+                SystemJS.import('ca-input-array.js').then(() => {
+                    caInputArray = fixture('ca-input-array');
+                    done();
+                });
+            });
+
+            test('should return correct defaults', () => {
+
+                expect(caInputArray.type).to.equal('text');
+                expect(caInputArray.sum).to.equal(0);
+                expect(caInputArray.min).to.equal(-1);
+                expect(caInputArray.max).to.equal(-1);
+                expect(caInputArray.divisibleBy).to.equal(1);
+                expect(caInputArray.maxLength).to.equal(-1);
+                expect(caInputArray.minItems).to.equal(5);
+                expect(caInputArray.maxItems).to.equal(-1);
+                expect(caInputArray.count).to.equal(5);
+            });
+
+            test('should create an input for each item', () => {
+
+                expect(caInputArray.querySelectorAll('input').length).to.equal(5);
+            });
+        });
+        a11ySuite('ca-input-array');
+    </script>
+  </body>
+</html>
