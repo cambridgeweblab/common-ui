@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>CA OVERRIDE | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link href="/examples/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/components/ca-override.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-property.css">
+    <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
+</head>
+
+<body>
+    <div class="ca-home">
+        <a id="home" href="/"></a>
+    </div>
+    <div class="ca-title">CA OVERRIDE</div>
+    <script>
+        SystemJS.import('ca-override.js').then(() => {
+            const caOverride = document.createElement('ca-override');
+            caOverride.name = 'telephone';
+            const input = document.createElement('input');
+            input.type = 'tel';
+            caOverride.appendChild(input);
+
+            caOverride.property = {
+                "type": "string",
+                "id": "order:01_telephone",
+                "required": true,
+                "maxLength": 60,
+                "minLength": 1,
+                "title": "Telephone Number",
+                "defaultValue": "01223 553311"
+            };
+            document.body.appendChild(caOverride);
+        });
+    </script>
+</body>
+
+</html>
