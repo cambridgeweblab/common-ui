@@ -1,14 +1,16 @@
 define([
     './helpers/component-support.js',
-    './helpers/create-element.js',
+    './helpers/create-element-legacy.js',
     './helpers/cancel-event.js',
     './helpers/clear-element.js',
     './helpers/clone-object.js',
     './helpers/schema-to-default.js',
     './helpers/parent-by-attribute.js',
     './helpers/dialogs.js',
+    './helpers/keyboard.js',
+    './ca-form.js',
     'document-register-element'
-], (componentSupport, createElement, cancelEvent, clearElement, cloneObject, schemaToDefault, dialogs, getParentByAttribute, keyboard) => {
+], (componentSupport, createElementLegacy, cancelEvent, clearElement, cloneObject, schemaToDefault, getParentByAttribute, dialogs, keyboard, caForm) => {
 
     const isValid = {
         _id(e) {
@@ -48,7 +50,7 @@ define([
                 // if there is a selected tool
                 if (selectedTool.tool) {
                     // create a new schema by cloning the selected tool from the form builder grand schema
-                    const newSchema = cloneObject(this.schemaToolbox.where('id', selectedTool.schemaType, true));
+                    const newSchema = cloneObject(this.schemaToolbox.find(s => s.id === selectedTool.schemaType));
 
                     // need to show the property form in the property area
                     this.propertyFormShow.call(this);
@@ -98,85 +100,75 @@ define([
 
         // <PreviewButton> methods
         clearFormClick(el, src) {
-            const self = this;
-
             // if the form has been modified then ask if you want to save before clearing
             if (this.modified) {
                 // if clear form dialog not already open
-                if (self.clearFormDialogOpen !== true) {
+                if (this.clearFormDialogOpen !== true) {
                     // set flag to say clear form dialog is now open
-                    self.clearFormDialogOpen = true;
+                    this.clearFormDialogOpen = true;
 
-                    dialogs.confirm('Do you want to save the modified file?', 'Clear Form', function(callback) {
+                    dialogs.confirm('Do you want to save the modified file?', 'Clear Form', (callback) => {
                         // closing dialog so reset flag to say clear form dialog is not open
-                        self.clearFormDialogOpen = false;
+                        this.clearFormDialogOpen = false;
 
                         if (callback === 'Yes') {
                             // save the form and clear the form
-                            this.saveForm.call(self).then(
-                                function() {
-                                    // save was successful so now clear the form
-                                    this.clearForm.call(self);
-                                },
-                                () => {
-                                    // the save failed so log the error and don't clear the form
-                                    dialogs.alert('Failed to save the form!', 'Clear Form', null, () => {}, 'dialog-clear-form');
-                                }
-                            );
+                            this.saveForm.call(this).then(() => {
+                                  // save was successful so now clear the form
+                                this.clearForm.call(this);
+                            })
+                              .catch(() => {
+                                  // the save failed so log the error and don't clear the form
+                                  dialogs.alert('Failed to save the form!', 'Clear Form', null, () => {}, 'dialog-clear-form');
+                              });
                         } else if (callback === 'No') {
                             // just clear the form
-                            this.clearForm.call(self);
+                            this.clearForm.call(this);
                         }
                     }, 'dialog-clear-form');
                 }
             } else {
                 // otherwise just clear the form
-                this.clearForm.call(self);
+                this.clearForm.call(this);
             }
         },
         loadFormClick(el, src) {
-            const self = this;
-
             // if the form has been modified then ask if you want to save before loading a new one
             if (this.modified) {
                 // if load form dialog not already open
-                if (self.loadFormDialogOpen !== true) {
+                if (this.loadFormDialogOpen !== true) {
                     // set flag to say load form dialog is now open
-                    self.loadFormDialogOpen = true;
+                    this.loadFormDialogOpen = true;
 
-                    dialogs.confirm('Do you want to save the modified file?', 'Load Form', function(callback) {
+                    dialogs.confirm('Do you want to save the modified file?', 'Load Form', (callback) => {
                         // closing dialog so reset flag to say load form dialog is not open
-                        self.loadFormDialogOpen = false;
+                        this.loadFormDialogOpen = false;
 
                         if (callback === 'Yes') {
                             // save the form and load the form
-                            this.saveForm.call(self).then(
-                                function() {
-                                    // save was successful so now load the new form
-                                    this.loadForm.call(self);
-                                },
-                                () => {
-                                    // the save failed so log the error and don't load the new form
-                                    dialogs.alert('Failed to save the form!', 'Save Form', null, () => {}, 'dialog-save-form-success');
-                                }
-                            );
+                            this.saveForm.call(this).then(() => {
+                                  // save was successful so now load the new form
+                                this.loadForm.call(this);
+                            })
+                              .catch(() => {
+                                  // the save failed so log the error and don't load the new form
+                                  dialogs.alert('Failed to save the form!', 'Save Form', null, () => {}, 'dialog-save-form-success');
+                              });
                         } else if (callback === 'No') {
                             // just load the form
-                            this.loadForm.call(self);
+                            this.loadForm.call(this);
                         }
                     }, 'dialog-load-form');
                 }
             } else {
                 // otherwise just load the form
-                this.loadForm.call(self);
+                this.loadForm.call(this);
             }
         },
         saveFormClick(el, src) {
-            const self = this;
-
             // if the form has been modified then save the form
             if (this.modified) {
-                this.saveForm.call(self);
+                this.saveForm.call(this);
             } else {
                 dialogs.alert('The form has not been modified', 'Save Form', ['Ok'], () => {}, 'dialog-save-form');
             }
@@ -317,25 +309,23 @@ define([
             return false;
         },
         propertyRemove(el, src) {
-            const self = this;
-
             // if property remove dialog not already open
-            if (self.propertyRemoveDialogOpen !== true) {
+            if (this.propertyRemoveDialogOpen !== true) {
                 // set flag to say property remove dialog is now open
-                self.propertyRemoveDialogOpen = true;
+                this.propertyRemoveDialogOpen = true;
 
-                dialogs.confirm('Are you sure you want to remove this field from the form?', 'Remove Property', function(callback) {
+                dialogs.confirm('Are you sure you want to remove this field from the form?', 'Remove Property', (callback) => {
                     // closing dialog so reset flag to say property remove dialog is not open
-                    self.propertyRemoveDialogOpen = false;
+                    this.propertyRemoveDialogOpen = false;
 
                     if (callback === 'Yes') {
                         // get hold of the selected element
-                        const selectedElement = this.getSelectedElement.call(self);
+                        const selectedElement = this.getSelectedElement.call(this);
 
                         // if there is a selected element
                         if (selectedElement.element) {
                             // get hold of the schema on the preview form
-                            const previewFormSchema = self.previewForm.schema[0];
+                            const previewFormSchema = this.previewForm.schema[0];
 
                             // if the properties exists in the schema of the preview form
                             if (previewFormSchema.properties[selectedElement.dataKey]) {
@@ -343,15 +333,15 @@ define([
                                 delete previewFormSchema.properties[selectedElement.dataKey];
 
                                 // re-index the data keys on the preview form (forwards indexing - ie from start to end to plug the gap)
-                                this.fieldReIndex.call(self, self.previewForm.schema[0], +1);
+                                this.fieldReIndex.call(this, this.previewForm.schema[0], +1);
 
                                 // re-select using the dataKey of the selected element
-                                const thisElement = this.getThisElement.call(self, selectedElement.dataKey);
+                                const thisElement = this.getThisElement.call(this, selectedElement.dataKey);
 
                                 // try to click on this element but if we couldn't
-                                if (this.clickThisElement.call(self, thisElement.dataKey) === false) {
+                                if (this.clickThisElement.call(this, thisElement.dataKey) === false) {
                                     // click the first element on the page
-                                    this.clickFirstElement.call(self);
+                                    this.clickFirstElement.call(this);
                                 }
                             }
                         }
@@ -392,7 +382,7 @@ define([
     /**
      * @exports ca-form-builder
      * @description A custom HTML element (Web Component) that can be created using
-     * document.createElement('ca-form-builder') or included in a HTML page as an element.
+     * document.createElementLegacy('ca-form-builder') or included in a HTML page as an element.
      */
     class FormBuilder extends HTMLElement {
 
@@ -407,7 +397,6 @@ define([
          * @returns {undefined} nothing
          */
         attachedCallback() {
-            // only keep the api if running in "reflection" mode
             this.loadAllSchemas.call(this);
 
             // use our own eventDelegate to handle all click and keyup events on the ca form builder
@@ -535,85 +524,85 @@ define([
             clearElement(this);
 
             // create a tool box for holding the tools
-            this.toolbox = createElement(this, 'div', {
+            this.toolbox = createElementLegacy(this, 'div', {
                 class: 'ca-form-builder-toolbox',
                 'data-action': 'toolboxAction'
             });
 
             // create a preview for holding the master form
-            this.preview = createElement(this, 'div', {
+            this.preview = createElementLegacy(this, 'div', {
                 class: 'ca-form-builder-preview',
                 'data-action': 'previewAction'
             });
 
             // create a property area
-            this.property = createElement(this, 'div', {
+            this.property = createElementLegacy(this, 'div', {
                 class: 'ca-form-builder-property',
                 'data-action': 'propertyAction'
             });
 
             // create a meta data area (with the links stripped out) for holding the meta data form
-            this.metadata = createElement(this, 'div', {
+            this.metadata = createElementLegacy(this, 'div', {
                 class: 'ca-form-builder-metadata',
                 'data-action': 'metadataAction'
             });
-            this.metadataForm = createElement(this.metadata, 'ca-form', {
+            this.metadataForm = createElementLegacy(this.metadata, 'ca-form', {
                 schema: this.schemaNoLinks(this.schemaMetaData)
             });
 
             // add a form based on the schema (with the links stripped out) into the preview with validation disabled
-            this.previewForm = createElement(this.preview, 'ca-form', {
+            this.previewForm = createElementLegacy(this.preview, 'ca-form', {
                 schema: this.schemaNoLinks(this.schema),
                 disableValidation: 'true'
             });
 
             // create a container for the buttons underneath the preview form
-            this.previewFormButtons = createElement(this.preview, 'div', {
+            this.previewFormButtons = createElementLegacy(this.preview, 'div', {
                 class: 'ca-form-builder-previewform-buttons'
             });
 
-            createElement(this.previewFormButtons, 'button', {
+            createElementLegacy(this.previewFormButtons, 'button', {
                 type: 'button',
                 'data-action': 'saveFormClick',
                 'data-trigger': 'click',
                 class: 'right'
             }, 'Save Form');
 
-            createElement(this.previewFormButtons, 'button', {
+            createElementLegacy(this.previewFormButtons, 'button', {
                 type: 'button',
                 'data-action': 'loadFormClick',
                 'data-trigger': 'click',
                 class: 'right'
             }, 'Load Form');
 
-            createElement(this.previewFormButtons, 'button', {
+            createElementLegacy(this.previewFormButtons, 'button', {
                 type: 'button',
                 'data-action': 'clearFormClick',
                 'data-trigger': 'click',
                 class: 'right'
             }, 'Clear Form');
 
-            createElement(this.previewFormButtons, 'button', {
+            createElementLegacy(this.previewFormButtons, 'button', {
                 type: 'button',
                 'data-action': 'logFormClick',
                 'data-trigger': 'click'
             }, 'Log Form to Console');
 
             // create a container for the buttons in the toolbox
-            this.toolboxButtons = createElement(this.toolbox, 'div', {
+            this.toolboxButtons = createElementLegacy(this.toolbox, 'div', {
                 class: 'ca-form-builder-toolbox-buttons'
             });
 
             // for each toolbox schema
             this.schemaToolbox.forEach(item => {
                 // add an item to the tool box for the designated schema
-                createElement(this.toolboxButtons, 'a', {
+                createElementLegacy(this.toolboxButtons, 'a', {
                     'data-schema-type': item.id
                 }, item.title);
             });
 
             // add an add button underneath the tool box
-            createElement(this.toolbox, 'button', {
+            createElementLegacy(this.toolbox, 'button', {
                 type: 'button',
                 class: 'right'
             }, 'Add Tool To Form');
@@ -815,7 +804,7 @@ define([
 
         loadForm() {
             // select the first 'links' where 'rel'='instances' in the schema
-            const loadLink = this.schema[0].links && this.schema[0].links.where('rel', 'instances', true);
+            const loadLink = this.schema[0].links && this.schema[0].links.find(link => link.rel === 'instances');
 
             if (loadLink) {
                 // grab hold of the form id from the meta data
@@ -866,10 +855,10 @@ define([
             // if a form id has not been specified
             if (typeof metadata.formId === 'undefined' || metadata.formId === '') {
                 // then this is a CREATE so select the first 'links' where 'rel'='create' in the schema
-                saveData = this.schema[0].links && this.schema[0].links.where('rel', 'create', true);
+                saveData = this.schema[0].links && this.schema[0].links.find(link => link.rel === 'create');
             } else {
                 // this is an UPDATE so select the first 'links' where 'rel'='update' in the schema
-                saveData = this.schema[0].links && this.schema[0].links.where('rel', 'update', true);
+                saveData = this.schema[0].links && this.schema[0].links.find(link => link.rel === 'update');
             }
 
             return new Promise((resolve, reject) => {
@@ -952,7 +941,7 @@ define([
                 validFrom: metadata.validFrom,
                 validTo: metadata.validTo,
                 columns: metadata.columns,
-                formDefinition: cloneObject(self.previewForm.schema[0])
+                formDefinition: cloneObject(this.previewForm.schema[0])
             };
 
             // compare this to the previous version (if they are different, then the form is "dirty")
@@ -1130,7 +1119,7 @@ define([
                 const urnSchema = this.urnToJson(schemaProp.id).schema;
 
                 // find the first matching item in the grand list of schemas
-                const selectedSchema = this.schemaToolbox.filter((item) => item.id === urnSchema).first();
+                const selectedSchema = this.schemaToolbox.filter((item) => item.id === urnSchema)[0];
 
                 // create a new instance of the selected schema
                 const newSchema = cloneObject(selectedSchema);
@@ -1175,29 +1164,29 @@ define([
             this.propertyFormClear.call(this);
 
             // add a form to the property area based on the schema passed in
-            this.propertyForm = createElement(this.property, 'ca-form', {
+            this.propertyForm = createElementLegacy(this.property, 'ca-form', {
                 schema: [schema]
             });
 
             // add buttons directly underneath the property area (all triggered by 'click')
-            createElement(this.property, 'button', {
+            createElementLegacy(this.property, 'button', {
                 type: 'button',
                 'data-action': 'propertyMoveUp',
                 'data-trigger': 'click'
             }, 'Move Up');
-            createElement(this.property, 'button', {
+            createElementLegacy(this.property, 'button', {
                 type: 'button',
                 'data-action': 'propertyMoveDown',
                 'data-trigger': 'click'
             }, 'Move Down');
 
-            createElement(this.property, 'button', {
+            createElementLegacy(this.property, 'button', {
                 type: 'button',
                 'data-action': 'propertyRemove',
                 'data-trigger': 'click',
                 class: 'right'
             }, 'Remove');
-            createElement(this.property, 'button', {
+            createElementLegacy(this.property, 'button', {
                 type: 'button',
                 'data-action': 'propertyClone',
                 'data-trigger': 'click',

@@ -1,0 +1,45 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA FORM BUILDER | Web Lab Common UI</title>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link href="/examples/index.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/components/ca-form-builder.css">
+    <link rel="stylesheet" type="text/css" href="/bower_components/pikaday/css/pikaday.css">
+    <link rel="stylesheet" href="/components/helpers/dialogs.css" />
+    <link rel="stylesheet" href="/components/ca-form.css" />
+    <link rel="stylesheet" href="/components/ca-currency.css" />
+    <link rel="stylesheet" href="/components/ca-datetime.css" />
+    <link rel="stylesheet" href="/components/ca-form.css" />
+    <link rel="stylesheet" href="/components/ca-list.css" />
+    <link rel="stylesheet" href="/components/ca-nav.css" />
+    <link rel="stylesheet" href="/components/ca-select.css" />
+    <link rel="stylesheet" href="/components/ca-summary.css" />
+    <link rel="stylesheet" href="/components/ca-tel.css" />
+    <link rel="stylesheet" href="/components/ca-confirm-input.css" />
+    <link rel="stylesheet" href="/components/ca-feedback.css" />
+
+    <!-- requires import, will throw 404s until migrated. -->
+    <link rel="stylesheet" href="/components/ca-import.css" />
+    <link rel="stylesheet" href="/components/ca-export.css" />
+    <link rel="stylesheet" href="/components/ca-rating.css" />
+    <link rel="stylesheet" href="/components/ca-input-array.css" />
+</head>
+<body>
+<div class="ca-home">
+    <a id="home" href="/"></a>
+</div>
+
+<div class="ca-title">CA FORM BUILDER</div>
+
+<ca-form-builder src='/examples/data/ca-form-builder-schema.json' data-toolbox="/examples/data/ca-form-builder-toolbox.json"></ca-form-builder>
+
+<script>
+    SystemJS.import('ca-form-builder.js').then(() => {
+        // example creation via JavaScript
+    });
+</script>
+</body>
+</html>
