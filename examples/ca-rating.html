@@ -1,0 +1,61 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CA RATING | Web Lab Common UI</title>
+        <script src="/bower_components/system.js/dist/system.js"></script>
+        <script src="/components/config/index.js"></script>
+        <link href="/examples/index.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/components/ca-rating.css">
+
+        <style>
+            /* ca-rating custom style overrides */
+            ca-rating { width: 50%; padding: 2px 0; }
+        </style>
+    </head>
+
+    <body>
+        <div class="ca-home">
+            <a id="home" href="../index.html"></a>
+        </div>
+
+        <div class="ca-title">CA RATING</div>
+
+        <ca-rating></ca-rating>
+
+        <ca-rating from="5"></ca-rating>
+
+        <ca-rating to="7"></ca-rating>
+
+        <ca-rating from="3" to="8"></ca-rating>
+
+        <ca-rating value="7"></ca-rating>
+
+        <ca-rating from="3" to="8" value="6"></ca-rating>
+
+        <ca-rating to="8" value="4"></ca-rating>
+
+        <ca-rating from="2" value="7"></ca-rating>
+
+        <ca-rating from="5" to="5" value="6"></ca-rating>
+
+        <ca-rating from="8" to="3" value="6"></ca-rating>
+
+
+        <script>
+            SystemJS.import('ca-rating.js').then(() => {
+                // example creation via JavaScript
+                var caRating = document.createElement('ca-rating');
+
+                // set ca-rating properties
+                caRating.value = '42';
+                caRating.to = '51';
+                caRating.from = '35';
+//                caRating.value = '42';
+
+                // add to the DOM
+                document.body.appendChild(caRating);
+            });
+        </script>
+    </body>
+</html>
