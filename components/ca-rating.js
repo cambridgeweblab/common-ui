@@ -106,6 +106,26 @@ define([
             };
         }
 
+        /** @returns {boolean} attached - indicates whether the element has attached to the DOM */
+        get attached() {
+            return (this._attached === true);
+        }
+
+        /** @param {boolean} value - sets the attached flag */
+        set attached(value) {
+            this._attached = value;
+        }
+
+        /** @returns {HTMLElement} selectedItem - holds the currently selected element */
+        get selectedItem() {
+            return this._selectedItem;
+        }
+
+        /** @param {HTMLElement} value - sets the selectedItem of the element */
+        set selectedItem(value) {
+            this._selectedItem = value;
+        }
+
         /**
          * @description Create the structure behind the component
          * @returns {undefined} void function that performs the rendering.
