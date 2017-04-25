@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CA EXPORT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-export.css">
+  </head>
+  <body>
+    <test-fixture id="ca-export">
+      <template>
+        <ca-export></ca-export>
+      </template>
+    </test-fixture>
+    <script>
+        suite('<ca-export>', () => {
+            let caExport;
+
+            // TODO: CREATE TESTS, there were none associated with the original component
+            setup(done => {
+                SystemJS.import('ca-export.js').then(() => {
+                    caExport = fixture('ca-export');
+                    done();
+                });
+            });
+        });
+        a11ySuite('ca-export');
+    </script>
+  </body>
+</html>
