@@ -290,7 +290,7 @@ define([
                     })
                     .then(data => {
                         trace('CSV file converted and posted');
-                        this.onsave.call(data);
+                        this.onsave(data);
                     });
             }
         }
