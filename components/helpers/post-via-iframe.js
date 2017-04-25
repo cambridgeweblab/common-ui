@@ -1,4 +1,4 @@
-define('post-via-iframe', ['./create-element.js'], (createElement) =>
+define('post-via-iframe', ['./create-element.js'], createElement =>
     /**
       * Sends data to the server via a form post in a hidden frame
       * @param {string} url - url to post the data to
@@ -6,7 +6,6 @@ define('post-via-iframe', ['./create-element.js'], (createElement) =>
       */
     function postViaIframe(url, data) {
         const targetName = `_post_via_iframe_${Date.now()}`;
-        // eslint-disable-next-line no-used-vars
         const iframe = createElement(document.body, 'iframe', {
             src: '',
             name: targetName,
@@ -20,16 +19,13 @@ define('post-via-iframe', ['./create-element.js'], (createElement) =>
             style: 'display: none !important'
         });
 
-        // eslint-disable-next-line no-restricted-syntax
-        for (const key in data) {
-            if (Object.prototype.hasOwnProperty.call(data, key)) {
-                createElement(form, 'input', {
-                    type: 'hidden',
-                    name: key,
-                    value: data[key]
-                });
-            }
-        }
+        Object.keys(data).forEach(key => {
+            createElement(form, 'input', {
+                type: 'hidden',
+                name: key,
+                value: data[key]
+            });
+        });
 
         form.submit();
     }

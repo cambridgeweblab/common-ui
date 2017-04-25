@@ -45,18 +45,13 @@ define([
          * @param  {string} attrName - the name of the attribute to have changed
          * @param  {string} oldVal - the old value of the attribute
          * @param  {string} newVal - the new value of the attribute
-         * @returns {void} void
+         * @returns {undefined} nothing.
          */
         attributeChangedCallback(attrName, oldVal, newVal) {
             switch (attrName) {
 
                 case 'label':
                     this.querySelector('label span').textContent = this.label;
-                    break;
-
-                case 'id':
-                    // this.querySelector('label').setAttribute('for', '_' + this.id);
-                    // this.querySelector('input').setAttribute('id', '_' + this.id);
                     break;
 
                 default: break;
@@ -157,13 +152,12 @@ define([
          * @param {array} headers to set
          */
         set headers(headers) {
-            // eslint-disable-next-line no-param-reassign
-            headers = Array.isArray(headers) ? headers.join(',') : headers;
+            const parsedHeaders = Array.isArray(headers) ? headers.join(',') : headers;
 
-            if (headers === '') {
+            if (parsedHeaders === '') {
                 this.removeAttribute('headers');
             } else {
-                this.setAttribute('headers', headers);
+                this.setAttribute('headers', parsedHeaders);
             }
         }
 
@@ -180,13 +174,13 @@ define([
          * @param {array} values for firstrow
          */
         set firstRow(values) {
-            // eslint-disable-next-line no-param-reassign
-            values = Array.isArray(values) ? values.join('|') : values;
 
-            if (values === '') {
+            const firstRowAttributes = Array.isArray(values) ? values.join('|') : values;
+
+            if (firstRowAttributes === '') {
                 this.removeAttribute('first-row');
             } else {
-                this.setAttribute('first-row', values);
+                this.setAttribute('first-row', firstRowAttributes);
             }
         }
 
@@ -238,11 +232,11 @@ define([
         set type(value) {
             // ensure its always csv or xlsx
             // eslint-disable-next-line no-param-reassign
-            value = (value !== 'xlsx') ? value = 'csv' : 'xlsx';
+            const type = (value !== 'xlsx') ? value = 'csv' : 'xlsx';
 
-            this.setAttribute('type', value);
-            this.input.setAttribute('accept', `.${value}`);
-            this.link.setAttribute('download', `template.${value}`);
+            this.setAttribute('type', type);
+            this.input.setAttribute('accept', `.${type}`);
+            this.link.setAttribute('download', `template.${type}`);
         }
 
         /**
@@ -296,7 +290,7 @@ define([
                     })
                     .then(data => {
                         trace('CSV file converted and posted');
-                        this.onsave.call(this, data);
+                        this.onsave.call(data);
                     });
             }
         }
@@ -324,17 +318,12 @@ define([
         * @param {array} data to use for rows
         * @returns {undefined} nothing. Builds table to DOM
         */
-        render(headers, data) {
-            // eslint-disable-next-line no-param-reassign
-            headers = headers || this.headers;
-            // eslint-disable-next-line no-param-reassign
-            data = data || this._data;
-
+        render(headers = this.headers, data = this._data) {
             if (data) {
                 const table = this.querySelector('table');
-                const colGroup = this.querySelector('colgroup');
-                const thead = this.querySelector('thead');
-                const tbody = this.querySelector('tbody');
+                const colGroup = table.querySelector('colgroup');
+                const thead = table.querySelector('thead');
+                const tbody = table.querySelector('tbody');
 
                 // remove previous values
                 clearElement(colGroup);
@@ -414,7 +403,9 @@ define([
 
             switch (this.type) {
 
-                case 'csv': el.href = `data:text/plain;charset=utf-8,${encodeURIComponent(this.headers)}`; break;
+                case 'csv':
+                    el.href = `data:text/plain;charset=utf-8,${encodeURIComponent(this.headers)}`;
+                    break;
 
                 case 'xlsx': {
 
@@ -429,7 +420,7 @@ define([
                     }
 
                      // get the example row if this.firstRow attribute is set
-                    const exampleRow = this.buildExampleRow.call(this);
+                    const exampleRow = this.buildExampleRow();
                     if (exampleRow) {
                         rows.push(exampleRow);
                     }
@@ -473,8 +464,8 @@ define([
                 const file = el.files[0];
 
                 switch (this.type) {
-                    case 'csv': this.readFileAsCsv.call(this, file); break;
-                    case 'xlsx': this.convertXlsxToJson.call(this); break;
+                    case 'csv': this.readFileAsCsv(file); break;
+                    case 'xlsx': this.convertXlsxToJson(); break;
                     default: break;
                 }
             }
@@ -491,17 +482,13 @@ define([
             if (this.schema && this.schema.properties) {
 
                 dataObjects.forEach(function(row, index) {
+                    Object.keys(row).forEach(key => {
+                        const error = validateAgainstSchema(this.schema, key, row[key]);
 
-                     // eslint-disable-next-line no-restricted-syntax
-                    for (const key in row) {
-                        if (Object.prototype.hasOwnProperty.call(row, key)) {
-                            const error = validateAgainstSchema(this.schema, key, row[key]);
-
-                            if (error) {
-                                errors.push([index + 1, key, row[key], error]);
-                            }
+                        if (error) {
+                            errors.push([index + 1, key, row[key], error]);
                         }
-                    }
+                    });
                 });
             }
 
@@ -559,10 +546,10 @@ define([
                      });
 
                      // convert table data into array of objects, key/value object for each row
-                     const jsonData = this.convertExcelJsonToJsonKeyedObjects.call(this, dataWithoutExampleRow);
+                     const jsonData = this.convertExcelJsonToJsonKeyedObjects(dataWithoutExampleRow);
 
                      // validate if we have a schema
-                     const errors = this.validateRows.call(this, jsonData);
+                     const errors = this.validateRows(jsonData);
 
                      if (errors.length <= 0) {
 
@@ -571,10 +558,10 @@ define([
 
                          // fire an event to let the consumer know a file with data was added
                          // if the handler returns false, the file will not be rendered
-                         if (this.onfileadded.call(this, this._data) !== false) {
+                         if (this.onfileadded(this._data) !== false) {
 
                              // insert a HTML table containing the data
-                             this.render.call(this);
+                             this.render();
 
                              // allow CSS to update the UI (removed input and displays table)
                              this.hasData = true;
@@ -583,7 +570,7 @@ define([
                      } else {
 
                          // insert a HTML table containing errors
-                         this.render.call(this, ['Row', 'Column', 'Value', 'Error'], errors);
+                         this.render(['Row', 'Column', 'Value', 'Error'], errors);
 
                          // allow CSS to update the UI (shows the table of errors)
                          this.hasErrors = true;
@@ -657,15 +644,13 @@ define([
             const rowLen = data.length;
             const colLen = headers.length;
             const schema = (this.schema || {}).properties;
-            let row = [];
-            let item = {};
             let key = '';
 
              // go through all rows (skipping the header)
             for (let i = 1; i < rowLen; i++) {
 
-                row = data[i];
-                item = {};      // clear previous item
+                const row = data[i];
+                const item = {};      // clear previous item
 
                  // create line item (a cell at a time)
                 for (let ii = 0; ii < colLen; ii++) {
