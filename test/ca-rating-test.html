@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA RATING | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-rating.css">
+</head>
+<body>
+<test-fixture id="ca-rating">
+    <template>
+        <ca-rating></ca-rating>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-rating>', () => {
+        let caRating;
+
+        // TODO: CREATE TESTS, there were none associated with the original component
+        setup(done => {
+            SystemJS.import('ca-rating.js').then(() => {
+                caRating = fixture('ca-rating');
+                done();
+            });
+        });
+    });
+    a11ySuite('ca-rating');
+</script>
+</body>
+</html>
