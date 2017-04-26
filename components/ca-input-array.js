@@ -1,9 +1,10 @@
 define([
-    './helpers/create-element.js', 
-    './helpers/clear-element.js', 
-    './helpers/cancel-event.js', 
+    './helpers/create-element.js',
+    './helpers/clear-element.js',
+    './helpers/cancel-event.js',
+    './helpers/keyboard.js',
     'document-register-element'
-], (createElement, clearElement, cancelEvent) => {
+], (createElement, clearElement, cancelEvent, keyboard) => {
 
     /**
      * @exports ca-input-array component
@@ -477,6 +478,8 @@ define([
             // respond to key events
             switch (key) {
 
+                // AS per https://github.com/eslint/eslint/issues/8047 - eslint upgraded needed
+                // eslint-disable-next-line no-lone-blocks
                 case 13: { // handle ENTER key press
 
                     cancelEvent(ev);
@@ -491,6 +494,8 @@ define([
 
                 } break;
 
+                // AS per https://github.com/eslint/eslint/issues/8047 - eslint upgraded needed
+                // eslint-disable-next-line no-lone-blocks
                 case 8: { // handle BACKSPACE key press
 
                     if (el.value === '') {
@@ -508,53 +513,10 @@ define([
                 } break;
 
                 default: {
-                    if (this.type === 'number' && !this.isNavKey(key) && !this.isNumberChar(char)) {
+                    if (this.type === 'number' && !keyboard.navKeys(key) && !this.isNumberChar(char)) {
                         cancelEvent(ev);
                     }
                 }
-            }
-        }
-
-        /**
-         * determines if a navigation key has been passed as key
-         * @param {integer} key key
-         * @returns {boolean} is navigation key
-         */
-        isNavKey(key) {
-
-            const keys = {
-                BACKSPACE: 8,
-                TAB: 9,
-                ENTER: 13,
-                ESC: 27,
-                PAGE_UP: 33,
-                PAGE_DOWN: 34,
-                HOME: 36,
-                END: 35,
-                LEFT: 37,
-                RIGHT: 39,
-                UP: 38,
-                DOWN: 40,
-                STAR: 56,
-                QUESTION: 191
-            };
-
-            switch (key) {
-
-                case keys.TAB:
-                case keys.ESC:
-                case keys.PAGE_UP:
-                case keys.PAGE_DOWN:
-                case keys.HOME:
-                case keys.END:
-                case keys.LEFT:
-                case keys.RIGHT:
-                case keys.UP:
-                case keys.DOWN:
-                    return true;
-
-                default:
-                    return false;
             }
         }
 
