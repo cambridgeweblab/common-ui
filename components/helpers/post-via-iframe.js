@@ -5,7 +5,6 @@ define('post-via-iframe', ['./create-element.js'], createElement =>
       * @param {object} data - JSON key/value object - a hidden field is created for each key
       */
     function postViaIframe(url, data) {
-  
         const targetName = `_post_via_iframe_${Date.now()}`;
         const iframe = createElement(document.body, 'iframe', {
             src: '',
@@ -19,9 +18,7 @@ define('post-via-iframe', ['./create-element.js'], createElement =>
             target: targetName,
             style: 'display: none !important'
         });
-  
         Object.keys(data).forEach(key => {
-          
             createElement(form, 'input', {
                 type: 'hidden',
                 name: key,
