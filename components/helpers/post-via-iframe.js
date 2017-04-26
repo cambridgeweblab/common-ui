@@ -18,9 +18,7 @@ define('post-via-iframe', ['./create-element.js'], createElement =>
             target: targetName,
             style: 'display: none !important'
         });
-
         Object.keys(data).forEach(key => {
-
             createElement(form, 'input', {
                 type: 'hidden',
                 name: key,
