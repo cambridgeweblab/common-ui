@@ -1,0 +1,135 @@
+[
+    {
+        "$schema": "http://json-schema.org/draft-03/schema#",
+        "id": "http://json-schema.org/draft-03/schema#",
+        "type": "object",
+        "title": "",
+        "description": "",
+        "links":[
+            {
+                "rel":"instances",
+                "href":"http://localhost:8080/forms/",
+                "title":"Load",
+                "method": "GET"
+            },
+            {
+                "rel":"update",
+                "href":"http://localhost:8080/forms/",
+                "title":"Save",
+                "method": "PUT"
+            },
+            {
+                "rel":"create",
+                "href":"http://localhost:8080/forms/",
+                "title":"Create",
+                "method": "POST"
+            }
+        ],
+        "properties":
+        {
+            "formId":
+            {
+                "fieldName": "formId",
+                "sequence": "10",
+                "type": "string",
+                "id": "urn:ca-form:textbox:formId:10",
+                "title": "Form Id",
+                "default": "",
+                "description": "Enter the form identifier",
+                "format": "number",
+                "required": false
+            },
+            "businessStreams":
+            {
+                "fieldName": "businessStreams",
+                "sequence": "20",
+                "type": "string",
+                "id": "urn:ca-form:textbox:businessStreams:20",
+                "required": false,
+                "description": "Business stream that this form belongs to",
+                "title": "Business Stream",
+                "enum": ["ALL","Cambridge English (CE)","Cambridge International Examinations (CIE)","Oxford, Cambridge and RSA (OCR)"]
+            },
+            "applicationName":
+            {
+                "fieldName": "applicationName",
+                "sequence": "30",
+                "type": "string",
+                "id": "urn:ca-form:textbox:applicationName:30",
+                "required": false,
+                "description": "The application name that this form belongs to",
+                "title": "Application Name"
+            },
+            "title":
+            {
+                "fieldName": "title",
+                "sequence": "40",
+                "type": "string",
+                "id": "urn:ca-form:textbox:title:40",
+                "title": "Title",
+                "description": "Enter the title of the form",
+                "format": "text",
+                "required": false,
+                "minLength": 1,
+                "maxLength": 255
+            },
+            "description":
+            {
+                "fieldName": "description",
+                "sequence": "50",
+                "type": "string",
+                "id": "urn:ca-form:textbox:description:50",
+                "title": "Description",
+                "description": "Enter the description of the form",
+                "format": "text",
+                "required": false,
+                "minLength": 1,
+                "maxLength": 255
+            },
+            "validFrom":
+            {
+                "fieldName": "validFrom",
+                "sequence": "60",
+                "type": "string",
+                "id": "urn:ca-form:datetime:validFrom:60",
+                "title": "Valid From",
+                "description": "Enter the date that this form is valid from",
+                "format": "date-time",
+                "required": false
+            },
+            "validTo":
+            {
+                "fieldName": "validTo",
+                "sequence": "70",
+                "type": "string",
+                "id": "urn:ca-form:datetime:validTo:70",
+                "title": "Valid To",
+                "description": "Enter the date that this form is valid to",
+                "format": "date-time",
+                "required": false
+            },
+            "columns":
+            {
+                "fieldName": "columns",
+                "sequence": "80",
+                "type": "number",
+                "id": "urn:ca-form:number:columns:80",
+                "title": "Columns",
+                "description": "Enter the number of columns in the form",
+                "format": "number",
+                "default": 1,
+                "required": false
+            },
+            "formDefinition":
+            {
+                "fieldName": "formDefinition",
+                "sequence": "90",
+                "type": "any",
+                "id": "urn:ca-form:number:formDefinition:90",
+                "title": "Form Definition",
+                "description": "The definition of the form",
+                "required": false
+            }
+        }
+    }
+]

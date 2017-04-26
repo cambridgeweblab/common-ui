@@ -1,0 +1,344 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA FORM BUILDER | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/system.js/dist/system.js"></script>
+    <script src="/components/config/index.js"></script>
+    <link rel="stylesheet" type="text/css" href="/components/ca-form-builder.css">
+    <link rel="stylesheet" type="text/css" href="/bower_components/pikaday/css/pikaday.css">
+    <link rel="stylesheet" href="/components/helpers/dialogs.css" />
+    <link rel="stylesheet" href="/components/ca-form.css" />
+    <link rel="stylesheet" href="/components/ca-currency.css" />
+    <link rel="stylesheet" href="/components/ca-datetime.css" />
+    <link rel="stylesheet" href="/components/ca-form.css" />
+    <link rel="stylesheet" href="/components/ca-list.css" />
+    <link rel="stylesheet" href="/components/ca-nav.css" />
+    <link rel="stylesheet" href="/components/ca-select.css" />
+    <link rel="stylesheet" href="/components/ca-summary.css" />
+    <link rel="stylesheet" href="/components/ca-tel.css" />
+    <link rel="stylesheet" href="/components/ca-confirm-input.css" />
+    <link rel="stylesheet" href="/components/ca-feedback.css" />
+
+</head>
+<body>
+<test-fixture id="form-builder">
+    <template>
+        <ca-form-builder src='/examples/data/ca-form-builder-schema.json' data-toolbox="/examples/data/ca-form-builder-toolbox.json"></ca-form-builder>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-form-builder>', () => {
+        let caFormBuilder;
+
+        setup(done => {
+            SystemJS.import('ca-form-builder.js').then(() => {
+                caFormBuilder = fixture('form-builder');
+                done();
+            });
+        });
+
+        test('should be creatable', () => {
+            // Check the element has been created with the correct tag
+            expect(caFormBuilder).to.be.defined;
+            expect(caFormBuilder.tagName).to.equal('ca-form-builder'.toUpperCase());
+        });
+
+        test('should load the schemas', done => {
+            setTimeout(() => {
+                expect(caFormBuilder.schema.length).to.equal(1);
+                expect(caFormBuilder.schemaMetaData.length).to.equal(1);
+                expect(caFormBuilder.schemaToolbox.length).to.be.above(0);
+                done();
+            }, 100);
+        });
+
+        test('should create the expected structure when rendered', done => {
+            setTimeout(() => {
+                // render the element
+                caFormBuilder.render();
+
+                // Check the structure is as expected
+                expect(caFormBuilder.toolbox).to.be.defined;
+                expect(caFormBuilder.toolbox.className).to.equal('ca-form-builder-toolbox');
+                expect(caFormBuilder.toolbox.getAttribute('data-action')).to.equal('toolboxAction');
+
+                expect(caFormBuilder.preview).to.be.defined;
+                expect(caFormBuilder.preview.className).to.equal('ca-form-builder-preview');
+                expect(caFormBuilder.preview.getAttribute('data-action')).to.equal('previewAction');
+
+                expect(caFormBuilder.property).to.be.defined;
+                expect(caFormBuilder.property.className).to.equal('ca-form-builder-property');
+                expect(caFormBuilder.property.getAttribute('data-action')).to.equal('propertyAction');
+
+                expect(caFormBuilder.metadata).to.be.defined;
+                expect(caFormBuilder.metadata.className).to.equal('ca-form-builder-metadata');
+                expect(caFormBuilder.metadata.getAttribute('data-action')).to.equal('metadataAction');
+                expect(caFormBuilder.metadataForm).to.be.defined;
+                expect(caFormBuilder.metadataForm.form).to.be.defined;
+
+                expect(caFormBuilder.previewForm).to.be.defined;
+                expect(caFormBuilder.previewForm.form).to.be.defined;
+                expect(caFormBuilder.previewFormButtons).to.be.defined;
+                expect(caFormBuilder.previewFormButtons.className).to.equal('ca-form-builder-previewform-buttons');
+
+                expect(caFormBuilder.toolboxButtons).to.be.defined;
+                expect(caFormBuilder.toolboxButtons.className).to.equal('ca-form-builder-toolbox-buttons');
+
+                done();
+            }, 100);
+        });
+
+        test('should convert a fully specified urn to json', () => {
+            const urn = 'namespace:component:tool:fieldName:sequence';
+            const json = caFormBuilder.urnToJson(urn);
+
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('fieldName');
+            expect(json.sequence).to.equal('sequence');
+            expect(json.id).to.equal(urn);
+            expect(json.schema).to.equal('namespace:component:tool');
+            expect(json.dataKey).to.equal('fieldName#sequence');
+        });
+
+        test('should convert a fully specified urn to json', () => {
+            const urn = 'namespace:component:tool:fieldName:sequence';
+            const json = caFormBuilder.urnToJson(urn);
+
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('fieldName');
+            expect(json.sequence).to.equal('sequence');
+            expect(json.id).to.equal(urn);
+            expect(json.schema).to.equal('namespace:component:tool');
+            expect(json.dataKey).to.equal('fieldName#sequence');
+        });
+
+        test('should convert a partially specified urn to json with suitable defaults', () => {
+            const urn = 'namespace:component:tool';
+            const json = caFormBuilder.urnToJson(urn);
+
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('Untitled');
+            expect(json.sequence).to.equal('10');
+            expect(json.id).to.equal(urn + ':Untitled:10');
+            expect(json.schema).to.equal('namespace:component:tool');
+            expect(json.dataKey).to.equal('Untitled#10');
+        });
+
+        test('should convert a fully specified urn with a single override to json', () => {
+            const urn = 'namespace:component:tool:fieldName:sequence';
+            const json = caFormBuilder.urnToJson(urn, { sequence: '20' });
+
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('fieldName');
+            expect(json.sequence).to.equal('20');
+            expect(json.id).to.equal('namespace:component:tool:fieldName:20');
+            expect(json.schema).to.equal('namespace:component:tool');
+            expect(json.dataKey).to.equal('fieldName#20');
+        });
+
+        test('should convert a urn with multiple overrides to json', () => {
+            const urn = 'namespace:component:tool:fieldName:sequence';
+            const json = caFormBuilder.urnToJson(urn, {
+                fieldName: 'MyFieldName',
+                sequence: '30'
+            });
+
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('MyFieldName');
+            expect(json.sequence).to.equal('30');
+            expect(json.id).to.equal('namespace:component:tool:MyFieldName:30');
+            expect(json.schema).to.equal('namespace:component:tool');
+            expect(json.dataKey).to.equal('MyFieldName#30');
+        });
+
+        test('should convert a blank urn with a full set of overrides to json', () => {
+            const urn = '';
+            const json = caFormBuilder.urnToJson(urn, {
+                namespace: 'myNamespace',
+                component: 'myComponent',
+                tool: 'myTool',
+                fieldName: 'myFieldName',
+                sequence: 'mySequence'
+            });
+
+            expect(json.namespace).to.equal('myNamespace');
+            expect(json.component).to.equal('myComponent');
+            expect(json.tool).to.equal('myTool');
+            expect(json.fieldName).to.equal('myFieldName');
+            expect(json.sequence).to.equal('mySequence');
+            expect(json.id).to.equal('myNamespace:myComponent:myTool:myFieldName:mySequence');
+            expect(json.schema).to.equal('myNamespace:myComponent:myTool');
+            expect(json.dataKey).to.equal('myFieldName#mySequence');
+        });
+
+        test('should leave a urn with an unknown override intact to json', () => {
+            // try to set an override on an unknown attribute
+            const urn = 'namespace:component:tool:fieldName:sequence';
+            const json = caFormBuilder.urnToJson(urn, { unknown: 'unknown' });
+
+            // the original urn should be untouched
+            expect(json.namespace).to.equal('namespace');
+            expect(json.component).to.equal('component');
+            expect(json.tool).to.equal('tool');
+            expect(json.fieldName).to.equal('fieldName');
+            expect(json.sequence).to.equal('sequence');
+
+            // the "unknown" override should not be defined
+            expect(json.unknown).to.not.be.defined;
+        });
+
+        test('should return schema with no links', done => {
+            setTimeout(() => {
+                // expect the schema links to exist
+                expect(caFormBuilder.schemaMetaData[0].links).not.to.be.null;
+
+                // and the schemaNoLinks fn to remove the links
+                const linklessSchema = caFormBuilder.schemaNoLinks(caFormBuilder.schemaMetaData);
+                expect(linklessSchema[0].links).to.not.be.defined;
+
+                done();
+            }, 100);
+        });
+
+        test('should have tools in the toolbox', done => {
+            setTimeout(() => {
+                expect(caFormBuilder.toolboxButtons.children.length).to.be.above(0);
+                done();
+            }, 100);
+        });
+
+        test('should be possible to get/set the selected tool in the toolbox', done => {
+            setTimeout(() => {
+                // for all tools in the toolbox
+                for (let i = 0, l = caFormBuilder.toolboxButtons.children.length; i < l; i++) {
+                    const src = caFormBuilder.toolboxButtons.children[i];
+                    caFormBuilder.setSelectedTool(src);
+                    expect(caFormBuilder.getSelectedTool().tool).to.equal(src);
+                }
+
+                done();
+            }, 100);
+        });
+
+        test('should be able to add items to the preview form', done => {
+            setTimeout(() => {
+                // for all tools in the toolbox
+                for (let i = 0, l = caFormBuilder.toolboxButtons.children.length; i < l; i++) {
+                    // add the ith element and check to see it has been added to the preview form
+                    AddElement(i);
+                    ExpectTool(i);
+                }
+                done();
+            }, 100);
+        });
+
+        test('should be able to get next and previous elements', done => {
+            setTimeout(() => {
+                // add element and check the data key for 1st element
+                const se1 = AddElement(0);
+
+                // add element and check the data key for 2nd element
+                const se2 = AddElement(1);
+
+                // se1 should be the previous element to se2
+                expect(caFormBuilder.getPreviousElement(se2).dataKey).to.equal(se1.dataKey);
+                // se2 should be the next element to se1
+                expect(caFormBuilder.getNextElement(se1).dataKey).to.equal(se2.dataKey);
+
+                expect(caFormBuilder.getThisElement('Untitled#10').dataKey).to.equal(se1.dataKey);
+                expect(caFormBuilder.getThisElement('Untitled#20').dataKey).to.equal(se2.dataKey);
+
+                done();
+            }, 100);
+        });
+
+        test('should be able to check which element is selected', done => {
+            setTimeout(() => {
+                const src = caFormBuilder.toolboxButtons.children[0];
+                caFormBuilder.setSelectedTool(src);
+
+                const st = caFormBuilder.getSelectedTool();
+
+                expect(st.tool).to.equal(src);
+
+                done();
+            }, 100);
+        });
+
+        test('should be able to detect that the form is dirty', done => {
+            setTimeout(() => {
+                // take a snapshot of the form - form should be clen
+                caFormBuilder.formTakeSnapshot();
+                expect(caFormBuilder.formIsDirty()).to.equal(false);
+
+                // add an element to the form - form should be dirty
+                AddElement(0);
+                expect(caFormBuilder.formIsDirty()).to.equal(true);
+
+                // take another snapshot of the form - form should be clean again
+                caFormBuilder.formTakeSnapshot();
+                expect(caFormBuilder.formIsDirty()).to.equal(false);
+
+                done();
+            }, 100);
+        });
+
+        test('should be able to swap elements', done => {
+            setTimeout(() => {
+                // add 1st element
+                const se1 = AddElement(0);
+                expect(se1.dataKey).to.equal('Untitled#10');
+
+                // add 2nd element
+                const se2 = AddElement(1);
+                expect(se2.dataKey).to.equal('Untitled#20');
+
+                // now swap the two elements over
+                caFormBuilder.fieldSwap(se1, se2);
+
+                expect(se1.dataKey).to.equal('Untitled#10');
+                expect(se2.dataKey).to.equal('Untitled#20');
+
+                done();
+            }, 100);
+        });
+
+        function AddElement(idx) {
+            let src = caFormBuilder.toolboxButtons.children[idx];
+            caFormBuilder.EventActions.toolboxAction.call(caFormBuilder, null, src);
+            src = caFormBuilder.toolbox.querySelector('button.right');
+            caFormBuilder.EventActions.toolboxAction.call(caFormBuilder, null, src);
+
+            // return the newly added element
+            return caFormBuilder.getSelectedElement();
+        }
+
+        function ExpectTool(idx) {
+            const key = 'Untitled#' + (idx + 1) * 10;
+
+            // get hold of the number of keys in the preview form schema
+            const p = Object.keys(caFormBuilder.previewForm.schema[0].properties);
+            expect(p.length).to.equal(idx + 1);
+            expect(p[idx]).to.equal(key);
+
+            // get hold of the newly added element and check the data key is as expected
+            const se = caFormBuilder.getSelectedElement();
+            expect(se.dataKey).to.equal(key);
+        }
+    });
+    a11ySuite('form-builder');
+</script>
+</body>
+</html>
