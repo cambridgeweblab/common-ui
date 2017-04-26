@@ -187,8 +187,6 @@ define([
             };
 
             postData.meta.data.formDefinition = this.previewForm.schema[0];
-
-            console.log('Data = %o', postData);
         },
         // </PreviewButton> methods
 
@@ -657,7 +655,7 @@ define([
         }
 
         // Take a urn (eg "namespace:component:tool:fieldName:sequence") and break it into its constituent parts in a Json object
-        urnToJson() {
+        urnToJson(...args) {
             const result = {
                 namespace: null,
                 component: null,
@@ -666,8 +664,8 @@ define([
                 sequence: null
             };
             const validKeys = 'namespace:component:tool:fieldName:sequence';
-            const parts = arguments[0].split(':'); // eslint-disable-line prefer-rest-params
-            const overrides = arguments[1]; // eslint-disable-line prefer-rest-params
+            const parts = args[0].split(':');
+            const overrides = args[1];
 
             // break the constituent parts into the separate fields
             result.namespace = parts[0];
