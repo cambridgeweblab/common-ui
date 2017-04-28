@@ -20,6 +20,17 @@ define([
      */
     class ObjectList extends HTMLElement {
         /**
+         * @description Executes when the element is attached to the DOM
+         * @returns {undefined} calls render if condition is met
+         */
+        attachedCallback() {
+            // Render the component now it has been added to the DOM, if we have a schema.
+            if (this.schema) {
+                this.render();
+            }
+        }        
+
+        /**
          * Gets title to be used for these items
          * @returns {string} title, title to get.
          */
@@ -69,17 +80,6 @@ define([
         set value(value) {
             this._property = value;
             if (this.parentNode && this._schema) {
-                this.render();
-            }
-        }
-
-        /**
-         * @description Executes when the element is attached to the DOM
-         * @returns {undefined} calls render if condition is met
-         */
-        attachedCallback() {
-            // Render the component now it has been added to the DOM, if we have a schema.
-            if (this.schema) {
                 this.render();
             }
         }
