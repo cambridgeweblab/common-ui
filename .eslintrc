@@ -4,8 +4,12 @@
     "amd": true,
     "browser": true
   },
+  "plugins": [
+    "html"
+  ],
   "globals": {
-    "ActiveXObject": true
+    "ActiveXObject": true,
+    "SystemJS": true
   },
   "rules": {
     "import/no-amd": 0

@@ -9,8 +9,8 @@
   },
   "scripts": {
     "start": "node index.js",
-    "lint": "eslint .",
-    "lint-fix": "eslint . --fix",
+    "lint": "eslint --ext .html,.js .",
+    "lint-fix": "eslint --fix --ext .html,.js .",
     "test": "wct",
     "bower-install": "bower install"
   },
@@ -31,6 +31,7 @@
     "bower": "^1.7.9",
     "eslint": "^3.6.0",
     "eslint-config-weblab": "git+https://github.com/cambridgeweblab/eslint-config-weblab.git",
+    "eslint-plugin-html": "^2.0.1",
     "web-component-tester": "4.2",
     "web-component-tester-istanbul": "^0.10.0"
   },
