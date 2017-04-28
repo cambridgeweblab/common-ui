@@ -16,21 +16,21 @@
     <script>
         SystemJS.import('ca-treeview.js').then(() => {
             const dataSrc = {
-              'links': [
-                  {
-                    'rel': 'describedby:learners',
-                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema',
-                    'title': 'Learners'
-                  }, {
-                    'rel': 'describedby:learnergroups',
-                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/learnergroup/$schema',
-                    'title': 'Learner groups'
-                  }, {
-                    'rel': 'describedby:teachers',
-                    'href': 'http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$schema',
-                    'title': 'Teachers'
-                  }
-              ]
+                links: [
+                    {
+                        rel: 'describedby:learners',
+                        href: 'http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema',
+                        title: 'Learners'
+                    }, {
+                        rel: 'describedby:learnergroups',
+                        href: 'http://stable-odt-api.eu-gb.mybluemix.net/api/learnergroup/$schema',
+                        title: 'Learner groups'
+                    }, {
+                        rel: 'describedby:teachers',
+                        href: 'http://stable-odt-api.eu-gb.mybluemix.net/api/teacher/$schema',
+                        title: 'Teachers'
+                    }
+                ]
             };
             const element = document.querySelector('ca-treeview');
             element.root = 'CA Treeview';

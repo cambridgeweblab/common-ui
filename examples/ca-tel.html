@@ -21,57 +21,58 @@
         <script>
             SystemJS.import('ca-tel.js').then(() => {
                 SystemJS.import('helpers/component-support.js').then(componentSupport => {
+                    // eslint-disable-next-line no-param-reassign
                     componentSupport.countryData = [
                         {
-                            "name": "Belgium",
-                            "code": ["32"],
-                            "iso": "BE",
-                            "languages": ["nl", "fr", "de"],
-                            "population": 11248330,
-                            "currency": {
-                                "EUR": {
-                                    "symbol": "€"
+                            name: 'Belgium',
+                            code: ['32'],
+                            iso: 'BE',
+                            languages: ['nl', 'fr', 'de'],
+                            population: 11248330,
+                            currency: {
+                                EUR: {
+                                    symbol: '€'
                                 }
                             }
                         },
                         {
-                            "name": "Germany",
-                            "code": ["49"],
-                            "iso": "DE",
-                            "languages": ["de"],
-                            "population": 81083600,
-                            "currency": {
-                                "EUR": {
-                                    "symbol": "€"
+                            name: 'Germany',
+                            code: ['49'],
+                            iso: 'DE',
+                            languages: ['de'],
+                            population: 81083600,
+                            currency: {
+                                EUR: {
+                                    symbol: '€'
                                 }
                             },
-                            "links": []
+                            links: []
                         },
                         {
-                            "name": "Jersey",
-                            "code": ["44"],
-                            "iso": "JE",
-                            "languages": ["en", "fr"],
-                            "population": 99000,
-                            "currency": {
-                                "GBP": {
-                                    "symbol": "GBP"
+                            name: 'Jersey',
+                            code: ['44'],
+                            iso: 'JE',
+                            languages: ['en', 'fr'],
+                            population: 99000,
+                            currency: {
+                                GBP: {
+                                    symbol: 'GBP'
                                 }
                             },
-                            "links": []
+                            links: []
                         },
                         {
-                            "name": "United Kingdom",
-                            "code": ["44"],
-                            "iso": "GB",
-                            "languages": ["en"],
-                            "population": 64800000,
-                            "currency": {
-                                "GBP": {
-                                    "symbol": "£"
+                            name: 'United Kingdom',
+                            code: ['44'],
+                            iso: 'GB',
+                            languages: ['en'],
+                            population: 64800000,
+                            currency: {
+                                GBP: {
+                                    symbol: '£'
                                 }
                             },
-                            "links": []
+                            links: []
                         }
                     ];
                     document.querySelector('ca-tel').data = componentSupport.getTelephoneCodes();

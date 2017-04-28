@@ -27,33 +27,33 @@
         const cafeedback = document.querySelector('ca-feedback');
         
         const schema = {
-            "type": "object",
-            "$schema": "http://json-schema.org/draft-03/schema#",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "id": "order:01_name",
-                    "required": true,
-                    "maxLength": 60,
-                    "minLength": 1,
-                    "title": "Name"
+            type: 'object',
+            $schema: 'http://json-schema.org/draft-03/schema#',
+            properties: {
+                name: {
+                    type: 'string',
+                    id: 'order:01_name',
+                    required: true,
+                    maxLength: 60,
+                    minLength: 1,
+                    title: 'Name'
                 },
-                "email": {
-                    "type": "string",
-                    "id": "order:02_email",
-                    "required": true,
-                    "maxLength": 60,
-                    "minLength": 1,
-                    "description": "Please enter an email address",
-                    "title": "Email address",
-                    "pattern": "^[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\\.)+[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?$"
+                email: {
+                    type: 'string',
+                    id: 'order:02_email',
+                    required: true,
+                    maxLength: 60,
+                    minLength: 1,
+                    description: 'Please enter an email address',
+                    title: 'Email address',
+                    pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
                 },
-                "comments": {
-                    "type": "string",
-                    "id": "order:03_comments",
-                    "description": "Comments",
-                    "title": "Comments",
-                    "format": "textarea"
+                comments: {
+                    type: 'string',
+                    id: 'order:03_comments',
+                    description: 'Comments',
+                    title: 'Comments',
+                    format: 'textarea'
                 }
             }
         };
