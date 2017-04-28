@@ -1,0 +1,75 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>CA OBJECT LIST | Web Lab Common UI</title>
+        <script src="/bower_components/system.js/dist/system.js"></script>
+        <script src="/components/config/index.js"></script>
+        <link rel="stylesheet" type="text/css" href="/examples/index.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-object-list.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-summary.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
+        <link rel="stylesheet" type="text/css" href="/components/ca-select.css">
+        <link rel="stylesheet" type="text/css" href="/components/helpers/dialogs.css">
+        <style>
+            ca-object-list {
+              position: inherit;
+              overflow: visible;
+            }
+
+            ca-object-list ca-summary {
+              margin-bottom: 20px;
+            }
+
+            ca-object-list button {
+                clear: both;
+                display: block;
+            }
+
+            ca-object-list ca-summary[data-type="card"] {
+                display: block;
+                margin: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body>
+        <div class="ca-home">
+            <a id="home" href="../"></a>
+        </div>
+
+        <div class="ca-title">CA OBJECT LIST EXAMPLE</div>
+        <ca-object-list name="example" id="example" title="example"></ca-object-list>
+
+        <script>
+            SystemJS.import('ca-object-list.js').then(() => {
+                const objectList = document.querySelector('ca-object-list');
+                objectList.schema = {
+                    type: 'object',
+                    id: 'id',
+                    properties: {
+                        colour: {
+                            type: 'string',
+                            id: 'order:040_colour',
+                            required: true,
+                            description: 'The colour of the marks',
+                            title: 'Colour',
+                            enum: ['Red', 'Green', 'Purple', 'Pencil']
+                        },
+                        marks: {
+                            type: 'number',
+                            id: 'order:050_marks',
+                            description: 'The marks',
+                            title: 'Marks',
+                            required: true
+                        }
+                    }
+                };
+                objectList.value = [
+                    { colour: 'Red', marks: 22 }
+                ];
+            });
+        </script>
+    </body>
+</html>

@@ -11,7 +11,8 @@
     "start": "node index.js",
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "test": "wct"
+    "test": "wct",
+    "bower-install": "bower install"
   },
   "repository": {
     "type": "git",
