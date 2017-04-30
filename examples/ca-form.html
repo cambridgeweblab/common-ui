@@ -24,8 +24,9 @@
                 type: 'object',
                 id: 'https://ca-uat-exampay-api.cfapps.io/api/testvenue/$schema',
                 title: 'Cambridge Assessment trading as UCLES & OCR - Centre Invoice Payment Form',
-                description: `You are required to complete the manadatory fields below, you will then be directed to a secure PCI compliant payment portal hosted by Barclaycard. 
-                    This form is for Centres making credit/debit card payments for outstanding invoices. Once you have submitted the completed form and your payment has been successfully received, a receipt will be available to print`,
+                description: `You are required to complete the manadatory fields below, you will then be directed to a secure PCI compliant payment portal hosted by Barclaycard.
+                    This form is for Centres making credit/debit card payments for outstanding invoices.
+                    Once you have submitted the completed form and your payment has been successfully received, a receipt will be available to print`,
                 $schema: 'http://json-schema.org/draft-03/schema#',
                 properties: {
                     personsName: {
@@ -44,7 +45,7 @@
                         minLength: 1,
                         description: 'Please enter an email address',
                         title: 'Centre email address',
-                        pattern: '/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/'
+                        pattern: '/^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$/'
                     },
                     centreTelephoneNumber: {
                         type: 'number',

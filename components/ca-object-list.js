@@ -28,7 +28,7 @@ define([
             if (this.schema) {
                 this.render();
             }
-        }        
+        }
 
         /**
          * Gets title to be used for these items
