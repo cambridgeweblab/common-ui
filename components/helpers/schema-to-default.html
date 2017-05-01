@@ -1,0 +1,41 @@
+<script>
+define('schema-to-default', [], () =>
+    /** Creates an empty object with the same structure defined by a JSON schema. */
+    function schemaToDefault(schema) {
+
+        const data = {};
+        const properties = schema.properties || schema;
+
+        Object.keys(properties).forEach(key => {
+            const item = properties[key];
+
+            switch (item.type) {
+
+                case 'array':
+                    data[key] = [];
+                    if (item.items) {
+                        let i = 0;
+                        const l = (item.maxItems || 1);
+                        for (; i < l; i++) {
+                            data[key].push(schemaToDefault(item.items));
+                        }
+                    }
+                    break;
+
+                case 'object':
+                    data[key] = {};
+                    if (item.items) {
+                        data[key] = schemaToDefault(item.items);
+                    }
+                    break;
+
+                default:
+                    data[key] = item.default || undefined;
+                    break;
+            }
+        });
+
+        return data;
+    }
+);
+</script>

@@ -1,0 +1,11 @@
+<link rel="import" href="has-class.html">
+<script>
+define('add-class', ['has-class'], (hasClass) =>
+    function (el, cls) {
+        if (!hasClass(el, cls)) {
+            // eslint-disable-next-line no-param-reassign
+            el.className += ` ${cls}`;
+        }
+    }
+);
+</script>

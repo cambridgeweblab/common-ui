@@ -1,0 +1,13 @@
+<link rel="import" href="create-element.html">
+<script>
+define('escape-html', ['create-element'], (createElement) =>
+    /**
+     * Escapes text which may contain characters such as <, &, etc. so it can be safely treated as HTML.
+     * @param {string} unsafeContent - text content without HTML escaping
+     * @returns {string} the same text, but with HTML entities included as necessary
+     */
+    function escapeHtml(unsafeContent) {
+        return createElement(null, 'span', {}, unsafeContent).innerHTML;
+    }
+);
+</script>

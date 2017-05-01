@@ -1,0 +1,148 @@
+<link rel="import" href="./helpers/create-element.html">
+<link rel="import" href="./helpers/types.html">
+<link rel="import" href="helpers/secure-ajax.html">
+<link rel="import" href="./helpers/dialogs.html">
+<style>
+    ca-big-red-button {
+        position: absolute;
+        display: block;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        text-align: center;
+        background: rgba(0,0,0,0.7);
+        color: #fff;
+        padding: 2em;
+    }
+
+    ca-big-red-button span {
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
+
+    ca-big-red-button p {
+        padding: 1em 0;
+        width: 50%;
+        margin: 0 auto;
+        line-height: 1.75em;
+    }
+
+    ca-big-red-button button {
+        display: inline-block;
+        margin: 1em;
+        padding: 0.8em 2em;
+        font-size: 1rem;
+        cursor: pointer;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        border-radius: .25rem;
+        color: #fff;
+        background-color: #d9534f;
+        border: 1px solid #d9534f;
+    }
+
+    .dialog-reset-data {
+        width: 500px !important;
+    }
+
+    .dialog-reset-data .dialog-body {
+        padding: 20px 12px !important;
+        line-height: 1.5em;
+    }
+</style>
+<script>
+define(['create-element', 'types', 'secure-ajax', 'dialogs'], (createElement, types, ajax, dialogs) => {
+    /**
+     * @exports ca-big-red-button
+     * @description A custom HTML element (Web Component) that can be created using
+     * document.createElement('ca-big-red-button') or included in a HTML page as an element.
+     */
+    class CaBigRedButtonElement extends HTMLElement {
+        /**
+         * @description Executes when the element is first created
+         * @returns {undefined} scaffolds component.
+         */
+        createdCallback() {
+            createElement(this, 'h2', null, 'WARNING!');
+            createElement(this, 'p', null, 'Resetting application data will clear all data entered and reset the application back to its default test data.');
+
+            const button = createElement(this, 'button', null, 'Reset application data');
+            const close = createElement(this, 'span', null, 'X');
+
+            close.onclick = () => {
+                this.close();
+            };
+
+            button.onclick = () => {
+                this.show();
+            };
+        }
+
+        /** @returns {string} action attribute, the url to request */
+        get action() {
+            return this.getAttribute('action');
+        }
+
+        /**
+         * @param  {string} value, sets the url to request.
+         * @return {undefined} void, updates the attribute with value.
+         */
+        set action(value) {
+            this.setAttribute('action', value);
+        }
+
+        /** @returns {string} method attribute - the request type */
+        get method() {
+            return this.getAttribute('method');
+        }
+
+        /**
+         * @param  {string} value, sets the url to request.
+         * @return {undefined} void, updates the method attribute with value.
+         */
+        set method(value) {
+            this.setAttribute('method', value);
+        }
+
+        /**
+         * @description show a confirmation dialog before performing request.
+         * @returns {undefined} - void, makes an ajax request to perform action.
+         */
+        show() {
+            dialogs.confirm('Are you sure you want to reset the application back to default test data?', 'Confirm', (callback) => {
+                if (callback === 'Yes') {
+                    ajax.execute({
+                        url: this.action,
+                        type: this.method,
+                        dataType: 'json'
+                    })
+                    .then(() => {
+                        dialogs.alert('All data entered has been cleared and the application has been reset back to default test data.', 'Success', null, () => {
+                            this.close();
+                        }, 'dialog-reset-data');
+                    }, () => this.close());
+                } else {
+                    this.close();
+                }
+            }, 'dialog-reset-data');
+        }
+
+        /**
+         * @description Method to close the dialog and reload the page
+         * @return {undefined} void, clears state and reloads location.
+         */
+        close() {
+            history.replaceState('', document.title, window.location.pathname);
+            location.reload();
+        }
+    }
+
+    // Register our new element
+    document.registerElement('ca-big-red-button', CaBigRedButtonElement);
+});
+</script>
