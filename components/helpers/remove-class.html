@@ -1,6 +1,6 @@
 <link rel="import" href="has-class.html">
 <script>
-define('add-class', ['has-class'], (hasClass) =>
+define('remove-class', ['has-class'], (hasClass) =>
     function (el, cls) {
         if (hasClass(el, cls)) {
             const reg = new RegExp(`\\b${cls}\\b`);
