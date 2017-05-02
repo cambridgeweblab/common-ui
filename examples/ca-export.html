@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>CA EXPORT | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-export.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-export.html">
+    <link href="/examples/index.css" rel="stylesheet">
   </head>
   <body>
     <div class="ca-home">
@@ -13,10 +13,7 @@
     </div>
     <div class="ca-title">CA EXPORT EXAMPLE</div>
     <div style="padding: 20px;">
-      <ca-export readonly="false" filename="test.csv" />
+      <ca-export readonly="false" filename="test.csv" label="Export"/>
     </div>
-    <script>
-        SystemJS.import('ca-export.js');
-    </script>
   </body>
 </html>

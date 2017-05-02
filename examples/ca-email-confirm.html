@@ -3,10 +3,9 @@
     <head>
         <meta charset="utf-8">
         <title>CA EMAIL CONFIRM | Web Lab Common UI</title>
-        <script src="/bower_components/system.js/dist/system.js"></script>
-        <script src="/components/config/index.js"></script>
+        <link rel="import" href="/bower_components/imd/imd.html">
+        <link rel="import" href="/components/ca-email-confirm.html">
         <link rel="stylesheet" type="text/css" href="/examples/index.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-email-confirm.css">
     </head>
     <body>
         <div class="ca-home">
@@ -18,7 +17,6 @@
         <button class="toggle-validation-messages">Toggle 'Show validation messages'</button>
 
         <script>
-            SystemJS.import('ca-email-confirm.js');
             document.querySelector('.toggle-validation-messages').onclick = e => {
 
                 e.preventDefault();

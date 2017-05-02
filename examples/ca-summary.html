@@ -4,11 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>CA SUMMARY | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-summary.html">
     <link href="/examples/index.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/components/ca-property.css">
-    <link rel="stylesheet" type="text/css" href="/components/ca-summary.css">
 </head>
 
 <body>
@@ -127,12 +125,17 @@
                 }]
         };
 
-        SystemJS.import('ca-summary.js').then(() => {
+        window.addEventListener('WebComponentsReady', () => {
             const caSummary = document.querySelector('ca-summary');
             caSummary.itemsPerCol = 5;
             caSummary.schema = schema;
             caSummary.data = data;
         });
+
+        if (!window.HTMLImports) {
+            document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+            document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+        }
     </script>
 </body>
 

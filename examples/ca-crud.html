@@ -3,18 +3,13 @@
     <head>
         <meta charset="utf-8">
         <title>CA CRUD | Web Lab Common UI</title>
-        <script src="/bower_components/system.js/dist/system.js"></script>
-        <script src="/components/config/index.js"></script>
+        <link rel="import" href="/bower_components/imd/imd.html">
+        <link rel="import" href="/components/ca-crud.html">
+        <link rel="import" href="/components/ca-property.html">
+        <link rel="import" href="/components/ca-select.html">
+        <link rel="import" href="/components/ca-datetime.html">
         <link href="/examples/index.css" rel="stylesheet">
-        <link href="/components/helpers/dialogs.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="/bower_components/pikaday/css/pikaday.css">
-        <link href="/components/ca-crud.css" rel="stylesheet" />
-        <link href="/components/ca-list.css" rel="stylesheet" />
-        <link href="/components/ca-form.css" rel="stylesheet" />
-        <link href="/components/ca-property.css" rel="stylesheet" />
-        <link href="/components/ca-select.css" rel="stylesheet" />
-        <link href="/components/ca-datetime.css" rel="stylesheet" />
-        <link href="/components/ca-export.css" rel="stylesheet" />
 
         <style>
             ca-list { width: 100%; padding: 0; }
@@ -63,7 +58,7 @@
                 ]
             };
 
-            Promise.all(['ca-crud.js', 'ca-property.js', 'ca-select.js', 'ca-datetime.js'].map(mod => SystemJS.import(mod))).then(() => {
+            window.addEventListener('HTMLImportsLoaded', () => {
                 const element = document.createElement('ca-crud');
                 document.body.appendChild(element);
 
@@ -75,6 +70,12 @@
 
                 element.render();
             });
+
+            if (!window.HTMLImports) {
+                document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+                document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+            }
+
         </script>
     </body>
 </html>

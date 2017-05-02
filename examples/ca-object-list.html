@@ -3,14 +3,9 @@
     <head>
         <meta charset="utf-8">
         <title>CA OBJECT LIST | Web Lab Common UI</title>
-        <script src="/bower_components/system.js/dist/system.js"></script>
-        <script src="/components/config/index.js"></script>
+        <link rel="import" href="/bower_components/imd/imd.html">
+        <link rel="import" href="/components/ca-object-list.html">
         <link rel="stylesheet" type="text/css" href="/examples/index.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-object-list.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-summary.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-select.css">
-        <link rel="stylesheet" type="text/css" href="/components/helpers/dialogs.css">
         <style>
             ca-object-list {
               position: inherit;
@@ -43,7 +38,7 @@
         <ca-object-list name="example" id="example" title="example"></ca-object-list>
 
         <script>
-            SystemJS.import('ca-object-list.js').then(() => {
+            window.addEventListener('WebComponentsReady', () => {
                 const objectList = document.querySelector('ca-object-list');
                 objectList.schema = {
                     type: 'object',
@@ -70,6 +65,11 @@
                     { colour: 'Red', marks: 22 }
                 ];
             });
+
+            if (!window.HTMLImports) {
+                document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+                document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+            }
         </script>
     </body>
 </html>

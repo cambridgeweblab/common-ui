@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title>CA FILE INPUT | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/hellpers/dialogs.css">
-    <link rel="stylesheet" type="text/css" href="/components/ca-file-input.css">
+    <link href="/examples/index.css" rel="stylesheet">
+
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-file-input.html">
   </head>
   <body>
     <div class="ca-home">
@@ -15,10 +15,15 @@
     <div class="ca-title">CA FILE INPUT EXAMPLE</div>
     <ca-file-input></ca-file-input>
     <script>
-        SystemJS.import('ca-file-input.js').then(() => {
+        window.addEventListener('WebComponentsReady', () => {
             const fileInput = document.querySelector('ca-file-input');
             fileInput.mediatype = 'image/gif';
         });
+
+        if (!window.HTMLImports) {
+            document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+            document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+        }
     </script>
   </body>
 </html>
