@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA FORM | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-form.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-form.html">
   </head>
   <body>
     <test-fixture id="ca-form">
@@ -20,10 +19,8 @@
 
             // TODO: CREATE TESTS, there were non associated with the original component
             setup(done => {
-                SystemJS.import('ca-form.js').then(() => {
-                    caForm = fixture('ca-form');
-                    done();
-                });
+                caForm = fixture('ca-form');
+                done();
             });
         });
         a11ySuite('ca-form');

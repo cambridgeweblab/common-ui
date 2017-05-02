@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA LIST | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-list.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-list.html">
 </head>
 <body>
 <test-fixture id="list">
@@ -393,10 +392,8 @@
         };
 
         setup(done => {
-            SystemJS.import('ca-list.js').then(() => {
-                caList = fixture('list');
-                done();
-            });
+            caList = fixture('list');
+            done();
         });
 
         test('should be created and appended', () => {

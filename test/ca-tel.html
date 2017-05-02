@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA TEL | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-tel.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-tel.html">
   </head>
   <body>
     <test-fixture id="ca-tel">
@@ -20,10 +19,8 @@
 
             // TODO: CREATE TESTS, there were none associated with the original component
             setup(done => {
-                SystemJS.import('ca-tel.js').then(() => {
-                    caTel = fixture('ca-tel');
-                    done();
-                });
+                caTel = fixture('ca-tel');
+                done();
             });
         });
         a11ySuite('ca-tel');

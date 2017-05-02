@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA DIALOG | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-dialog.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-dialog.html">
   </head>
   <body>
     <test-fixture id="dialog">
@@ -19,10 +18,8 @@
             let dialog;
 
             setup(done => {
-                SystemJS.import('ca-dialog.js').then(() => {
-                    dialog = fixture('dialog');
-                    done();
-                });
+                dialog = fixture('dialog');
+                done();
             });
 
             test('it should stay hidden when created', () => {

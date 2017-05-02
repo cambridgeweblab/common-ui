@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA EMAIL CONFIRM | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-email-confirm.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-email-confirm.html">
   </head>
   <body>
     <test-fixture id="email-confirm">
@@ -16,18 +15,16 @@
     </test-fixture>
     <script>
         suite('<ca-email-confirm>', () => {
-            
+
             let emailConfirm;
 
             setup(done => {
-                SystemJS.import('ca-email-confirm.js').then(() => {
-                    emailConfirm = fixture('email-confirm');
-                    done();
-                });
+                emailConfirm = fixture('email-confirm');
+                done();
             });
 
             test('it should add valid and show-validation attributes when created', () => {
-              
+
                 expect(emailConfirm.hasAttribute('valid')).to.be.true;
                 expect(emailConfirm.getAttribute('valid')).to.equal('false');
                 expect(emailConfirm.hasAttribute('show-validation')).to.be.true;
@@ -35,7 +32,7 @@
             });
 
             test('it should have been set up with default values for labels and inputs', () => {
-              
+
                 expect(emailConfirm.label1).to.equal('Please enter your email address');
                 expect(emailConfirm.label2).to.equal('Please confirm your email address');
                 expect(emailConfirm.placeholder1).to.equal('');
@@ -44,7 +41,7 @@
             });
 
             test('it should correctly validate email addresses entered into both inputs', () => {
-                
+
                 // setup invalid state
                 emailConfirm.querySelector('.ctl1 input').value = 'invalidEmail';
                 emailConfirm.querySelector('.ctl2 input').value = 'invalidEmail';
@@ -60,7 +57,7 @@
                 expect(emailConfirm.getAttribute('valid')).to.equal('true');
                 expect(emailConfirm.error1).to.equal('');
                 expect(emailConfirm.error2).to.equal('');
-                
+
                 // check that valid states returns to invalid if one value is incorrect
                 emailConfirm.querySelector('.ctl1 input').value = 'invalidEmail';
                 emailConfirm.validate();

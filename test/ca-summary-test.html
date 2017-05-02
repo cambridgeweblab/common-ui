@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <title>CA summary | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-property.css">
-    <link rel="stylesheet" type="text/css" href="/components/ca-summary.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-summary.html">
   </head>
   <body>
     <test-fixture id="summary">
@@ -21,10 +19,8 @@
 
             // TODO: ADD TEST - MIGRATED FROM OLD REPO, NO TESTS.
             setup(done => {
-                SystemJS.import('ca-summary.js').then(() => {
-                    summary = fixture('summary');
-                    done();
-                });
+                summary = fixture('summary');
+                done();
             });
         });
         a11ySuite('summary');

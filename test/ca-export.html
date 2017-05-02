@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA EXPORT | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-export.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-export.html">
   </head>
   <body>
     <test-fixture id="ca-export">
@@ -20,10 +19,8 @@
 
             // TODO: CREATE TESTS, there were none associated with the original component
             setup(done => {
-                SystemJS.import('ca-export.js').then(() => {
-                    caExport = fixture('ca-export');
-                    done();
-                });
+                caExport = fixture('ca-export');
+                done();
             });
         });
         a11ySuite('ca-export');

@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA BIG RED BUTTON | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-big-red-button.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-big-red-button.html">
   </head>
   <body>
     <test-fixture id="big-button">
@@ -19,10 +18,8 @@
             let bigRedButton;
 
             setup(done => {
-                SystemJS.import('ca-big-red-button.js').then(() => {
-                    bigRedButton = fixture('big-button');
-                    done();
-                });
+                bigRedButton = fixture('big-button');
+                done();
             });
             test('should be creatable', () => {
                 // Check the element has been created with the correct tag
