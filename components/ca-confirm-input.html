@@ -28,6 +28,7 @@ define(['create-element'], (createElement) => {
             const input1Options = {
                 id: `caConfirmInput_${this.name}`,
                 value: this.value,
+                'aria-label': this.label,
                 type: this.type,
                 autofocus: '',
                 class: 'ca-confirm-input-1'
@@ -35,6 +36,7 @@ define(['create-element'], (createElement) => {
             const input2Options = {
                 id: `caConfirmInput_${this.name}_confirm`,
                 type: this.type,
+                'aria-label': this.label,
                 placeholder:
                 `Please re-enter ${this.label.toLowerCase()}`,
                 class: 'ca-confirm-input-2'
