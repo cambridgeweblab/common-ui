@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
     "test": "wct",
+    "watch": "gulp test-watch",
     "bower-install": "bower install"
   },
   "repository": {
@@ -31,6 +32,8 @@
     "bower": "^1.7.9",
     "eslint": "^3.6.0",
     "eslint-config-weblab": "git+https://github.com/cambridgeweblab/eslint-config-weblab.git",
+    "gulp": "^3.9.1",
+    "node-notifier": "^5.1.2",
     "web-component-tester": "4.2",
     "web-component-tester-istanbul": "^0.10.0"
   },
