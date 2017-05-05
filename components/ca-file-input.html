@@ -66,8 +66,9 @@ define(['create-element', 'dialogs'], (createElement, dialogs) => {
                 options.multiple = true;
             }
 
-            this.input = createElement(this, 'input', options);
             this.label = createElement(this, 'label', { tabIndex: 0 }, this.getLabelText(this.mediaType));
+            this.input = createElement(this.label, 'input', options);
+            
 
             this.input.addEventListener('change', function(e) {
                 const fileReaders = [];
