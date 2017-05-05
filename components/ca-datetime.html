@@ -62,8 +62,15 @@ define([
          * @return {undefined}
          */
         createdCallback() {
+
+            let inputOpts = {};
+
+            if (this.label) {
+                inputOpts['aria-label'] = this.label
+            }
+
             const div = createElement(this, 'div', {});
-            const input = createElement(div, 'input', {});
+            const input = createElement(div, 'input', inputOpts);
             this.root = div;
         }
 
@@ -162,6 +169,16 @@ define([
         /** @param {string} value - the time part of the selected datetime */
         set datePicker(value) {
             this._datePicker = value;
+        }
+
+        /** @returns {string} ca-datetime.label - the datetime label */
+        get label() {
+            return this.getAttribute('label') || '';
+        }
+
+        /** @param {string} label - the label to use for datetime input */
+        set label(label) {
+            this.setAttribute('label', label);
         }
 
         /**
