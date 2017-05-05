@@ -157,6 +157,26 @@ define(['create-element', 'clear-element', 'cancel-event'], (createElement, clea
             this.setAttribute('image-captured', value === true);
         }
 
+        /** @returns {string} ca-image-capture.videoId - the video element id */
+        get videoId() {
+            return this.getAttribute('video-id') || '';
+        }
+
+        /** @param {string} id - the id to use for video element */
+        set videoId(id) {
+            this.setAttribute('video-id', videoId);
+        }
+
+        /** @returns {string} ca-image-capture.label - the image-capture label */
+        get label() {
+            return this.getAttribute('label') || '';
+        }
+
+        /** @param {string} label - the label to use for image-capture label */
+        set label(label) {
+            this.setAttribute('label', label);
+        }
+
         /**
          * @description Manages all internal events on an element
          * @param {object} e - the element that the event happened on
@@ -201,7 +221,7 @@ define(['create-element', 'clear-element', 'cancel-event'], (createElement, clea
             this.canvasEl = createElement(this, 'canvas', { width: this.videoWidth, height: this.videoHeight });
 
             // create video stream object - we capture stills by grabbing video stills
-            this.videoEl = createElement(this, 'video', { muted: 'muted', autoplay: 'autoplay' });
+            this.videoEl = createElement(this, 'video', { muted: 'muted', autoplay: 'autoplay', id: this.videoId });
 
             // normalise getUserMedia method across browsers
             navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
@@ -231,8 +251,15 @@ define(['create-element', 'clear-element', 'cancel-event'], (createElement, clea
                 });
             }
 
+            // only add label if both videoId and label are provided
+            if (this.videoId && this.label){            
+                createElement(this, 'label', {for: this.videoId}, this.label);
+            }
+
             // add button to allow user to capture/clear image
             this.button = createElement(this, 'button', null, 'Capture');
+
+        
 
             // hook all click events
             this.onclick = this.eventHandler.bind(this);
