@@ -63,10 +63,10 @@ define([
          */
         createdCallback() {
 
-            let inputOpts = {};
+            const inputOpts = {};
 
             if (this.label) {
-                inputOpts['aria-label'] = this.label
+                inputOpts['aria-label'] = this.label;
             }
 
             const div = createElement(this, 'div', {});

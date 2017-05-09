@@ -67,20 +67,17 @@
 </style>
 <script>
 define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createElement, clearElement, cancelEvent, keyboard) => {
-
     /**
      * @exports ca-input-array component
      * @extends HTMLElement
      */
     class CaInputArrayElement extends HTMLElement {
-
         /**
          * Executes when the element is first created
          * @access private
          * @returns {void}
          */
         createdCallback() {
-
             this.render();
         }
 
@@ -94,7 +91,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         attributeChangedCallback(attrName, oldVal, newVal) {
-
             // if we do not have a property matching the attribute, exit
             if (!this[attrName]) return;
 
@@ -139,7 +135,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {array|string} value
          */
         get value() {
-
             const self = this;
             const elements = Array.prototype.slice(this.querySelectorAll(this.childSelector));
             let values = [];
@@ -182,7 +177,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} sum
          */
         get sum() {
-
             let sum = 0;
             const values = (this.value || []);
 
@@ -199,7 +193,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {string} pattern
          */
         get pattern() {
-
             return this.getAttribute('pattern') || '';
         }
 
@@ -209,7 +202,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set pattern(value) {
-
             this.setAttribute('pattern', value);
         }
 
@@ -217,7 +209,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} min
          */
         get min() {
-
             return parseInt(this.getAttribute('min') || '-1', 10);
         }
 
@@ -226,7 +217,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set min(value) {
-
             this.setAttribute('min', parseInt(value || '-1', 10));
         }
 
@@ -234,7 +224,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} max
          */
         get max() {
-
             return parseInt(this.getAttribute('max') || '-1', 10);
         }
 
@@ -243,7 +232,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set max(value) {
-
             this.setAttribute('max', parseInt(value || '-1', 10));
         }
 
@@ -252,7 +240,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} divisibleBy
          */
         get divisibleBy() {
-
             return parseInt(this.getAttribute('divisible-by') || '1', 10);
         }
 
@@ -262,7 +249,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set divisibleBy(value) {
-
             this.setAttribute('divisible-by', parseInt(value || '1', 10));
         }
 
@@ -270,7 +256,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} maxLength
          */
         get maxLength() {
-
             return parseInt(this.getAttribute('maxlength') || '-1', 10);
         }
 
@@ -279,7 +264,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set maxLength(value) {
-
             this.setAttribute('maxlength', parseInt(value || '-1', 10));
         }
 
@@ -287,7 +271,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} minItems
          */
         get minItems() {
-
             return parseInt(this.getAttribute('min-items') || '1', 10);
         }
 
@@ -296,7 +279,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set minItems(value) {
-
             this.setAttribute('min-items', value);
         }
 
@@ -304,7 +286,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} maxItems
          */
         get maxItems() {
-
             return parseInt(this.getAttribute('max-items') || '-1', 10);
         }
 
@@ -313,7 +294,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set maxItems(value) {
-
             this.setAttribute('max-items', value);
         }
 
@@ -321,7 +301,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {string} child selector string
          */
         get childSelector() {
-
             // HACK, https://stackoverflow.com/questions/18677323/html5-input-type-number-value-is-empty-in-webkit-if-has-spaces-or-non-numeric-ch
             // Number doesn't return -+ as characters when you domElement.value
             // var type = this.type === 'number' ? 'text' : this.type;
@@ -333,7 +312,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {integer} count
          */
         get count() {
-
             return this.querySelectorAll(this.childSelector).length;
         }
 
@@ -341,7 +319,6 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {boolean} autofocus
          */
         get autofocus() {
-
             return this.getAttribute('autofocus') === 'true';
         }
 
@@ -350,8 +327,17 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
          * @returns {void}
          */
         set autofocus(value) {
-
             this.setAttribute('autofocus', value === 'true');
+        }
+
+        /** @returns {string} ca-tel.inputAriaLabel - the label to use for input element */
+        get inputAriaLabel() {
+            return this.getAttribute('input-aria-label') || '';
+        }
+
+        /** @param {string} inputAriaLabel - the input aria label to use within ca-tel element */
+        set inputAriaLabel(inputAriaLabel) {
+            this.setAttribute('input-aria-label', inputAriaLabel || '');
         }
 
         /**
@@ -391,7 +377,16 @@ define(['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createE
             removeButton.onclick = this.removeClick.bind(this);
 
             // add input
-            input = createElement(lineItem, 'input', { type, pattern: this.pattern });
+            const inputOpts = {
+                type: this.type,
+                pattern: this.pattern
+            };
+
+            if (this.inputAriaLabel) {
+                inputOpts['aria-label'] = this.inputAriaLabel;
+            }
+
+            input = createElement(lineItem, 'input', inputOpts);
 
             // on accurate way to get values on key hits - http://unixpapa.com/js/key.html
             input.onkeypress = this.keypressHandler.bind(this);

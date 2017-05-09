@@ -162,8 +162,8 @@ define(['create-element', 'clear-element', 'cancel-event'], (createElement, clea
             return this.getAttribute('video-id') || '';
         }
 
-        /** @param {string} id - the id to use for video element */
-        set videoId(id) {
+        /** @param {string} videoId - the id to use for video element */
+        set videoId(videoId) {
             this.setAttribute('video-id', videoId);
         }
 
@@ -252,14 +252,13 @@ define(['create-element', 'clear-element', 'cancel-event'], (createElement, clea
             }
 
             // only add label if both videoId and label are provided
-            if (this.videoId && this.label){            
-                createElement(this, 'label', {for: this.videoId}, this.label);
+            if (this.videoId && this.label) {
+                createElement(this, 'label', { for: this.videoId }, this.label);
             }
 
             // add button to allow user to capture/clear image
             this.button = createElement(this, 'button', null, 'Capture');
 
-        
 
             // hook all click events
             this.onclick = this.eventHandler.bind(this);

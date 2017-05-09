@@ -80,31 +80,43 @@ define([
      */
     class CaSelectElement extends HTMLElement {
 
+      /**
+         * Called when the component is attached to the DOM
+         * @returns {undefined} nada.
+         */
+        attachedCallback() {
+            if (this.ariaLabel) {
+                this.root.setAttribute('aria-label', this.ariaLabel);
+            }
+        }
+
         /**
         * Called when element is initialised
         * @returns {void} void
         */
         createdCallback() {
-
             this.isTouch = ('ontouchend' in document.documentElement);
             this.selections = {};
 
             switch (this.style) {
-
                 case 'checkbox':
                     this.root = this;
                     break;
 
-                default:
-                    this.root = createElement(this, 'select', {});
+                default: {
+                    const selectOpts = {};
+                    if (this.ariaLabel) {
+                        selectOpts['aria-label'] = this.ariaLabel;
+                    }
+                    this.root = createElement(this, 'select', selectOpts);
                     this.root.multiple = this.multiple;
                     this.root.onchange = () => this.onChangeHandler();
 
                     // force blur events to bubble (required for ca-form validation)
                     this.root.onblur = () => {
-
                         // helpers.fireEvent(this, 'blur');
                     };
+                }
             }
 
             if (this.data) this.render();
@@ -497,6 +509,18 @@ define([
         set style(value) {
 
             this.setAttribute('style', value);
+        }
+
+        /** @returns {string} ca-select.ariaLabel - the aria label to use for the confirm text box */
+        get ariaLabel() {
+            return this.getAttribute('aria-label') || '';
+        }
+
+        /** @param {string} ariaLabel - the aria label to use for the select element */
+        set ariaLabel(ariaLabel) {
+            if (ariaLabel) {
+                this.setAttribute('aria-label', ariaLabel || '');
+            }
         }
     }
 

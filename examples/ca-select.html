@@ -12,12 +12,11 @@
           <a id="home" href="/"></a>
         </div>
         <div class="ca-title">CA SELECT EXAMPLE</div>
-        <ca-select></ca-select>
+        <ca-select aria-label="Please choose a option"></ca-select>
 
         <script>
             window.addEventListener('WebComponentsReady', () => {
 
-                console.log(document.querySelector('ca-select'));
                 document.querySelector('ca-select').data = [
                     {
                         value: 1,

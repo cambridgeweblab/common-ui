@@ -8,8 +8,7 @@
     "html"
   ],
   "globals": {
-    "ActiveXObject": true,
-    "SystemJS": true
+    "ActiveXObject": true
   },
   "rules": {
     "import/no-amd": 0

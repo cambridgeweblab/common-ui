@@ -10,7 +10,7 @@
   <body>
     <test-fixture id="select">
       <template>
-        <ca-select></ca-select>
+        <ca-select aria-label="Please choose a option"></ca-select>
       </template>
     </test-fixture>
     <script>
@@ -19,11 +19,13 @@
 
             // TODO: ADD TEST - MIGRATED FROM OLD REPO, NO TESTS.
             setup(done => {
-                select = fixture('select');
+                select = fixture('select');      
                 done();
             });
         });
+
         a11ySuite('select');
+        
     </script>
   </body>
 </html>

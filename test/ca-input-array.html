@@ -9,8 +9,8 @@
   </head>
   <body>
     <test-fixture id="ca-input-array">
-      <template>
-        <ca-input-array min-items="5"></ca-input-array>
+      <template>        
+        <ca-input-array min-items="5" input-aria-label="Please enter a value"></ca-input-array>
       </template>
     </test-fixture>
     <script>
@@ -34,6 +34,7 @@
                 expect(caInputArray.minItems).to.equal(5);
                 expect(caInputArray.maxItems).to.equal(-1);
                 expect(caInputArray.count).to.equal(5);
+                expect(caInputArray.inputAriaLabel).to.equal('Please enter a value');
             });
 
             test('should create an input for each item', () => {

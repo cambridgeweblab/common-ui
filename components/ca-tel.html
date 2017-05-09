@@ -333,8 +333,8 @@ define(['create-element', 'fire-event'], (createElement, fireEvent) => {
          */
         createdCallback() {
             this.root = createElement(this, 'div', {});
-            this.select = createElement(this.root, 'ca-select', { type: 'tel' });
-            this.input = createElement(this.root, 'input', { type: 'tel' });
+            this.select = createElement(this.root, 'ca-select', { type: 'tel', 'aria-label': this.selectAriaLabel });
+            this.input = createElement(this.root, 'input', { type: 'tel', 'aria-label': this.inputAriaLabel });
 
             this.select.onupdate = this.eventDelegate.bind(this);
             this.input.onblur = () => fireEvent(this, 'blur');
@@ -464,11 +464,34 @@ define(['create-element', 'fire-event'], (createElement, fireEvent) => {
             return (!this.iddChanged && (this.idd === '' || this.tel === ''));
         }
 
+        /** @returns {string} ca-tel.selectAriaLabel - the label to use for the select element */
+        get selectAriaLabel() {
+            return this.getAttribute('select-aria-label') || '';
+        }
+
+        /** @param {string} selectAriaLabel - the select aria label to use within ca-tel element */
+        set selectAriaLabel(selectAriaLabel) {
+            this.setAttribute('select-aria-label', selectAriaLabel || '');
+        }
+
+        /** @returns {string} ca-tel.inputAriaLabel - the label to use for input element */
+        get inputAriaLabel() {
+            return this.getAttribute('input-aria-label') || '';
+        }
+
+        /** @param {string} inputAriaLabel - the input aria label to use within ca-tel element */
+        set inputAriaLabel(inputAriaLabel) {
+            this.setAttribute('input-aria-label', inputAriaLabel || '');
+        }
+
         /**
          * Render the Telephone input.
          * @returns {undefined}
          */
         render() {
+            if (this.ariaLabel) {
+                this.select.ariaLabel = this.ariaLabel;
+            }
             const data = this._data || [];
             this.select.data = data;
         }
