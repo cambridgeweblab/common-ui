@@ -1,0 +1,108 @@
+<link rel="import" href="helpers/create-element.html">
+<style>
+    ca-currency {
+        display: table;
+        position: relative;
+    }
+
+    ca-currency input {
+        display: table-cell;
+        border-radius: 0px 4px 4px 0px;
+        border-left: 0;
+        padding: 6px;
+    }
+
+    ca-currency:before {
+        width: 1%;
+        white-space: nowrap;
+        vertical-align: middle;
+        font-size: 14px;
+        padding: 6px 12px;
+        display: table-cell;
+        content: attr(symbol);
+        line-height: 1;
+        text-align: center;
+        background: #eee;
+        border: 1px solid #ccc;
+        border-radius: 4px 0px 0px 4px;
+    }
+</style>
+<script>
+    define(['create-element'], (createElement) => {
+        /**
+         * Class Currency for a ca-currency web component
+         * @extends HTMLElement
+         */
+        class CaCurrencyElement extends HTMLElement {
+            /**
+             * createdCallback - called when the component created, (not yet attached to the DOM).
+             * @returns {undefined} initalises the component.
+             */
+            createdCallback() {
+
+                const opts = {
+                    value: this.value,
+                    type: 'number',
+                    step: 'any'
+                };
+
+                if (this.ariaLabel) {
+                    opts['aria-label'] = this.ariaLabel;
+                }
+
+                this.input = createElement(this, 'input', opts);
+
+                if (this.readonly) {
+                    this.input.setAttribute('readonly', 'true');
+                }
+            }
+
+            /** @return {string} symbol - the currency symbol (eg "£", "$") */
+            get symbol() {
+                return this.getAttribute('symbol');
+            }
+
+            /** @param {string} value - sets the currency symbol */
+            set symbol(value) {
+                this.setAttribute('symbol', value);
+            }
+
+            /** @returns {string} ca-currency.value - the currency value */
+            get value() {
+                return (this.input) ? this.input.value : this.getAttribute('value');
+            }
+
+            /** @param {string} value - sets the currency value */
+            set value(value) {
+                if (this.input) {
+                    this.input.value = value;
+                } else {
+                    this.setAttribute('value', value);
+                }
+            }
+
+            /** @returns {boolean} - ca-currency.readonly - whether the value is editable */
+            get readonly() {
+                return this.getAttribute('readonly') === 'true';
+            }
+
+            /** @param {string} value - flag to manage readonly */
+            set readonly(value) {
+                this.setAttribute('readonly', value);
+            }
+
+            /** @returns {string} ca-currency.ariaLabel - the currency aria label */
+            get ariaLabel() {
+                return this.getAttribute('aria-label') || '';
+            }
+
+            /** @param {string} ariaLabel - the label to use for currency aria input */
+            set ariaLabel(ariaLabel) {
+                this.setAttribute('aria-label', ariaLabel);
+            }
+        }
+
+        // Register our new element
+        document.registerElement('ca-currency', CaCurrencyElement);
+    });
+</script>

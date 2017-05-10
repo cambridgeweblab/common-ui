@@ -18,9 +18,8 @@
     "tests"
   ],
   "dependencies": {
-    "system.js": "^0.19.39",
-    "document-register-element": "^1.2.0",
-    "base64": "^1.0.0",
-    "pikaday": "^1.5.1"
+    "pikaday": "^1.5.1",
+    "imd": "PolymerLabs/IMD#master",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24"
   }
 }

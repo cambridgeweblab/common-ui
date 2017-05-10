@@ -1,0 +1,253 @@
+<link rel="import" href="helpers/create-element.html">
+<link rel="import" href="helpers/clear-element.html">
+<style>
+    ca-remote-image-capture {
+        display: block;
+        position: relative;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        width: 400px;
+        height: 720px;
+    }
+
+    ca-remote-image-capture img { width: 100%; height: 100%; }
+
+    ca-remote-image-capture[image-captured="true"] img {
+      visibility: hidden;
+    }
+
+    ca-remote-image-capture canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        visibility: hidden;
+        width: 100%;
+        height: 100%;
+        margin-left: 0px;
+        left: 0px;
+        -webkit-transform: scaleX(1);
+        -moz-transform: scaleX(1);
+    }
+
+    ca-remote-image-capture video {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -640px;
+        width: 1280px;
+        height: 720px;
+        -webkit-transform: scaleX(1);
+        -moz-transform: scaleX(1);
+    }
+
+    ca-remote-image-capture button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        text-indent: -999em;
+        overflow: hidden;
+        cursor: pointer;
+        width: 64px;
+        height: 64px;
+        margin: -32px 0 0 -32px;
+        display: block;
+        background-color: rgba(255, 255, 255, 0.6);
+        background-repeat: no-repeat;
+        background-position: center 2px;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEyNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPiAgICA8Zz4gICAgICAgIDxwYXRoIGQ9Ik04MC45LDMzLjNINjkuN2wtMi4yLTUuNmMtMS43LTQuMi01LjctNy0xMC4zLTdINDIuOGMtNC42LDAtOC42LDIuNy0xMC4zLDdsLTIuMiw1LjZIMTkuMWMtMy43LDAtNi42LDMtNi42LDYuNnYzMi42ICAgYzAsMy43LDMsNi42LDYuNiw2LjZoNjEuOGMzLjcsMCw2LjYtMyw2LjYtNi42VjM5LjlDODcuNSwzNi4zLDg0LjUsMzMuMyw4MC45LDMzLjN6IE04My4xLDcyLjZjMCwxLjItMSwyLjItMi4yLDIuMkgxOS4xICAgYy0xLjIsMC0yLjItMS0yLjItMi4yVjM5LjljMC0xLjIsMS0yLjIsMi4yLTIuMmgxNC4ybDMuMy04LjNjMS0yLjUsMy40LTQuMiw2LjItNC4yaDE0LjRjMi43LDAsNS4yLDEuNiw2LjIsNC4ybDMuMyw4LjNoMTQuMiAgIGMxLjIsMCwyLjIsMSwyLjIsMi4yVjcyLjZ6Ii8+ICAgICAgICA8cGF0aCBkPSJNNTAsMzUuMmMtOS45LDAtMTgsOC4xLTE4LDE4YzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMThDNjgsNDMuMyw1OS45LDM1LjIsNTAsMzUuMnogTTUwLDY1LjcgICBjLTYuOSwwLTEyLjUtNS42LTEyLjUtMTIuNWMwLTYuOSw1LjYtMTIuNSwxMi41LTEyLjVzMTIuNSw1LjYsMTIuNSwxMi41QzYyLjUsNjAuMSw1Ni45LDY1LjcsNTAsNjUuN3oiLz4gICAgPC9nPjwvc3ZnPg==);
+        background-size: 90%;
+        outline: 0;
+        transition: transform .15s;
+        border-radius: 10px;
+    }
+
+    ca-remote-image-capture button:after {
+        content: "Capture";
+        display: block;
+    }
+
+    ca-remote-image-capture[image-captured="true"] button {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMDAgMTI1IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4gICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTc1Ljk1LDk5LjY3SDI1LjQ1MWMtMS44NzUsMC0zLjQ3OS0xLjM0OC0zLjgwMS0zLjE5NUw4LjE0LDE5LjE5Yy0wLjE5OC0xLjEyMiwwLjExMy0yLjI3NSwwLjg0Ni0zLjE0NyAgYzAuNzMzLTAuODczLDEuODE1LTEuMzc3LDIuOTU1LTEuMzc3aDc3LjUxOGMxLjE0LDAsMi4yMjIsMC41MDQsMi45NTUsMS4zNzdjMC43MzMsMC44NzMsMS4wNDQsMi4wMjUsMC44NDYsMy4xNDdMNzkuNzUxLDk2LjQ3NCAgQzc5LjQyOSw5OC4zMjIsNzcuODI1LDk5LjY3LDc1Ljk1LDk5LjY3eiBNMjguNjk0LDkxLjk1aDQ0LjAxMmwxMi4xNi02OS41NjVIMTYuNTM0TDI4LjY5NCw5MS45NXoiLz4gICAgPGc+ICAgICAgICA8cGF0aCBmaWxsPSIjMDAwMDAwIiBkPSJNMzguNjc3LDgyLjYxNGMtMS45NDksMC0zLjYyMi0xLjQ2OS0zLjgzMy0zLjQ0OWwtNC45MDgtNDUuODI3Yy0wLjIyOC0yLjExOSwxLjMwNi00LjAyMiwzLjQyNi00LjI0OSAgIGMyLjE1Mi0wLjIyNSw0LjAyMiwxLjMxLDQuMjQ4LDMuNDI3bDQuOTA4LDQ1LjgyN2MwLjIyOCwyLjExOS0xLjMwNiw0LjAyMi0zLjQyNiw0LjI0OUMzOC45NTIsODIuNjA3LDM4LjgxMyw4Mi42MTQsMzguNjc3LDgyLjYxNCAgIHoiLz4gICAgICAgIDxwYXRoIGZpbGw9IiMwMDAwMDAiIGQ9Ik02Mi43MjUsODIuNjE0Yy0wLjEzNiwwLTAuMjc1LTAuMDA3LTAuNDE1LTAuMDIyYy0yLjEyLTAuMjI3LTMuNjU0LTIuMTMtMy40MjYtNC4yNDlsNC45MDgtNDUuODI3ICAgYzAuMjI2LTIuMTE4LDIuMDk0LTMuNjY0LDQuMjQ4LTMuNDI3YzIuMTIsMC4yMjcsMy42NTQsMi4xMywzLjQyNiw0LjI0OWwtNC45MDgsNDUuODI3QzY2LjM0OCw4MS4xNDUsNjQuNjc0LDgyLjYxNCw2Mi43MjUsODIuNjE0ICAgeiIvPiAgICAgICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTUwLjU4NCw4Mi40NjhjLTIuMTMyLDAtMy44Ni0xLjcyOC0zLjg2LTMuODZWMzMuMDczYzAtMi4xMzIsMS43MjgtMy44NiwzLjg2LTMuODYgICBjMi4xMzIsMCwzLjg2LDEuNzI4LDMuODYsMy44NnY0NS41MzVDNTQuNDQ0LDgwLjczOSw1Mi43MTYsODIuNDY4LDUwLjU4NCw4Mi40Njh6Ii8+ICAgIDwvZz4gICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTkwLjMwNyw0LjU1SDc2LjQyOWMwLjA0MS0wLjIyNSwwLjA3LTAuNDUzLDAuMDctMC42OWMwLTIuMTMyLTEuNzI4LTMuODYtMy44Ni0zLjg2aC00NC4xMSAgYy0yLjEzMiwwLTMuODYsMS43MjgtMy44NiwzLjg2YzAsMC4yMzYsMC4wMjksMC40NjUsMC4wNywwLjY5SDEwLjg2QzguNzI4LDQuNTUsNyw2LjI3OCw3LDguNDA5czEuNzI4LDMuODYsMy44NiwzLjg2aDc5LjQ0NyAgYzIuMTMyLDAsMy44Ni0xLjcyOCwzLjg2LTMuODZTOTIuNDM5LDQuNTUsOTAuMzA3LDQuNTV6Ii8+PC9zdmc+);
+        background-position: center 14px;
+        background-size: 70%;
+    }
+
+    ca-remote-image-capture button:hover{
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+
+    ca-remote-image-capture[image-captured="true"] video { visibility: hidden; }
+    ca-remote-image-capture[image-captured="true"] canvas { visibility: visible; }
+
+    ca-remote-image-capture[data-no-video="true"]{
+        background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQ2NSA1NDAiIHg9IjBweCIgeT0iMHB4Ij4gIDxnIGZpbGw9IiNhYWEiPiAgICA8cGF0aCBjbGFzcz0iZmlsMCIgZD0iTTEzNiAxNDNsMjggMCA4IC0xOGMyLC02IDUsLTEyIDgsLTE3IDUsLTUgMTEsLTkgMTksLTlsNjggMGM4LDAgMTQsNCAxOSw5IDQsNSA2LDExIDksMTdsNyAxOCAyNiAwYzYsMCAxMSwxIDE1LDRsLTE2IDExIC0zMCAwIDAgMGMtMywwIC02LC0yIC03LC01bC0xMCAtMjNjLTEsLTQgLTMsLTkgLTYsLTEyIC0yLC0yIC00LC0zIC03LC0zbC02OCAwYy0zLDAgLTUsMSAtNywzIC0yLDMgLTQsOCAtNiwxMmwtOSAyM2MtMSwzIC00LDUgLTcsNWwtMzQgMGMtNCwwIC04LDIgLTEwLDUgLTMsMyAtNSw2IC01LDEwbDAgMTMxYzAsMCAwLDEgMCwxbC0xMyAxMGMtMiwtNCAtMiwtNyAtMiwtMTFsMCAtMTMxYzAsLTggMywtMTYgOSwtMjFsMCAwYzUsLTYgMTMsLTkgMjEsLTl6bTIyMSAxOWMxLDQgMiw3IDIsMTFsMCAxMzFjMCw4IC00LDE2IC05LDIxIC02LDYgLTEzLDkgLTIyLDlsLTE5MiAwYy01LDAgLTExLC0xIC0xNSwtNGwxNiAtMTEgMTkxIDBjNCwwIDgsLTIgMTEsLTUgMiwtMiA0LC02IDQsLTEwbDAgLTEzMWMwLDAgMCwtMSAwLC0xbDE0IC0xMHptLTEyNSAyMGMxNSwwIDI5LDcgMzgsMTdsLTgwIDU3Yy00LC03IC03LC0xNiAtNywtMjUgMCwtMjcgMjIsLTQ5IDQ5LC00OXptNDcgMzVjMSw1IDIsOSAyLDE0IDAsMjcgLTIyLDQ5IC00OSw0OSAtMTAsMCAtMjAsLTQgLTI4LC05bDc1IC01NHoiLz4gICAgPHBhdGggY2xhc3M9ImZpbDAiIGQ9Ik0yMzIgMGM2NCwwIDEyMywyNiAxNjUsNjggNDIsNDIgNjgsMTAwIDY4LDE2NCAwLDY0IC0yNiwxMjMgLTY4LDE2NSAtNDIsNDIgLTEwMSw2OCAtMTY1LDY4IC02NCwwIC0xMjIsLTI2IC0xNjQsLTY4IC00MiwtNDIgLTY4LC0xMDEgLTY4LC0xNjUgMCwtNjQgMjYsLTEyMiA2OCwtMTY0IDQyLC00MiAxMDAsLTY4IDE2NCwtNjh6bTE1MyA4MGMtMzksLTM5IC05MywtNjMgLTE1MywtNjMgLTU5LDAgLTExMywyNCAtMTUyLDYzIC0zOSwzOSAtNjMsOTMgLTYzLDE1MiAwLDYwIDI0LDExNCA2MywxNTMgMzksMzggOTMsNjMgMTUyLDYzIDYwLDAgMTE0LC0yNSAxNTMsLTYzIDM4LC0zOSA2MywtOTMgNjMsLTE1MyAwLC01OSAtMjUsLTExMyAtNjMsLTE1MnoiLz4gICAgPHBhdGggY2xhc3M9ImZpbDAiIGQ9Ik0zNzkgMTQ2YzQsLTMgMTAsLTIgMTQsMiAzLDUgMiwxMSAtMywxNWwtMjgwIDE5OWMtNCwzIC0xMSwyIC0xNCwtMiAtMywtNSAtMiwtMTEgMiwtMTRsMjgxIC0yMDB6Ii8+ICA8L2c+ICA8dGV4dCB4PSI3NCIgeT0iNTA2IiBmaWxsPSIjYWFhIiBmb250LXNpemU9IjMwIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSI+Tk8gVklERU8gQVZBSUxBQkxFPC90ZXh0Pjwvc3ZnPg==) center center no-repeat;
+        background-size: 60%;
+    }
+    ca-remote-image-capture[data-no-video="true"] video,
+    ca-remote-image-capture[data-no-video="true"] canvas,
+    ca-remote-image-capture[data-no-video="true"] button { visibility: hidden; }
+
+    ca-remote-image-capture[data-invalid="true"] button {
+        background-color: #dd4b39 !important;
+    }
+</style>
+<script>
+define(['create-element', 'clear-element'], (createElement, clearElement) => {
+    /**
+     * @exports ca-image-capture
+     * @description A custom HTML element (Web Component) that can be created using
+     * document.createElement('ca-image-capture') or included in a HTML page as an element.
+     */
+    class CaRemoteImageCaptureElement extends HTMLElement {
+
+        /**
+         * @description Executes when the element is attached to the DOM
+         * fires and event to ask for specific configuration
+         * @returns {undefined}
+         */
+        attachedCallback() {
+            const event = new CustomEvent('ca-config-component', {
+                detail: {
+                    config: [
+                        { name: 'image-stream-url', localName: 'streamUrl', type: 'property' },
+                        { name: 'image-capture-url', localName: 'captureUrl', type: 'property' },
+                        { name: 'image-stream-height', localName: 'height', type: 'attribute' },
+                        { name: 'image-stream-width', localName: 'width', type: 'attribute' }
+                    ],
+                    component: this
+                },
+                bubbles: true
+            });
+            this.dispatchEvent(event);
+        }
+
+        /**
+         * @description Executes when any attribute is changed on the element
+         * @param {string} attrName - the name of the attribute to have changed
+         * @param {string} oldVal - the old value of the attribute
+         * @param {string} newVal - the new value of the attribute
+         * @returns {undefined}
+         */
+        attributeChangedCallback(attrName, oldVal, newVal) {
+            // Only need to re-render the component if the attrbute value has changed
+            if (oldVal !== newVal) {
+                this.render.call(this);
+            }
+        }
+
+        /** @property {Integer} ca-image-capture.height - gets the height */
+        get height() {
+            return parseInt(this.getAttribute('height') || '720', 10);
+        }
+
+        /** @param {Integer} value - sets the height */
+        set height(value) {
+            this.setAttribute('height', value || 720);
+        }
+
+        /** @property {Integer} ca-image-capture.width - gets the width */
+        get width() {
+            return parseInt(this.getAttribute('width') || '1280', 10);
+        }
+
+        /** @param {Integer} value - sets the height */
+        set width(value) {
+            this.setAttribute('width', value || 1280);
+        }
+
+        /** @property {Boolean} ca-image-capture.imageCaptured - gets the captured state */
+        get imageCaptured() {
+            return (this.getAttribute('image-captured') === 'true');
+        }
+
+        /** @param {Boolean} value - sets the captured state */
+        set imageCaptured(value) {
+            this.setAttribute('image-captured', value === true);
+        }
+
+        /** @property {String} ca-image-capture.streamUrl - sets the stream url */
+        get streamUrl() {
+            return this.imageStreamUrl;
+        }
+
+        /** @param {String} value - sets the stream url */
+        set streamUrl(value) {
+            this.imageStreamUrl = value;
+        }
+
+        /** @property {String} ca-image-capture.captureUrl - gets the capture url */
+        get captureUrl() {
+            return this.imageCaptureUrl;
+        }
+
+        /** @param {String} value - sets the capture url */
+        set captureUrl(value) {
+            this.imageCaptureUrl = value;
+        }
+
+        /** @property {String} ca-image-capture.value - gets the image base 64 val */
+        get value() {
+            if (this.imageCaptured) {
+                return this.imageCanvas.toDataURL('image/jpeg', 0.8).replace('data:image/jpeg;base64,', '');
+            }
+            return '';
+        }
+
+        /**
+         * @description Renders the element (invoked via render.call(this))
+         * @returns {undefined}
+         */
+        render() {
+            // only render based on these conditions.
+            if (this.streamUrl && !this.imageCaptured) {
+                // clear this container incase we have been here before
+                clearElement(this);
+                // create a canvas element to be used to show the captred static image
+                this.imageCanvas = createElement(this, 'canvas', { width: this.width, height: this.height });
+                this.imageTag = createElement(this, 'img', { src: this.streamUrl });
+
+                // add button to allow user to capture/clear image
+                this.button = createElement(this, 'button', null, 'Capture');
+
+                this.button.onclick = this.handleCaptureClick.bind(this);
+            }
+        }
+
+        /**
+         * @description Handles the capture on click event
+         * @param {event} event, the event object.
+         * @returns {Boolean} it's a void function really...
+         */
+        handleCaptureClick(event) {
+            event.preventDefault();
+            // we haz our image, early return, peeps.
+            if (this.imageCaptured) {
+                this.imageCaptured = false;
+                this.imageTag.src = this.streamUrl;
+                return true;
+            }
+
+            this.imageTag.src = '';
+
+            const responseImage = new Image();
+            responseImage.onload = () => {
+                this.imageCaptured = true;
+                const canvasContext = document.querySelector('canvas').getContext('2d');
+                canvasContext.drawImage(responseImage, 0, 0);
+            };
+            responseImage.onerror = () => {
+                this.imageCaptured = false;
+                this.imageTag.src = this.streamUrl;
+            };
+            responseImage.src = `${this.captureUrl}?cacheBuster=${Math.floor((Math.random() * 100000) + 1)}`;
+            return true;
+        }
+
+    }
+
+    document.registerElement('ca-remote-image-capture', CaRemoteImageCaptureElement);
+});
+</script>

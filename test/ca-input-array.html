@@ -4,14 +4,13 @@
     <meta charset="utf-8">
     <title>CA INPUT ARRAY | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-input-array.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-input-array.html">
   </head>
   <body>
     <test-fixture id="ca-input-array">
-      <template>
-        <ca-input-array min-items="5"></ca-input-array>
+      <template>        
+        <ca-input-array min-items="5" input-aria-label="Please enter a value"></ca-input-array>
       </template>
     </test-fixture>
     <script>
@@ -20,10 +19,8 @@
 
             // TODO: CREATE TESTS, there were non associated with the original component
             setup(done => {
-                SystemJS.import('ca-input-array.js').then(() => {
-                    caInputArray = fixture('ca-input-array');
-                    done();
-                });
+                caInputArray = fixture('ca-input-array');
+                done();
             });
 
             test('should return correct defaults', () => {
@@ -37,6 +34,7 @@
                 expect(caInputArray.minItems).to.equal(5);
                 expect(caInputArray.maxItems).to.equal(-1);
                 expect(caInputArray.count).to.equal(5);
+                expect(caInputArray.inputAriaLabel).to.equal('Please enter a value');
             });
 
             test('should create an input for each item', () => {

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>CA APP CONTEXT | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-app-context.html">
   </head>
   <body>
     <test-fixture id="app-context">
@@ -18,10 +18,8 @@
             let appContext;
 
             setup(done => {
-                SystemJS.import('ca-app-context.js').then(() => {
-                    appContext = fixture('app-context');
-                    done();
-                });
+                appContext = fixture('app-context');
+                done();
             });
 
             test('should be creatable', () => {

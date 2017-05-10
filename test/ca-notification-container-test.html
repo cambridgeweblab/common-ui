@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <title>CA NOTIFICATION | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
-    <link rel="stylesheet" type="text/css" href="/components/ca-notification-container.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-notification-container.html">
   </head>
   <body>
     <test-fixture id="notification-container">
@@ -20,10 +18,8 @@
             let notificationContainer;
 
             setup(done => {
-                SystemJS.import('ca-notification-container.js').then(() => {
-                    notificationContainer = fixture('notification-container');
-                    done();
-                });
+                notificationContainer = fixture('notification-container');
+                done();
             });
 
             test('it should not be visible if notifications are present', () => {

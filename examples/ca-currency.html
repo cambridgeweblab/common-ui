@@ -3,18 +3,15 @@
   <head>
     <meta charset="utf-8">
     <title>CA CURRENCY | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-currency.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-currency.html">
+    <link href="/examples/index.css" rel="stylesheet">
   </head>
   <body>
     <div class="ca-home">
       <a id="home" href="/"></a>
     </div>
     <div class="ca-title">CA CURRENCY EXAMPLE</div>
-    <ca-currency value="123.45" readonly="false" symbol="$" />
-    <script>
-        SystemJS.import('ca-currency.js');
-    </script>
+    <ca-currency value="123.45" readonly="false" symbol="$" aria-label="the amount in US dollars" />
   </body>
 </html>

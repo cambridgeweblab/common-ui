@@ -1,0 +1,182 @@
+<link rel="import" href="secure-ajax.html">
+<link rel="import" href="create-element.html">
+<link rel="import" href="post-via-form.html">
+<link rel="import" href="dialogs.html">
+<script>
+define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dialogs'], (ajax, createElement, postViaForm, dialogs) => ({
+    action(action, dlg, container, data = {}) {
+
+        const request = ajax.execute;
+        const schemaProps = (action && action.schema) ? action.schema.properties : {};
+        let requiresInput = (action && action.schema && Array.isArray(action.schema.type));
+        let form = null;
+
+        // work out if the schema for this action requires input or is only
+        // returned to return default data assigned to the schema
+        Object.keys(schemaProps).forEach(key => {
+            if (schemaProps[key].required) {
+                data[key] = schemaProps[key].default; // eslint-disable-line no-param-reassign
+            }
+            if (!schemaProps[key].readonly) {
+                requiresInput = true;
+            }
+        });
+
+        if (requiresInput) {
+
+            // this schema requires input, therefore create a new form using that schema and repopulate the dialog
+
+            if (dlg) {
+
+                // wipeout dialog body and set the title to that of the schema
+                dlg.write('', action.title);
+
+                // add the schema description to the dialog if it eixsts
+                if (action.description) {
+                    createElement(dlg.body, 'p', { class: 'dialog-intro' }, action.description);
+                }
+
+                // create the from using the action schema
+                form = createFormForAction(dlg.body);
+
+                // add a button with the schema title so we can detect when its clicked
+                dlg.writeButtons([action.title, 'Close']);
+
+                // add the action rel as a css classname to the dialog to allow the UI to override layout if required
+                dlg.writeCss(action.rel.startsWith('action:') ? action.rel.substring(7) : action.rel);
+            } else if (container) {
+
+                // insert form into container
+                form = createFormForAction(container);
+
+                // The title, description and buttons go on the form instead of on the dialog
+                form.title = action.title;
+                form.description = action.description;
+                form.buttons = [action.title];
+            }
+
+            // return a promise to return the dialog data once the form is submitted
+            // or null if it is closed
+            return new Promise(function (resolve, reject) {
+                // eslint-disable-next-line no-param-reassign
+                if (dlg) dlg.params.callback = buttonClickHandler.bind(this, resolve, reject);
+                else if (container) form.onbuttonclick = buttonClickHandler.bind(this, resolve, reject);
+            }).then(invokeRequest).catch(err =>
+                // if an error has been captured then return as a rejected promise, otherwise return null (ie when dialog is closed)
+                ((err) ? Promise.reject(err) : null)
+            );
+        }
+        // the action schema required no input from the user
+        // possibly using default properties to set values withou the need for user interaction
+        // as user input is not required, execure the request right away.
+        return invokeRequest(data);
+
+        /**
+         * Handles clicks on buttons on the dialog or form and calls one of two functions depending if the button
+         * clicked was the one to submit the action or not.
+         *
+         * @param {Function} resolve - callback to receive form data if buttonLabel matches action.title
+         * @param {Function} reject - callback to execute if a different button was clickec
+         * @param {string} buttonLabel - the button clicked
+         * @return {boolean} true to close the dialog if the button was not an action submission
+         */
+        function buttonClickHandler(resolve, reject, buttonLabel) {
+
+            // if the button clicked matches the title of this schema, then its a action submission
+            if (buttonLabel === action.title) {
+
+                // if the form data is valid, return the data
+                if (form.isValid()) {
+                    resolve(form.getData());
+                }
+                return false;
+            }
+            // is the button tha was clicked is not an action submission, reject and close the dialog
+            reject();
+            return true; // Close the dialog
+        }
+
+        /**
+         * @param {HTMLElement} parentEl - object in which to insert form
+         * @returns {HTMLElement} the created (or found) form
+         */
+        function createFormForAction(parentEl) {
+
+            const createdForm = parentEl.querySelector('ca-form') || createElement(parentEl, 'ca-form');
+
+            createdForm.className = action.rel;
+
+            createdForm.data = data;
+            createdForm.schema = Array.isArray(action.schema.type) ? action.schema.type : [action.schema];
+
+            return createdForm;
+        }
+
+        /**
+         * @description sends data back to the action endpoint
+         * @param {object} reqData - data to be posted back to the endpoint
+         * @returns {Promise} promise to issue request and return
+         */
+        function invokeRequest(reqData) {
+
+            if (action.mediaType === 'text/html') {
+
+                postViaForm(action.href, reqData);
+                return Promise.resolve(false);
+            }
+
+            return request({
+                url: action.href,
+                contentType: action.enctype,
+                type: action.method,
+                data: reqData,
+                dataType: 'json'
+            })
+                    .then(resData => {
+
+                        // logic to stop the workflow automatically stepping to the next workflow form/section.
+                        // if the attribute exists close the workflow form step.
+                        if (document.documentElement.getAttribute('data-view')) {
+                            if (dlg) dlg.close();
+                            dialogs.open('', {
+                                id: 'previewDialog',
+                                autoshow: true,
+                                title: 'This step is now complete.',
+                                css: 'animated fadeInDown',
+                                bodycss: 'no-scroll',
+                                buttons: ['Close'],
+                                callback: button => {
+                                }
+                            });
+                            return undefined;
+                        }
+
+                        if (resData) {
+
+                            const actions = this.getActionsFromData(resData);
+
+                            if (actions.length === 1) {
+                                return this.action(actions[0], dlg, container);
+                            }
+                        }
+
+                        // if we make it to this point, close the dialog and return the response data to .then listener
+                        if (dlg) dlg.close();
+
+                        return resData;
+                    });
+
+        }
+    },
+
+    /**
+     * @description extracts a list of actions from data object passed in
+     * @param {object} data - data object with hateaos links collection to inspect
+     * @returns {Array} a list of all rel="action:name" links from within object.links collection
+     */
+    getActionsFromData(data) {
+
+        return (data.links || []).filter(link => (link.rel || '').indexOf('action:') === 0);
+    }
+}));
+</script>

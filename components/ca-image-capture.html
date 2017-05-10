@@ -1,0 +1,320 @@
+<link rel="import" href="helpers/create-element.html">
+<link rel="import" href="helpers/clear-element.html">
+<link rel="import" href="helpers/cancel-event.html">
+<style>
+    ca-image-capture {
+        display: block;
+        position: relative;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        width: 400px;
+        height: 720px;
+    }
+
+    ca-image-capture canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -640px;
+        visibility: hidden;
+        width: 1280px;
+        height: 720px;
+        -webkit-transform: scaleX(1);
+        -moz-transform: scaleX(1);
+    }
+
+    ca-image-capture video {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -640px;
+        width: 1280px;
+        height: 720px;
+        -webkit-transform: scaleX(1);
+        -moz-transform: scaleX(1);
+    }
+
+    ca-image-capture button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        text-indent: -999em;
+        overflow: hidden;
+        cursor: pointer;
+        width: 64px;
+        height: 64px;
+        margin: -32px 0 0 -32px;
+        display: block;
+        background-color: rgba(255, 255, 255, 0.6);
+        background-repeat: no-repeat;
+        background-position: center 2px;
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEyNSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTAwIDEwMDsiIHhtbDpzcGFjZT0icHJlc2VydmUiPiAgICA8Zz4gICAgICAgIDxwYXRoIGQ9Ik04MC45LDMzLjNINjkuN2wtMi4yLTUuNmMtMS43LTQuMi01LjctNy0xMC4zLTdINDIuOGMtNC42LDAtOC42LDIuNy0xMC4zLDdsLTIuMiw1LjZIMTkuMWMtMy43LDAtNi42LDMtNi42LDYuNnYzMi42ICAgYzAsMy43LDMsNi42LDYuNiw2LjZoNjEuOGMzLjcsMCw2LjYtMyw2LjYtNi42VjM5LjlDODcuNSwzNi4zLDg0LjUsMzMuMyw4MC45LDMzLjN6IE04My4xLDcyLjZjMCwxLjItMSwyLjItMi4yLDIuMkgxOS4xICAgYy0xLjIsMC0yLjItMS0yLjItMi4yVjM5LjljMC0xLjIsMS0yLjIsMi4yLTIuMmgxNC4ybDMuMy04LjNjMS0yLjUsMy40LTQuMiw2LjItNC4yaDE0LjRjMi43LDAsNS4yLDEuNiw2LjIsNC4ybDMuMyw4LjNoMTQuMiAgIGMxLjIsMCwyLjIsMSwyLjIsMi4yVjcyLjZ6Ii8+ICAgICAgICA8cGF0aCBkPSJNNTAsMzUuMmMtOS45LDAtMTgsOC4xLTE4LDE4YzAsOS45LDguMSwxOCwxOCwxOGM5LjksMCwxOC04LjEsMTgtMThDNjgsNDMuMyw1OS45LDM1LjIsNTAsMzUuMnogTTUwLDY1LjcgICBjLTYuOSwwLTEyLjUtNS42LTEyLjUtMTIuNWMwLTYuOSw1LjYtMTIuNSwxMi41LTEyLjVzMTIuNSw1LjYsMTIuNSwxMi41QzYyLjUsNjAuMSw1Ni45LDY1LjcsNTAsNjUuN3oiLz4gICAgPC9nPjwvc3ZnPg==);
+        background-size: 90%;
+        outline: 0;
+        transition: transform .15s;
+        border-radius: 10px;
+    }
+
+    ca-image-capture button:after {
+        content: "Capture";
+        display: block;
+    }
+
+    ca-image-capture[image-captured="true"] button {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjgiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAxMDAgMTI1IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCAxMDAgMTAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4gICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTc1Ljk1LDk5LjY3SDI1LjQ1MWMtMS44NzUsMC0zLjQ3OS0xLjM0OC0zLjgwMS0zLjE5NUw4LjE0LDE5LjE5Yy0wLjE5OC0xLjEyMiwwLjExMy0yLjI3NSwwLjg0Ni0zLjE0NyAgYzAuNzMzLTAuODczLDEuODE1LTEuMzc3LDIuOTU1LTEuMzc3aDc3LjUxOGMxLjE0LDAsMi4yMjIsMC41MDQsMi45NTUsMS4zNzdjMC43MzMsMC44NzMsMS4wNDQsMi4wMjUsMC44NDYsMy4xNDdMNzkuNzUxLDk2LjQ3NCAgQzc5LjQyOSw5OC4zMjIsNzcuODI1LDk5LjY3LDc1Ljk1LDk5LjY3eiBNMjguNjk0LDkxLjk1aDQ0LjAxMmwxMi4xNi02OS41NjVIMTYuNTM0TDI4LjY5NCw5MS45NXoiLz4gICAgPGc+ICAgICAgICA8cGF0aCBmaWxsPSIjMDAwMDAwIiBkPSJNMzguNjc3LDgyLjYxNGMtMS45NDksMC0zLjYyMi0xLjQ2OS0zLjgzMy0zLjQ0OWwtNC45MDgtNDUuODI3Yy0wLjIyOC0yLjExOSwxLjMwNi00LjAyMiwzLjQyNi00LjI0OSAgIGMyLjE1Mi0wLjIyNSw0LjAyMiwxLjMxLDQuMjQ4LDMuNDI3bDQuOTA4LDQ1LjgyN2MwLjIyOCwyLjExOS0xLjMwNiw0LjAyMi0zLjQyNiw0LjI0OUMzOC45NTIsODIuNjA3LDM4LjgxMyw4Mi42MTQsMzguNjc3LDgyLjYxNCAgIHoiLz4gICAgICAgIDxwYXRoIGZpbGw9IiMwMDAwMDAiIGQ9Ik02Mi43MjUsODIuNjE0Yy0wLjEzNiwwLTAuMjc1LTAuMDA3LTAuNDE1LTAuMDIyYy0yLjEyLTAuMjI3LTMuNjU0LTIuMTMtMy40MjYtNC4yNDlsNC45MDgtNDUuODI3ICAgYzAuMjI2LTIuMTE4LDIuMDk0LTMuNjY0LDQuMjQ4LTMuNDI3YzIuMTIsMC4yMjcsMy42NTQsMi4xMywzLjQyNiw0LjI0OWwtNC45MDgsNDUuODI3QzY2LjM0OCw4MS4xNDUsNjQuNjc0LDgyLjYxNCw2Mi43MjUsODIuNjE0ICAgeiIvPiAgICAgICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTUwLjU4NCw4Mi40NjhjLTIuMTMyLDAtMy44Ni0xLjcyOC0zLjg2LTMuODZWMzMuMDczYzAtMi4xMzIsMS43MjgtMy44NiwzLjg2LTMuODYgICBjMi4xMzIsMCwzLjg2LDEuNzI4LDMuODYsMy44NnY0NS41MzVDNTQuNDQ0LDgwLjczOSw1Mi43MTYsODIuNDY4LDUwLjU4NCw4Mi40Njh6Ii8+ICAgIDwvZz4gICAgPHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTkwLjMwNyw0LjU1SDc2LjQyOWMwLjA0MS0wLjIyNSwwLjA3LTAuNDUzLDAuMDctMC42OWMwLTIuMTMyLTEuNzI4LTMuODYtMy44Ni0zLjg2aC00NC4xMSAgYy0yLjEzMiwwLTMuODYsMS43MjgtMy44NiwzLjg2YzAsMC4yMzYsMC4wMjksMC40NjUsMC4wNywwLjY5SDEwLjg2QzguNzI4LDQuNTUsNyw2LjI3OCw3LDguNDA5czEuNzI4LDMuODYsMy44NiwzLjg2aDc5LjQ0NyAgYzIuMTMyLDAsMy44Ni0xLjcyOCwzLjg2LTMuODZTOTIuNDM5LDQuNTUsOTAuMzA3LDQuNTV6Ii8+PC9zdmc+);
+        background-position: center 14px;
+        background-size: 70%;
+    }
+
+    ca-image-capture button:hover{
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
+
+    ca-image-capture[image-captured="true"] video { visibility: hidden; }
+    ca-image-capture[image-captured="true"] canvas { visibility: visible; }
+
+    ca-image-capture[data-no-video="true"]{
+        background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQ2NSA1NDAiIHg9IjBweCIgeT0iMHB4Ij4gIDxnIGZpbGw9IiNhYWEiPiAgICA8cGF0aCBjbGFzcz0iZmlsMCIgZD0iTTEzNiAxNDNsMjggMCA4IC0xOGMyLC02IDUsLTEyIDgsLTE3IDUsLTUgMTEsLTkgMTksLTlsNjggMGM4LDAgMTQsNCAxOSw5IDQsNSA2LDExIDksMTdsNyAxOCAyNiAwYzYsMCAxMSwxIDE1LDRsLTE2IDExIC0zMCAwIDAgMGMtMywwIC02LC0yIC03LC01bC0xMCAtMjNjLTEsLTQgLTMsLTkgLTYsLTEyIC0yLC0yIC00LC0zIC03LC0zbC02OCAwYy0zLDAgLTUsMSAtNywzIC0yLDMgLTQsOCAtNiwxMmwtOSAyM2MtMSwzIC00LDUgLTcsNWwtMzQgMGMtNCwwIC04LDIgLTEwLDUgLTMsMyAtNSw2IC01LDEwbDAgMTMxYzAsMCAwLDEgMCwxbC0xMyAxMGMtMiwtNCAtMiwtNyAtMiwtMTFsMCAtMTMxYzAsLTggMywtMTYgOSwtMjFsMCAwYzUsLTYgMTMsLTkgMjEsLTl6bTIyMSAxOWMxLDQgMiw3IDIsMTFsMCAxMzFjMCw4IC00LDE2IC05LDIxIC02LDYgLTEzLDkgLTIyLDlsLTE5MiAwYy01LDAgLTExLC0xIC0xNSwtNGwxNiAtMTEgMTkxIDBjNCwwIDgsLTIgMTEsLTUgMiwtMiA0LC02IDQsLTEwbDAgLTEzMWMwLDAgMCwtMSAwLC0xbDE0IC0xMHptLTEyNSAyMGMxNSwwIDI5LDcgMzgsMTdsLTgwIDU3Yy00LC03IC03LC0xNiAtNywtMjUgMCwtMjcgMjIsLTQ5IDQ5LC00OXptNDcgMzVjMSw1IDIsOSAyLDE0IDAsMjcgLTIyLDQ5IC00OSw0OSAtMTAsMCAtMjAsLTQgLTI4LC05bDc1IC01NHoiLz4gICAgPHBhdGggY2xhc3M9ImZpbDAiIGQ9Ik0yMzIgMGM2NCwwIDEyMywyNiAxNjUsNjggNDIsNDIgNjgsMTAwIDY4LDE2NCAwLDY0IC0yNiwxMjMgLTY4LDE2NSAtNDIsNDIgLTEwMSw2OCAtMTY1LDY4IC02NCwwIC0xMjIsLTI2IC0xNjQsLTY4IC00MiwtNDIgLTY4LC0xMDEgLTY4LC0xNjUgMCwtNjQgMjYsLTEyMiA2OCwtMTY0IDQyLC00MiAxMDAsLTY4IDE2NCwtNjh6bTE1MyA4MGMtMzksLTM5IC05MywtNjMgLTE1MywtNjMgLTU5LDAgLTExMywyNCAtMTUyLDYzIC0zOSwzOSAtNjMsOTMgLTYzLDE1MiAwLDYwIDI0LDExNCA2MywxNTMgMzksMzggOTMsNjMgMTUyLDYzIDYwLDAgMTE0LC0yNSAxNTMsLTYzIDM4LC0zOSA2MywtOTMgNjMsLTE1MyAwLC01OSAtMjUsLTExMyAtNjMsLTE1MnoiLz4gICAgPHBhdGggY2xhc3M9ImZpbDAiIGQ9Ik0zNzkgMTQ2YzQsLTMgMTAsLTIgMTQsMiAzLDUgMiwxMSAtMywxNWwtMjgwIDE5OWMtNCwzIC0xMSwyIC0xNCwtMiAtMywtNSAtMiwtMTEgMiwtMTRsMjgxIC0yMDB6Ii8+ICA8L2c+ICA8dGV4dCB4PSI3NCIgeT0iNTA2IiBmaWxsPSIjYWFhIiBmb250LXNpemU9IjMwIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSI+Tk8gVklERU8gQVZBSUxBQkxFPC90ZXh0Pjwvc3ZnPg==) center center no-repeat;
+        background-size: 60%;
+    }
+    ca-image-capture[data-no-video="true"] video,
+    ca-image-capture[data-no-video="true"] canvas,
+    ca-image-capture[data-no-video="true"] button { visibility: hidden; }
+
+    ca-image-capture[data-invalid="true"] button {
+        background-color: #dd4b39 !important;
+    }
+</style>
+<script>
+define(['create-element', 'clear-element', 'cancel-event'], (createElement, clearElement, cancelEvent) => {
+    /**
+     * @exports ca-image-capture
+     * @description A custom HTML element (Web Component) that can be created using
+     * document.createElement('ca-image-capture') or included in a HTML page as an element.
+     */
+    class CaImageCaptureElement extends HTMLElement {
+
+        /**
+         * @description Executes when the element is attached to the DOM
+         * @returns {undefined} attached calls the render method.
+         */
+        attachedCallback() {
+            this.render();
+        }
+
+        /** @property {string} ca-image-capture.value - gets/sets base64 value of captured image */
+        get value() {
+            if (this.imageCaptured) {
+                return this.canvasEl.toDataURL('image/jpeg', 0.8).replace('data:image/jpeg;base64,', '');
+            }
+            return '';
+        }
+
+        /** @param {string} value - gets/sets base64 value of captured image */
+        set value(value) {
+            // mark image as captured
+            this.imageCaptured = true;
+
+            // draw data uri to
+            this.drawImage(value);
+        }
+
+        /** @property {integer} ca-image-capture.dataUri - returns data uri version of captured image */
+        get dataUri() {
+            return this.canvasEl.toDataURL('image/jpeg', 0.8);
+        }
+
+        /** @property {integer} ca-image-capture.videoWidth - width of the video stream to capture from */
+        get videoWidth() {
+            return parseInt(this.getAttribute('video-width') || '1280', 10);
+        }
+
+        /** @param {integer} value - width of the video stream to capture from */
+        set videoWidth(value) {
+            this.setAttribute('video-width', value || 1280);
+        }
+
+        /** @property {integer} ca-image-capture.videoHeight - height of the video stream to capture from */
+        get videoHeight() {
+            return parseInt(this.getAttribute('video-height') || '720', 10);
+        }
+
+        /** @param {integer} value - height of the video stream to capture from */
+        set videoHeight(value) {
+            this.setAttribute('video-height', value || 720);
+        }
+
+        /** @property {integer} ca-image-capture.imageCaptured - returns true if image has been captured, otherwise false */
+        get imageCaptured() {
+            return (this.getAttribute('image-captured') === 'true');
+        }
+
+        /** @param {boolean} value - returns true if image has been captured, otherwise false */
+        set imageCaptured(value) {
+            this.setAttribute('image-captured', value === true);
+        }
+
+        /** @returns {string} ca-image-capture.videoId - the video element id */
+        get videoId() {
+            return this.getAttribute('video-id') || '';
+        }
+
+        /** @param {string} videoId - the id to use for video element */
+        set videoId(videoId) {
+            this.setAttribute('video-id', videoId);
+        }
+
+        /** @returns {string} ca-image-capture.label - the image-capture label */
+        get label() {
+            return this.getAttribute('label') || '';
+        }
+
+        /** @param {string} label - the label to use for image-capture label */
+        set label(label) {
+            this.setAttribute('label', label);
+        }
+
+        /**
+         * @description Manages all internal events on an element
+         * @param {object} e - the element that the event happened on
+         * @returns {undefined}
+         */
+        eventHandler(e) {
+            // eslint-disable-next-line no-param-reassign
+            e = e || event;
+
+            const el = e.target || e.srcElement;
+            const tag = (el.tagName || '').toLowerCase();
+
+            switch (tag) {
+                case 'button':
+                    cancelEvent(e);
+                    if (!this.imageCaptured) {
+                        // capture image from video stream
+                        this.captureImage();
+                    } else {
+
+                        // clear captured image
+                        this.clearCapture();
+                    }
+                    break;
+
+                default: break;
+            }
+
+            // Allow the event to bubble
+            return true;
+        }
+
+        /**
+         * @description Renders the element (invoked via render.call(this))
+         * @returns {undefined} renders the element
+         */
+        render() {
+            // clear this container incase we have been here before
+            clearElement(this);
+
+            // create a canvas element to be used to show the captred static image
+            this.canvasEl = createElement(this, 'canvas', { width: this.videoWidth, height: this.videoHeight });
+
+            // create video stream object - we capture stills by grabbing video stills
+            this.videoEl = createElement(this, 'video', { muted: 'muted', autoplay: 'autoplay', id: this.videoId });
+
+            // normalise getUserMedia method across browsers
+            navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.oGetUserMedia;
+
+            if (navigator.getUserMedia) {
+
+                // request acess to video stream
+                navigator.getUserMedia({
+                    audio: false,
+                    video: {
+                        mandatory: {
+                            minWidth: this.videoWidth,
+                            maxWidth: this.videoWidth,
+                            minHeight: this.videoHeight,
+                            maxHeight: this.videoHeight
+                        }
+                    }
+                },
+                // fires once access granted
+                (stream) => {
+                    // modify the src with the URL to the browser created blob stream
+                    this.videoEl.src = window.URL.createObjectURL(stream);
+                },
+                // fires if access is refused
+                (e) => {
+                    this.setAttribute('data-no-video', true);
+                });
+            }
+
+            // only add label if both videoId and label are provided
+            if (this.videoId && this.label) {
+                createElement(this, 'label', { for: this.videoId }, this.label);
+            }
+
+            // add button to allow user to capture/clear image
+            this.button = createElement(this, 'button', null, 'Capture');
+
+
+            // hook all click events
+            this.onclick = this.eventHandler.bind(this);
+        }
+
+        /**
+         * Draws image based on dataUri
+         * @param {string} dataUri, base64 image
+         * @return {undefined}
+         */
+        drawImage(dataUri) {
+            // get the canvas context for drawing
+            const context = this.canvasEl.getContext('2d');
+            let img = new Image();
+
+            // draw image on canvas once loaded
+            img.onload = function () {
+                context.drawImage(img, 0, 0);
+                img = null;
+            };
+
+            // load the data uri into an image object
+            img.src = (dataUri.indexOf('data:image/jpeg;base64,') <= -1) ? `data:image/jpeg;base64,${dataUri}` : dataUri;
+        }
+
+        /**
+         * Captures the image
+         * @return {undefined}
+         */
+        captureImage() {
+            // get the canvas context for drawing
+            const context = this.canvasEl.getContext('2d');
+
+            // draw the video contents into the canvas x, y, width, height
+            context.drawImage(this.videoEl, 0, 0, this.canvasEl.width, this.canvasEl.height);
+
+            // set ca-image-capture property to allow canvas to be shown and video hidden
+            this.imageCaptured = true;
+        }
+
+        /**
+         * Clears the capture image
+         * @return {undefined}
+         */
+        clearCapture() {
+            // get the canvas context for drawing
+            const context = this.canvasEl.getContext('2d');
+
+            // clear the canvas
+            context.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
+
+            // tweak property to hide canvas and show video stream
+            this.imageCaptured = false;
+        }
+    }
+
+    document.registerElement('ca-image-capture', CaImageCaptureElement);
+});
+</script>

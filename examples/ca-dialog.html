@@ -3,10 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>CA DIALOG | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-dialog.html">
     <link href="/examples/index.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/components/ca-dialog.css">
   </head>
   <body>
     <div class="ca-home">
@@ -16,13 +15,12 @@
     <ca-dialog heading="hello" type="error"></ca-dialog>
     <button onclick="openDialog()">Open Dialog</button>
     <script>
-        SystemJS.import('ca-dialog.js');
         function openDialog() {
             const dialog = document.querySelector('ca-dialog');
             dialog.heading = 'Updated heading';
             dialog.buttons = ['Send feedback'];
             dialog.show();
-        };
+        }
     </script>
   </body>
 </html>

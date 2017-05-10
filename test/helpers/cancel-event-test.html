@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>CANCEL EVENT | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/helpers/cancel-event.html">
   </head>
   <body>
     <test-fixture id="cancel-event">
@@ -14,18 +14,16 @@
       </template>
     </test-fixture>
     <script>
-        // TODO: test this helper.
-        suite('types', () => {
-            let element;
-            let cancelEvent;
+      define(['cancel-event'], (cancelEvent) => {
+          // TODO: test this helper.
+          suite('cancelEvent', () => {
+              let element;
 
-            setup(done => {
-                SystemJS.import('helpers/cancel-event.js').then(module => {
-                    element = fixture('cancel-event');
-                    cancelEvent = module;
-                    done();
-                });
-            });
+              setup(done => {
+                  element = fixture('cancel-event');
+                  done();
+              });
+          });
         });
     </script>
   </body>

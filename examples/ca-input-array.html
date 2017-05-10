@@ -4,10 +4,9 @@
 <head>
     <meta charset="utf-8">
     <title>CA INPUT ARRAY | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-input-array.html">
     <link href="/examples/index.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/components/ca-input-array.css">
 </head>
 
 <body>
@@ -15,13 +14,17 @@
         <a id="home" href="/"></a>
     </div>
     <div class="ca-title">CA INPUT ARRAY</div>
-    <ca-input-array type="number" min="0" max="100" divisible-by="0.5" min-items="3" max-items="10"></ca-input-array>
+    <ca-input-array type="number" min="0" max="100" divisible-by="0.5" min-items="3" max-items="10" input-aria-label="Please enter a value"></ca-input-array>
     <script>
-        SystemJS.import('ca-input-array.js');
-        const caInputArray = document.querySelector('ca-input-array');
-        setTimeout(() => {
+        window.addEventListener('WebComponentsReady', () => {
+            const caInputArray = document.querySelector('ca-input-array');
             caInputArray.attribute = 'value';
-        }, 1000);
+        });
+
+        if (!window.HTMLImports) {
+            document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+            document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+        }
     </script>
 </body>
 

@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA PROPERTY | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-override.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-override.html">
   </head>
   <body>
     <test-fixture id="ca-override">
@@ -20,10 +19,8 @@
 
             // TODO: CREATE TESTS, there were none associated with the original component
             setup(done => {
-                SystemJS.import('ca-override.js').then(() => {
-                    caOverride = fixture('ca-override');
-                    done();
-                });
+                caOverride = fixture('ca-override');
+                done();
             });
         });
         a11ySuite('ca-override');

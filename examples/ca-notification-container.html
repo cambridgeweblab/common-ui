@@ -3,11 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>CA NOTIFICATION CONTAINER | Web Lab Common UI</title>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-notification-container.html">
     <link href="/examples/index.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/components/ca-notification.css">
-    <link rel="stylesheet" type="text/css" href="/components/ca-notification-container.css">
     <style>
       ca-notification-container {
         /* for example only */
@@ -26,34 +24,34 @@
     <button onclick="addWarnNotification()">Open Warning Notification</button>
     <button onclick="addSuccessNotification()">Open Success Notification</button>
     <script>
-        SystemJS.import('ca-notification-container.js');
         function addInfoNotification() {
             const notificationContainer = document.querySelector('ca-notification-container');
             const notification = document.createElement('ca-notification');
             notification.content = 'Notice has been noticed.';
             notificationContainer.addNotification(notification);
-        };
+        }
         function addErrorNotification() {
             const notificationContainer = document.querySelector('ca-notification-container');
             const notification = document.createElement('ca-notification');
             notification.type = 'error';
             notification.content = 'Notice has been noticed.';
             notificationContainer.addNotification(notification);
-        };
+        }
         function addWarnNotification() {
             const notificationContainer = document.querySelector('ca-notification-container');
             const notification = document.createElement('ca-notification');
             notification.type = 'warn';
             notification.content = 'Notice has been noticed.';
             notificationContainer.addNotification(notification);
-        };
+        }
         function addSuccessNotification() {
             const notificationContainer = document.querySelector('ca-notification-container');
             const notification = document.createElement('ca-notification');
             notification.type = 'success';
             notification.content = 'Notice has been noticed.';
             notificationContainer.addNotification(notification);
-        };
+        }
+        // NB: There is a Chrome 57 bug which can prevent this working. https://bugs.chromium.org/p/chromium/issues/detail?id=701601
     </script>
   </body>
 </html>

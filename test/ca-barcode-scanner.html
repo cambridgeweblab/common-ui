@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <title>CA BARCODE SCANNER | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-barcode-scanner.html">
   </head>
   <body>
     <test-fixture id="barcode-scanner">
       <template>
-        <ca-barcode-scanner test="test"></ca-barcode-scanner>
+        <ca-barcode-scanner title="test"></ca-barcode-scanner>
       </template>
     </test-fixture>
     <script>
@@ -18,10 +18,8 @@
             let barcodeScanner;
 
             setup(done => {
-                SystemJS.import('ca-barcode-scanner.js').then(() => {
-                    barcodeScanner = fixture('barcode-scanner');
-                    done();
-                });
+                barcodeScanner = fixture('barcode-scanner');
+                done();
             });
         });
         a11ySuite('barcode-scanner');

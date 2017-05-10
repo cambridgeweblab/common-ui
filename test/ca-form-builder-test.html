@@ -4,23 +4,8 @@
     <meta charset="utf-8">
     <title>CA FORM BUILDER | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-form-builder.css">
-    <link rel="stylesheet" type="text/css" href="/bower_components/pikaday/css/pikaday.css">
-    <link rel="stylesheet" href="/components/helpers/dialogs.css" />
-    <link rel="stylesheet" href="/components/ca-form.css" />
-    <link rel="stylesheet" href="/components/ca-currency.css" />
-    <link rel="stylesheet" href="/components/ca-datetime.css" />
-    <link rel="stylesheet" href="/components/ca-form.css" />
-    <link rel="stylesheet" href="/components/ca-list.css" />
-    <link rel="stylesheet" href="/components/ca-nav.css" />
-    <link rel="stylesheet" href="/components/ca-select.css" />
-    <link rel="stylesheet" href="/components/ca-summary.css" />
-    <link rel="stylesheet" href="/components/ca-tel.css" />
-    <link rel="stylesheet" href="/components/ca-confirm-input.css" />
-    <link rel="stylesheet" href="/components/ca-feedback.css" />
-
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-form-builder.html">
 </head>
 <body>
 <test-fixture id="form-builder">
@@ -33,10 +18,8 @@
         let caFormBuilder;
 
         setup(done => {
-            SystemJS.import('ca-form-builder.js').then(() => {
-                caFormBuilder = fixture('form-builder');
-                done();
-            });
+            caFormBuilder = fixture('form-builder');
+            done();
         });
 
         test('should be creatable', () => {

@@ -4,9 +4,8 @@
     <meta charset="utf-8">
     <title>CA DIALOG | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
-    <link rel="stylesheet" type="text/css" href="/components/ca-confirm-input.css">
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-confirm-input.html">
   </head>
   <body>
     <test-fixture id="confirm-input">
@@ -19,10 +18,8 @@
             let confirmInput;
 
             setup(done => {
-                SystemJS.import('ca-confirm-input.js').then(() => {
-                    confirmInput = fixture('confirm-input');
-                    done();
-                });
+                confirmInput = fixture('confirm-input');
+                done();
             });
 
             test('should be creatable', () => {

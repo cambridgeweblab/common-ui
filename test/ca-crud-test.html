@@ -4,11 +4,8 @@
         <meta charset="utf-8">
         <title>CA CRUD | Web Lab Common UI</title>
         <script src="/web-component-tester/browser.js"></script>
-        <script src="/bower_components/system.js/dist/system.js"></script>
-        <script src="/components/config/index.js"></script>
-        <link href="/components/helpers/dialogs.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="/bower_components/pikaday/css/pikaday.css">
-        <link href="/components/ca-crud.css" rel="stylesheet" />
+        <link rel="import" href="/bower_components/imd/imd.html">
+        <link rel="import" href="/components/ca-crud.html">
     </head>
     <body>
     <test-fixture id="crud">
@@ -415,13 +412,11 @@
             };
 
             setup(done => {
-                SystemJS.import('ca-crud.js').then(() => {
-                    caCrud = fixture('crud');
-                    server = sinon.fakeServer.create();
-                    server.respondWith('GET', /\/schema.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testSchema)]);
-                    server.respondWith('GET', /\/data.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testData)]);
-                    done();
-                });
+                caCrud = fixture('crud');
+                server = sinon.fakeServer.create();
+                server.respondWith('GET', /\/schema.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testSchema)]);
+                server.respondWith('GET', /\/data.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testData)]);
+                done();
             });
 
             teardown(() => {

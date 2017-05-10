@@ -1,0 +1,292 @@
+<link rel="import" href="helpers/create-element.html">
+<link rel="import" href="helpers/dialogs.html">
+<style>
+    ca-file-input input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+        background-color: #002c77;
+        color: #ffffff;
+        border-radius: 2px;
+    }
+
+    ca-file-input label {
+        display: block;
+        width: 100%!important;
+        text-shadow: none;
+        position: relative;
+        background: #fff;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        line-height: 1;
+        padding: 8px 2px 6px 6px;
+        color: #555;
+        height: 34px;
+        margin-top: 0;
+    }
+
+    /* Invalid file upload dialog style */
+    div.dialog-file-upload li
+    {
+        list-style: initial;
+        margin-left: 32px;
+    }
+</style>
+<script>
+define(['create-element', 'dialogs'], (createElement, dialogs) => {
+    const mimeTypeToExtension = {
+        'application/pdf': { accept: '.pdf', label: 'PDF' },
+        'image/png': { accept: '.png', label: 'PNG' },
+        'image/jpeg': { accept: '.jpg,.jpeg', label: 'JPG' },
+        'image/gif': { accept: '.gif', label: 'GIF' },
+        'application/msword': { accept: '.doc,.dot', label: 'DOC' },
+        'application/vnd.ms-excel': { accept: '.xls,.xlm,.xla,.xlc,.xlt,.xlw', label: 'XLS' }
+    };
+
+    const txtProp = ('textContent' in document.createElement('i')) ? 'textContent' : 'innerText';
+
+    /**
+     * FileInput class, creates instance of ca-file-input web component
+     */
+    class CaFileInputElement extends HTMLElement {
+        /**
+         * Called when the component is created (yet to be attached to the DOM).
+         * @returns {undefined} void fuction that scaffolds based structure and binds events.
+         */
+        createdCallback() {
+            const self = this;
+            const options = {
+                type: 'file'
+            };
+
+            if (this.getAttribute('multiple')) {
+                options.multiple = true;
+            }
+
+            this.label = createElement(this, 'label', { tabIndex: 0 }, this.getLabelText(this.mediaType));
+            this.input = createElement(this.label, 'input', options);
+
+            this.input.addEventListener('change', function(e) {
+                const fileReaders = [];
+                const maxLen = self.maxLength;
+                const mediaType = self.mediatype;
+                let validSelectedFiles = 0;
+                const selectedFiles = this.files.length;
+                let fileLabel = '';
+                let mType;
+
+                // only if a new file(s) has been uploaded
+                if (selectedFiles > 0) {
+                    // do we need to wipe the array and reset the label
+                    self._filesAsBase64 = [];
+                    self.label[txtProp] = self.getLabelText(mediaType);
+                }
+
+                for (let i = 0; i < selectedFiles; i++) {
+                    // if the file size is within limits (or don't care what size) AND the file type is correct (or we don't care)
+                    if ((maxLen === 0 || this.files[i].size < maxLen) && (this.files[i].type === mediaType || mediaType === '')) {
+                        validSelectedFiles++;
+                        fileReaders[i] = new FileReader();
+
+                        // eslint-disable-next-line no-loop-func
+                        fileReaders[i].addEventListener('loadend', () => {
+                            if (this.readyState === 2) {
+                                // this.result contains something like "data:image/png;base64,......." so
+                                // split on ';' and ':' to get the actual media type of the uploaded file
+                                mType = this.result.split(';')[0].split(':')[1];
+
+                                // verify that the media type of the uploaded file matches the allowed upload media type
+                                if (mType === mediaType || mediaType === '') {
+                                    // TODO: in case you want to add the filename to the return result
+                                    // var temp = "name:" + this.name + ";" + this.result;
+                                    self._filesAsBase64.push(this.result);
+                                } else {
+                                    // inform the user that the selected file cannot be uploaded
+                                    dialogs.alert(self.invalidFile(mType, mediaType, this.size, maxLen), `File Upload of ${this.name}`, ['Ok'], () => {}, 'dialog-file-upload');
+
+                                    // clear the input value so if they select the same file again, it triggers a change
+                                    self.input.value = '';
+                                }
+                            }
+                        }, false);
+
+                        if (this.files[i]) {
+                            // save the name and size of the file in the fileReader object
+                            fileReaders[i].name = this.files[i].name;
+                            fileReaders[i].size = this.files[i].size;
+
+                            // then kick off the reading of the file
+                            fileReaders[i].readAsDataURL(this.files[i]);
+                        }
+
+                        // determine the label to put on the file input button
+                        fileLabel = (selectedFiles > 1) ? (`${validSelectedFiles} files selected`) : e.target.value.split('\\').pop();
+                        self.label[txtProp] = fileLabel || self.getLabelText(mediaType);
+                    } else {
+                        // inform the user that the selected file cannot be uploaded
+                        dialogs.alert(
+                            self.invalidFile(this.files[i].type, mediaType, this.files[i].size, maxLen),
+                            `File Upload of ${this.files[i].name}`,
+                            ['Ok'],
+                            () => {}, 'dialog-file-upload'
+                        );
+
+                        // clear the input value so if they select the same file again, it triggers a change
+                        self.input.value = '';
+                    }
+                }
+            });
+
+            this.label.onclick = () => {
+                this.input.click();
+                return false;
+            };
+        }
+
+        /** @property {string} ca-file-input.title - the title for the control */
+        get title() {
+            return this.getAttribute('title');
+        }
+
+        /** @param {string} title - sets the title for the control */
+        set title(title) {
+            this.setAttribute('title', title);
+            this.button[txtProp] = title;
+        }
+
+        /** @property {string} ca-file-input.id - the id for the control */
+        get id() {
+            return this.getAttribute('id');
+        }
+
+        /** @param {string} id - sets id for the control */
+        set id (id) {
+            this.setAttribute('id', id);
+        }
+
+        /** @property {string} ca-file-input.value - the value behind the component */
+        get value() {
+            return Array.isArray(this._filesAsBase64) ? this._filesAsBase64.join(', ') : this._filesAsBase64;
+        }
+
+        /** @param {string} value - sets the value behind the component */
+        set value(value) {
+            // cannot set input's value as you will get a DOMException, so if this is attempted just clear the input's filename
+            this.input.value = '';
+
+            if (value !== '') {
+                console.log("WARNING: You shouldn't be attempting to set file input 'value' - this will throw a DOMException");
+            }
+        }
+
+        /** @property {string} ca-file-input.readonly - flag to indicate whether the control is disabled */
+        get readonly() {
+            return this.getAttribute('readonly') === 'true';
+        }
+
+        /** @param {string} value - sets flag readonly to indicate whether the control is disabled */
+        set readonly(value) {
+            this.setAttribute('readonly', value);
+        }
+
+        /** @property {string} ca-file-input.mediaType - indicate accepted file types by mimetype */
+        get mediatype() {
+            return this.mediaType;
+        }
+
+        /** @param {string} value - sets the indicate accepted file types by mimetype */
+        set mediatype(value) {
+            this.mediaType = value;
+
+            // set the file extension restriction if present
+            if (this.mediaType.length > 0) {
+
+                if (mimeTypeToExtension[this.mediaType]) {
+                    this.input.setAttribute('accept', mimeTypeToExtension[this.mediaType].accept);
+                    this.label[txtProp] = this.getLabelText(this.mediaType);
+                }
+            }
+        }
+        /** @property {string} ca-file-input.multiple - indicate allow multiple file selection */
+        get multiple() {
+            return this.input.getAttribute('multiple');
+        }
+
+        /** @param {string} value - sets the attribute to allow multiple file selection */
+        set multiple(value) {
+            this.input.setAttribute('multiple', value);
+        }
+
+        /** @property {integer} ca-file-input.maxLength - maximum file size (in bytes) */
+        get maxLength() {
+            return this._maxLength || 0;
+        }
+
+        /** @param {integer} value - sets the maximum file size (in bytes) */
+        set maxLength(value) {
+            this._maxLength = value;
+        }
+
+        /**
+         * Gets the test for a mediaType by looking up the key on a private object.
+         * @param {string} mediaType, key to look up label
+         * @returns {string} the text label for a key.
+         */
+        getLabelText(mediaType) {
+            let ret = 'Choose a file';
+
+            if (mimeTypeToExtension[mediaType]) {
+                ret = `Choose a ${mimeTypeToExtension[mediaType].label} file`;
+            }
+
+            return ret;
+        }
+
+        /**
+         * Returns a valid error message for a particular media type
+         * @param {string} mediaType, the media type.
+         * @param {string} allowedMediaType, allowed types.
+         * @param {integer} fileSize, current file size.
+         * @param  {integer} maxFileSize, max file size allowed,
+         * @returns {string} associated error message.
+         */
+        invalidFile(mediaType, allowedMediaType, fileSize, maxFileSize) {
+            // the file cannot be uploaded - need to determine why
+            let ret = 'The selected file cannot be uploaded:<br/><ul>';
+
+            // the media types don't match so tell the user what file extensions are allowed
+            if (mediaType.toLowerCase() !== allowedMediaType.toLowerCase()) {
+                ret = `${ret} <br/> <li>the file must have an extension of ${mimeTypeToExtension[allowedMediaType].accept}</li>`;
+            }
+
+            // the file is too large so tell the user how big the file is and what the maximum file size is
+            if (fileSize > maxFileSize) {
+                ret = `${ret} <br/> <li>the file size is ${this.getFileSize(fileSize, 1)} and exceeds the maximum size of ${this.getFileSize(maxFileSize)}</li>`;
+            }
+
+            return `${ret} </ul><br/>`;
+        }
+
+        /**
+         * Gets the file of a file
+         * @param {integer} bytes, number of bytes.
+         * @param {integer} decimals, number of decimals.
+         * @param {integer} binaryUnits, number of binaryUnits
+         * @returns {string} friendly size.
+         */
+        getFileSize(bytes, decimals, binaryUnits) {
+            if (bytes === 0) {
+                return '0 Bytes';
+            }
+            const unitMultiple = (binaryUnits) ? 1024 : 1000;
+            const unitNames = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const unitChanges = Math.floor(Math.log(bytes) / Math.log(unitMultiple));
+            return `${parseFloat((bytes / Math.pow(unitMultiple, unitChanges)).toFixed(decimals || 0))}  ${unitNames[unitChanges]}`;
+        }
+    }
+    document.registerElement('ca-file-input', CaFileInputElement);
+});
+</script>

@@ -3,22 +3,20 @@
     <head>
         <meta charset="utf-8">
         <title>CA SELECT | Web Lab Common UI</title>
-        <script src="/bower_components/system.js/dist/system.js"></script>
-        <script src="/components/config/index.js"></script>
+        <link rel="import" href="/bower_components/imd/imd.html">
+        <link rel="import" href="/components/ca-select.html">
         <link rel="stylesheet" type="text/css" href="/examples/index.css">
-        <link rel="stylesheet" type="text/css" href="/components/ca-select.css">
     </head>
     <body>
         <div class="ca-home">
           <a id="home" href="/"></a>
         </div>
         <div class="ca-title">CA SELECT EXAMPLE</div>
-        <ca-select></ca-select>
+        <ca-select aria-label="Please choose a option"></ca-select>
 
         <script>
-            SystemJS.import('ca-select.js').then(() => {
+            window.addEventListener('WebComponentsReady', () => {
 
-                console.log(document.querySelector('ca-select'));
                 document.querySelector('ca-select').data = [
                     {
                         value: 1,
@@ -26,6 +24,11 @@
                     }
                 ];
             });
+
+            if (!window.HTMLImports) {
+                document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+                document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+            }
         </script>
     </body>
 </html>

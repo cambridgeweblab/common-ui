@@ -1,0 +1,129 @@
+<link rel="import" href="get-property-by-path.html">
+<script>
+/**
+ * @param schema
+ * @param prop
+ * @param value
+ * @returns {string|null} a string containing the error message or null if valid
+ */
+define('validate-against-schema', ['get-property-by-path'], (getPropertyByPath) => {
+    const validateAgainstSchema = function (schema, prop, value) {
+
+        // TODO: Add support for the following
+        // exclusiveMinimum, exclusiveMaximum (number)
+
+        const schemaItem = getPropertyByPath(schema, prop, true);
+        const valLen = (`${value}`).length;
+
+        if (schemaItem) {
+
+            // check confirm input
+            if (schemaItem.required && ((schemaItem.format || '').indexOf('confirm-') > -1 && value === '')) {
+                return 'This field must have a value';
+            }
+
+            if (schemaItem.required && ((schemaItem.format || '').indexOf('confirm-') > -1 && value === 'INVALID')) {
+                return 'Both fields must have the same value';
+            }
+
+            // check required status
+            if (schemaItem.required && (!value || (Array.isArray(value) && value.length <= 0))) {
+                return 'This field must have a value';
+            }
+
+            if (schemaItem.minItems && (Array.isArray(value) && value.length < schemaItem.minItems)) {
+                return `Please select at least ${schemaItem.minItems} item(s)`;
+            }
+
+            if (schemaItem.maxItems && (Array.isArray(value) && value.length > schemaItem.maxItems)) {
+                return `Please select a maximum of ${schemaItem.maxItems} item(s)`;
+            }
+
+            if (value && schemaItem.pattern && !(new RegExp(schemaItem.pattern, 'gm').test(value.toString()))) {
+                return 'The value is not in the expected format';
+            }
+
+            if (schemaItem.type === 'array' && schemaItem.items && schemaItem.items.pattern) {
+
+                // find invalid items
+                const invalidItems = value.filter((val) =>
+                    !(new RegExp(schemaItem.items.pattern, 'gm').test(val.toString()))
+                );
+
+                if (invalidItems.length > 0) {
+                    return 'The value is not in the expected format';
+                }
+            }
+
+            if (value && schemaItem.minimum && parseFloat(value) < schemaItem.minimum) {
+                return `The value must not be lower than ${schemaItem.minimum}`;
+            }
+
+            if (value && schemaItem.maximum && parseFloat(value) > schemaItem.maximum) {
+                return `The value must not be higher than ${schemaItem.maximum}`;
+            }
+
+            // Multiply by 1000 to try to avoid floating point rounding errors.
+            if (value && ((schemaItem.multipleOf && (1000 * parseFloat(value)) % (1000 * schemaItem.multipleOf) > 0.0001)
+                || (schemaItem.divisibleBy && (1000 * parseFloat(value)) % (1000 * schemaItem.divisibleBy) > 0.0001))) {
+                return `The value must be a multiple of ${(schemaItem.multipleOf ? schemaItem.multipleOf : schemaItem.divisibleBy)}`;
+            }
+
+            // question: this seems hacky?
+            // answer: you are correct, however we have chosen to pass file size limit in
+            // the schema property 'maxLength', which has validation implications.
+            // there may be a better way to do this!
+            // TODO: review this decision
+            if (schemaItem.format !== 'file' && schemaItem.format !== 'multi-file') {
+                if (value && schemaItem.maxLength && valLen > schemaItem.maxLength) {
+                    return `The value must have a maximum of ${schemaItem.maxLength} character(s)`;
+                }
+            }
+
+            if (value && schemaItem.minLength && valLen < schemaItem.minLength) {
+                return `The value must have a minimum of ${schemaItem.minLength} character(s)`;
+            }
+
+            // if the schema has items.properties AND the value is a populated array AND it does not allow additional properties
+            if (schemaItem.items && schemaItem.items.properties &&
+                Array.isArray(value) && value.length > 0 &&
+                !schemaItem.items.properties.additionalProperties) {
+                // grab the nested schema for recursive comparision
+                const nestedSchema = schemaItem.items.properties;
+
+                // run the supplied function against each row in the value array
+                // store the validation results in an array, one result per row in the value array
+                const results = value.map((row) => {
+                    // array to capture each validation result
+                    const result = [];
+
+                    // build a result array for each property in the row
+                    // eslint-disable-next-line
+                    for (var prop in row) {
+                        // validate the value for each property in the row and store the result in the result array
+                        result.push(validateAgainstSchema(nestedSchema, prop, row[prop]));
+                    }
+
+                    // flatten the result array (note that joined nulls become empty string so [null,null].join('') === '')
+                    return result.join('');
+                });
+
+                // if all the joined results are blank then return null to indicate valid, otherwise return a comma delimited list of error messages
+                return (results.join('') === '') ? null : results.join(',');
+            }
+        } else {
+            // schemaItem not found in the schema so check if additionalProperties are allowed
+            // eslint-disable-next-line
+            if (!schema.additionalProperties) {
+                // additionalProperties found but not allowed so this is invalid
+                return 'This field is not allowed';
+            }
+        }
+
+        return null;
+    };
+
+    return validateAgainstSchema;
+
+});
+</script>

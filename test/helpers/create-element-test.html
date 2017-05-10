@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>CREATE ELEMENT | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <script src="/bower_components/system.js/dist/system.js"></script>
-    <script src="/components/config/index.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/helpers/create-element.html">
   </head>
   <body>
     <test-fixture id="create-element">
@@ -14,54 +14,52 @@
       </template>
     </test-fixture>
     <script>
-        suite('types', () => {
-            let element;
-            let createElement;
+        define(['create-element'], (createElement) => {
+            suite('createElement', () => {
+                let element;
 
-            setup(done => {
-                SystemJS.import('helpers/create-element.js').then(module => {
+                setup(done => {
                     element = fixture('create-element');
-                    createElement = module;
                     done();
                 });
-            });
 
-            test('it should append a div to parent element', () => {
-                // setup
-                const container = element;
+                test('it should append a div to parent element', () => {
+                    // setup
+                    const container = element;
 
-                // act
-                createElement(container, 'div', { class: 'inner-div' });
-                // assert
-                expect(container.querySelector('.inner-div')).to.be.ok;
-            });
+                    // act
+                    createElement(container, 'div', { class: 'inner-div' });
+                    // assert
+                    expect(container.querySelector('.inner-div')).to.be.ok;
+                });
 
-            test('it should set attributes, id and class if provided', () => {
-                // setup
-                const container = element;
+                test('it should set attributes, id and class if provided', () => {
+                    // setup
+                    const container = element;
 
-                // act
-                createElement(container, 'div', { class: 'inner-div', id: 'some-id', 'data-hello': 'hi' });
-                const innerDiv = container.querySelector('.inner-div');
+                    // act
+                    createElement(container, 'div', { class: 'inner-div', id: 'some-id', 'data-hello': 'hi' });
+                    const innerDiv = container.querySelector('.inner-div');
 
-                // assert
-                expect(innerDiv).to.be.ok;
-                expect(innerDiv.className).to.equal('inner-div');
-                expect(innerDiv.id).to.equal('some-id');
-                expect(innerDiv.getAttribute('data-hello')).to.equal('hi');
-            });
+                    // assert
+                    expect(innerDiv).to.be.ok;
+                    expect(innerDiv.className).to.equal('inner-div');
+                    expect(innerDiv.id).to.equal('some-id');
+                    expect(innerDiv.getAttribute('data-hello')).to.equal('hi');
+                });
 
-            test('it should insert text into the element if provided', () => {
-                // setup
-                const container = element;
+                test('it should insert text into the element if provided', () => {
+                    // setup
+                    const container = element;
 
-                // act
-                createElement(container, 'div', { class: 'inner-div' }, 'I am text');
-                const innerDiv = container.querySelector('.inner-div');
+                    // act
+                    createElement(container, 'div', { class: 'inner-div' }, 'I am text');
+                    const innerDiv = container.querySelector('.inner-div');
 
-                // assert
-                expect(innerDiv).to.be.ok;
-                expect(innerDiv.textContent).to.equal('I am text');
+                    // assert
+                    expect(innerDiv).to.be.ok;
+                    expect(innerDiv.textContent).to.equal('I am text');
+                });
             });
         });
     </script>

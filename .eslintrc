@@ -4,6 +4,9 @@
     "amd": true,
     "browser": true
   },
+  "plugins": [
+    "html"
+  ],
   "globals": {
     "ActiveXObject": true
   },
