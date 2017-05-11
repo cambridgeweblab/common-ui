@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA SORTABLE LIST | Web Lab Common UI</title>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-sortable-list.html">
+    <link rel="import" href="/components/ca-form.html">
+    <link rel="stylesheet" type="text/css" href="/examples/index.css">
+    <link href="//fonts.googleapis.com/css?family=Material+Icons" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div class="ca-home">
+    <a id="home" href="/"></a>
+</div>
+<div class="ca-title">CA SORTABLE LIST EXAMPLE</div>
+
+<ca-form>
+    <ca-sortable-list aria-label="Please choose a option"></ca-sortable-list>
+</ca-form>
+
+<script>
+    window.addEventListener('WebComponentsReady', () => {
+
+        const items = [
+            'Candidate Id',
+            'First Name',
+            'Candidate Number',
+            'Family Name',
+            'Date Of Birth',
+            'Gender',
+            'Telephone',
+            'Postal Address',
+            'Town',
+            'Postcode',
+            'Country',
+            'Candidate Email',
+            'Listening Score',
+            'Reading Score',
+            'Writing Score',
+            'Speaking Score',
+            'Overall Band Score',
+            'Module',
+            'Test Date',
+            'Centre Number',
+            'TRF Number',
+            'Photo',
+            'Download Date'
+        ];
+
+        document.querySelector('ca-sortable-list').items = items;
+    });
+
+    if (!window.HTMLImports) {
+        document.dispatchEvent(new CustomEvent('HTMLImportsLoaded', { bubbles: true }));
+        document.dispatchEvent(new CustomEvent('WebComponentsReady', { bubbles: true }));
+    }
+</script>
+</body>
+</html>
