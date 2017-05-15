@@ -360,7 +360,7 @@ define([
                         const schemaPromise = describedBy ? componentSupport.request({
                             url: describedBy.href,
                             dataType: 'json'
-                        }) : Promise.resolve(this.schema);
+                        }) : Promise.resolve(caList.schema);
                         const dataPromise = canonical ? componentSupport.request({
                             url: canonical.href,
                             dataType: 'json'
@@ -885,15 +885,15 @@ define([
         static isCreatable(schema) {
             const schemas = Array.isArray(schema) ? schema : [schema];
 
-            return schemas.filter(item => (item.links || []).find(l => l.rel === 'create') !== null).length > 0;
+            return schemas.filter(item => (item.links || []).find(l => l.rel === 'create') !== undefined).length > 0;
         }
 
         static hasWorkingCopy(data) {
-            return (data.links || []).find(l => l.rel === 'working-copy') !== null;
+            return (data.links || []).find(l => l.rel === 'working-copy') !== undefined;
         }
 
         static hasSelfLink(data) {
-            return (data.links || []).find(l => l.rel === 'self') !== null;
+            return (data.links || []).find(l => l.rel === 'self') !== undefined;
         }
 
         static isEditable(schema, data) {
@@ -901,11 +901,11 @@ define([
         }
 
         static isDeletable(data) {
-            return (data.links || []).find(l => l.rel === 'delete') !== null;
+            return (data.links || []).find(l => l.rel === 'delete') !== undefined;
         }
 
         static isPreviewable(data) {
-            return (data.links || []).find(l => l.rel === 'preview') !== null;
+            return (data.links || []).find(l => l.rel === 'preview') !== undefined;
         }
 
     }
