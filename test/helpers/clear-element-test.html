@@ -14,18 +14,21 @@
         <div class="container"></div>
       </template>
     </test-fixture>
-    <script>
-      define(['clear-element'], (clearElement) => {
-          // TODO: test this helper.
-          suite('clear-element', () => {
-              let element;
+    <script>              
+      suite('clear-element', () => {
+          let clearElement;
 
-              setup(done => {
-                  element = fixture('clear-element');
-                  done();
-              });
+          suiteSetup(done => {
+            define(['clear-element'], (helper) => {
+              clearElement = helper;                  
+              done();
+            });
           });
-        });
+
+          test('should be defined', () => {              
+            expect(clearElement).to.be.defined;            
+          });
+      });    
     </script>
   </body>
 </html>

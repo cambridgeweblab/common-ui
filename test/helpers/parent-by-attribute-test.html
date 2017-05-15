@@ -14,18 +14,22 @@
         <div class="container"></div>
       </template>
     </test-fixture>
-    <script>
-      define(['parent-by-attribute'], (parentByAttribute) => {
-        // TODO: test this helper.
-          suite('parentByAttribute', () => {
-              let element;
+    <script>          
+      suite('parentByAttribute', () => {
+        let parentByAttribute;
 
-              setup(done => {
-                element = fixture('parent-by-attribute');
-                done();
-              });
-          });
+        suiteSetup(done => {
+          define(['parent-by-attribute'], (helper) => {
+            parentByAttribute = helper;
+            element = fixture('parent-by-attribute');
+            done();
+          });                        
         });
+
+        test('should be defined', () => {              
+          expect(parentByAttribute).to.be.defined;            
+        });
+      });
     </script>
   </body>
 </html>

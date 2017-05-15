@@ -15,17 +15,20 @@
       </template>
     </test-fixture>
     <script>
-      define(['cancel-event'], (cancelEvent) => {
-          // TODO: test this helper.
-          suite('cancelEvent', () => {
-              let element;
+      suite('cancel-event', () => {
+          let cancelEvent;
 
-              setup(done => {
-                  element = fixture('cancel-event');
-                  done();
-              });
+          suiteSetup(done => {
+            define(['cancel-event'], (helper) => {
+              cancelEvent = helper;                  
+              done();
+            });
           });
-        });
+
+          test('should be defined', () => {              
+            expect(cancelEvent).to.be.defined;            
+          });
+      });   
     </script>
   </body>
 </html>

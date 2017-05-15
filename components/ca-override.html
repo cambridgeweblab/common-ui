@@ -61,7 +61,7 @@ define([
             }
             this._caProperty = createElement(null, 'ca-property', {
                 name: this.name,
-                title: this.property.title || camelToTitleCase(this.name)
+                title: this.property ? this.property.title : camelToTitleCase(this.name || '')
             });
             this._caProperty.property = this.property;
             this._caProperty.value = (this.property && this.property.defaultValue) || undefined;

@@ -15,52 +15,58 @@
       </template>
     </test-fixture>
     <script>
-        define(['create-element'], (createElement) => {
-            suite('createElement', () => {
-                let element;
+        
+        suite('createElement', () => {
+            let element;
+            let createElement;
 
-                setup(done => {
-                    element = fixture('create-element');
+            suiteSetup(done => {                
+                define(['create-element'], (helper) => {                       
+                    createElement = helper;
                     done();
-                });
+                });                    
+            });
 
-                test('it should append a div to parent element', () => {
-                    // setup
-                    const container = element;
+            setup(() => {
+                element = fixture('create-element');
+            });
 
-                    // act
-                    createElement(container, 'div', { class: 'inner-div' });
-                    // assert
-                    expect(container.querySelector('.inner-div')).to.be.ok;
-                });
+            test('it should append a div to parent element', () => {
+                // setup
+                const container = element;
 
-                test('it should set attributes, id and class if provided', () => {
-                    // setup
-                    const container = element;
+                // act
+                createElement(container, 'div', { class: 'inner-div' });
+                // assert
+                expect(container.querySelector('.inner-div')).to.be.ok;
+            });
 
-                    // act
-                    createElement(container, 'div', { class: 'inner-div', id: 'some-id', 'data-hello': 'hi' });
-                    const innerDiv = container.querySelector('.inner-div');
+            test('it should set attributes, id and class if provided', () => {
+                // setup
+                const container = element;
 
-                    // assert
-                    expect(innerDiv).to.be.ok;
-                    expect(innerDiv.className).to.equal('inner-div');
-                    expect(innerDiv.id).to.equal('some-id');
-                    expect(innerDiv.getAttribute('data-hello')).to.equal('hi');
-                });
+                // act
+                createElement(container, 'div', { class: 'inner-div', id: 'some-id', 'data-hello': 'hi' });
+                const innerDiv = container.querySelector('.inner-div');
 
-                test('it should insert text into the element if provided', () => {
-                    // setup
-                    const container = element;
+                // assert
+                expect(innerDiv).to.be.ok;
+                expect(innerDiv.className).to.equal('inner-div');
+                expect(innerDiv.id).to.equal('some-id');
+                expect(innerDiv.getAttribute('data-hello')).to.equal('hi');
+            });
 
-                    // act
-                    createElement(container, 'div', { class: 'inner-div' }, 'I am text');
-                    const innerDiv = container.querySelector('.inner-div');
+            test('it should insert text into the element if provided', () => {
+                // setup
+                const container = element;
 
-                    // assert
-                    expect(innerDiv).to.be.ok;
-                    expect(innerDiv.textContent).to.equal('I am text');
-                });
+                // act
+                createElement(container, 'div', { class: 'inner-div' }, 'I am text');
+                const innerDiv = container.querySelector('.inner-div');
+
+                // assert
+                expect(innerDiv).to.be.ok;
+                expect(innerDiv.textContent).to.equal('I am text');
             });
         });
     </script>
