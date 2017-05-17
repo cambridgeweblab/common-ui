@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>TYPES | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="/bower_components/imd/imd.html">
     <link rel="import" href="/components/helpers/types.html">
   </head>
@@ -13,40 +14,47 @@
         <div hello="undefined" bye="false" name=false greetings="true" welcome=true something></div>
       </template>
     </test-fixture>
-    <script>
-        define(['types'], (types) => {
-            suite('types', () => {
-                let element;
+    <script>       
+        suite('types', () => {
+            let element;
+            let types;
 
-                setup(done => {
-                    element = fixture('types');
+            suiteSetup(done => {          
+                define(['types'], (helper) => {
+                    types = helper;
                     done();
                 });
+            });
 
-                test('it should return false if string `undefined` is passed', () => {
-                    // assert
-                    expect(types.toBoolean(element.getAttribute('hello'))).to.equal(false);
-                });
+            setup(done => {
+                element = fixture('types');
+                done();
+            });
 
-                test('it should return false string `false` or false is passed', () => {
-                    // assert
-                    expect(types.toBoolean(element.getAttribute('bye'))).to.equal(false);
-                    expect(types.toBoolean(element.getAttribute('name'))).to.equal(false);
-                });
+            test('it should return false if string `undefined` is passed', () => {
+                // assert
+                expect(types.toBoolean(element.getAttribute('hello'))).to.equal(false);
+            });
 
-                test('it should return true string `true` or true is passed', () => {
-                    // assert
-                    expect(types.toBoolean(element.getAttribute('greetings'))).to.equal(true);
-                    expect(types.toBoolean(element.getAttribute('welcome'))).to.equal(true);
-                });
+            test('it should return false string `false` or false is passed', () => {
+                // assert
+                expect(types.toBoolean(element.getAttribute('bye'))).to.equal(false);
+                expect(types.toBoolean(element.getAttribute('name'))).to.equal(false);
+            });
 
-                test('it should return false attribute does not exist or has no value', () => {
-                    // assert
-                    expect(types.toBoolean(element.getAttribute('not-here'))).to.equal(false);
-                    expect(types.toBoolean(element.getAttribute('something'))).to.equal(false);
-                });
+            test('it should return true string `true` or true is passed', () => {
+                // assert
+                expect(types.toBoolean(element.getAttribute('greetings'))).to.equal(true);
+                expect(types.toBoolean(element.getAttribute('welcome'))).to.equal(true);
+            });
+
+            test('it should return false attribute does not exist or has no value', () => {
+                // assert
+                expect(types.toBoolean(element.getAttribute('not-here'))).to.equal(false);
+                expect(types.toBoolean(element.getAttribute('something'))).to.equal(false);
             });
         });
+        
     </script>
   </body>
 </html>

@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title>CLEAR ELEMENT | Web Lab Common UI</title>
     <script src="/web-component-tester/browser.js"></script>
-    <link rel="import" href="/bower_components/imd/imd.html">
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js">
+    </script><link rel="import" href="/bower_components/imd/imd.html">
     <link rel="import" href="/components/helpers/clear-element.html">
   </head>
   <body>
@@ -13,18 +14,21 @@
         <div class="container"></div>
       </template>
     </test-fixture>
-    <script>
-      define(['clear-element'], (clearElement) => {
-          // TODO: test this helper.
-          suite('clear-element', () => {
-              let element;
+    <script>              
+      suite('clear-element', () => {
+          let clearElement;
 
-              setup(done => {
-                  element = fixture('clear-element');
-                  done();
-              });
+          suiteSetup(done => {
+            define(['clear-element'], (helper) => {
+              clearElement = helper;                  
+              done();
+            });
           });
-        });
+
+          test('should be defined', () => {              
+            expect(clearElement).to.be.defined;            
+          });
+      });    
     </script>
   </body>
 </html>

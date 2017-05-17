@@ -1,8 +1,8 @@
-<link rel="import" href="helpers/get-element-value.html">
-<link rel="import" href="helpers/set-element-value.html">
-<link rel="import" href="helpers/create-element.html">
-<link rel="import" href="helpers/camel-to-title-case.html">
-<link rel="import" href="ca-property.html">
+<link rel="import" href="./helpers/get-element-value.html">
+<link rel="import" href="./helpers/set-element-value.html">
+<link rel="import" href="./helpers/create-element.html">
+<link rel="import" href="./helpers/camel-to-title-case.html">
+<link rel="import" href="./ca-property.html">
 <style>
     ca-override > *:last-child {
         display: none;
@@ -61,7 +61,7 @@ define([
             }
             this._caProperty = createElement(null, 'ca-property', {
                 name: this.name,
-                title: this.property.title || camelToTitleCase(this.name)
+                title: this.property ? this.property.title : camelToTitleCase(this.name || '')
             });
             this._caProperty.property = this.property;
             this._caProperty.value = (this.property && this.property.defaultValue) || undefined;
