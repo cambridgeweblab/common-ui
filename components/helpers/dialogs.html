@@ -1,9 +1,5 @@
 <link rel="import" href="./create-element-legacy.html">
 <link rel="import" href="./parent-by-attribute.html">
-<link rel="import" href="./cancel-event.html">
-<link rel="import" href="./add-event.html">
-<link rel="import" href="./has-class.html">
-<link rel="import" href="./remove-class.html">
 <link rel="import" href="./clear-element.html">
 
 <style>
@@ -74,13 +70,13 @@
         content: "i";
         display: inline-block;
         padding: 0px 4px;
-        border: 3px solid rgba(125,125,125,0.5);
+        border: 3px solid rgba(125, 125, 125, 0.5);
         border-radius: 100px;
         margin-right: 7px;
         font-weight: 700;
         font-size: 16px;
         font-family: monospace;
-        color: rgba(125,125,125,0.5);
+        color: rgba(125, 125, 125, 0.5);
     }
 
     .dialog .dialog-close {
@@ -172,9 +168,6 @@
         cursor: wait;
     }
 
-    .dialog-loading .dialog-body {
-    }
-
     .dialog-loading .loading-message {
         display: block
     }
@@ -211,9 +204,9 @@
         -webkit-box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0 4px 16px rgba(0, 0, 0, .2);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-        background: #FFF;
+        background: #fff;
         background-clip: padding-box;
-        border: 1px solid #ACACAC;
+        border: 1px solid #acacac;
         border: 1px solid rgba(0, 0, 0, 0.333);
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
@@ -241,9 +234,10 @@
         margin-left: 318px
     }
 
-    .dialog ul  {
+    .dialog ul {
         padding-left: 16px;
     }
+
     .dialog li {
         list-style: disc !important;
     }
@@ -253,13 +247,8 @@
     define('dialogs', [
         'create-element-legacy',
         'parent-by-attribute',
-        'cancel-event',
-        'add-event',
-        'has-class',
-        'add-class',
-        'remove-class',
         'clear-element'
-    ], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, removeClass, clearElement) => {
+    ], (createElement, parentByAttribute, clearElement) => {
 
         const dialogs = {
             ready: false,
@@ -273,7 +262,7 @@
                 onbeforeopen(url, title) {
                     return true;
                 },
-                onshow(dlg) {}
+                onshow(dlg) { }
             },
 
             init() {
@@ -282,7 +271,7 @@
 
                     // assign application wide event handler
                     //  - if we have a top then use that as it ensures only one window is responsible for all dialogs, makes them stackable no matter how deep they open
-                    addEvent(document, 'click', window.top.dialogs._.eventDelegate || dialogs._.eventDelegate);
+                    document.addEventListener('click', window.top.dialogs._.eventDelegate || dialogs._.eventDelegate);
 
                     // override window.open if required (if no name provided need to create a temp in order to close!!)
                     if (dialogs.overrideDefaultWindows) {
@@ -337,7 +326,7 @@
                     title: title || 'Alert',
                     html: message,
                     buttons: buttons || ['Ok'],
-                    callback: callback || function() {}
+                    callback: callback || function () { }
                 }));
             },
 
@@ -417,8 +406,8 @@
                 eventDelegate(e) {
 
                     // eslint-disable-next-line no-param-reassign
-                    e = e || event; // resolve event object
-                    let el = e.target || e.srcElement; // get event target
+                    e = e || event;
+                    let el = e.target || e.srcElement;
 
                     // get parent A tag is it exists
                     el = (el.tagName !== 'A') ? parentByAttribute(el, 'tagName', 'A') : el;
@@ -436,7 +425,9 @@
                         // open the link in an internal window (use either title or inner text as the dialog title)
                         dialogs.open(url, settings);
 
-                        cancelEvent(e);
+                        e.preventDefault();
+                        e.stopPropogation();
+                        return false;
                     }
                 },
 
@@ -444,7 +435,7 @@
                 // Object short hand cannot be used as a constructor
                 // creates an internal dialog window
                 // eslint-disable-next-line object-shorthand
-                create: function(url, params) {
+                create: function (url, params) {
                     // <summary>creates an internal dialog window</summary>
                     // <param name="url" type="String">the url to load</param>
                     // <param name="name" optional="true" type="String">the unique name to assign to the dialog (required if a call to dialogs.close is needed)</param>
@@ -464,7 +455,7 @@
                     dlg.params.css = (dlg.params.css) ? dlg.params.css : '';
                     dlg.params.html = (dlg.params.html) ? dlg.params.html : '';
                     dlg.params.text = (dlg.params.text) ? dlg.params.text : '';
-                    dlg.params.callback = params.callback || function() {};
+                    dlg.params.callback = params.callback || function () { };
                     dlg.params.modal = (params.modal === 'true' || params.modal);
                     dlg.params.method = (params.method === 'ajax' && window.ajax) ? 'ajax' : 'iframe';
 
@@ -491,14 +482,15 @@
 
                     if (dlg.mask && !dlg.params.modal) {
 
-                        dlg.mask.onclick = function(e) {
+                        dlg.mask.onclick = function (e) {
 
                             // eslint-disable-next-line no-param-reassign
                             e = e || event;
                             const el = e.target || e.srcElement;
                             const css = el.className || '';
 
-                            if (hasClass(el, 'dialog-mask')) {
+                            if (el.classList.contains('dialog-mask')) {
+
                                 dialogs.get(dlg.id).close();
                             }
                         };
@@ -543,21 +535,24 @@
                         class: 'dialog-buttons'
                     });
 
-                    (dlg.writeButtons = function(buttons) {
+                    (dlg.writeButtons = buttons => {
 
                         clearElement(dlg.buttons);
 
                         if (buttons && buttons.length > 0) {
 
-                            const buttonClickHandler = function(e) {
+                            const buttonClickHandler = e => {
+
                                 // eslint-disable-next-line no-param-reassign
                                 e = e || event;
                                 const el = e.target || e.srcElement;
 
-                                cancelEvent(e);
+                                e.preventDefault();
+                                e.stopPropogation();
 
                                 // TODO: Add check here to only call close if callback did not return false!
                                 dlg.close.call(null, el[dialogs._.txtProp]);
+                                return false;
                             };
 
                             for (let i = 0, l = buttons.length; i < l; i++) {
@@ -575,6 +570,7 @@
 
                             // eslint-disable-next-line no-lonely-if
                             if (dlg.buttons.parentNode) {
+
                                 dlg.buttons.parentNode.removeChild(dlg.buttons);
                             }
                         }
@@ -618,7 +614,7 @@
                         dlg.dialog.className += ' dialog-loading';
 
                         // for all other browsers, when the iframe has loaded call a function to remove the loading class
-                        dlg.iframe.onload = function() {
+                        dlg.iframe.onload = function () {
                             dlg.iframe._loaded();
                         };
 
@@ -685,12 +681,12 @@
                                 // TODO: umm. a little crazy, but it must be migrated.
                                 // eslint-disable-next-line no-undef
                                 if (doc && execCommand) {
-                                    
+
                                     doc.execCommand('Stop');
                                 }
                             }
                             // eslint-disable-next-line
-                        } catch (e) {}
+                        } catch (e) { }
                     };
 
                     dlg.show = () => {
@@ -705,7 +701,7 @@
                             dlg.dialog.classList.add('dialog-autoshow');
                         }
 
-                        removeClass(dlg.dialog, 'dialog-offscreen');
+                        dlg.dialog.classList.remove('dialog-offscreen');
 
                         if (dlg.mask) {
 
@@ -742,7 +738,7 @@
 
                         if (dlg.params.bodycss) {
 
-                            removeClass(body, dlg.params.bodycss);
+                            body.classList.remove(dlg.params.bodycss);
                         }
 
                         const idx = dialogs.items.findIndex(item => item.id === dlg.id);
@@ -795,4 +791,5 @@
 
         return dialogs;
     });
+
 </script>
