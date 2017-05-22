@@ -1196,6 +1196,18 @@ define([
                 sessionStorage[this.src] = JSON.stringify(this.getRawData());
             }
 
+            // if validation fails for any reason
+            if (!valid) {
+                const detail = data;
+                detail.pageName = 'ca-form';
+                // then raise a validate-error custom event
+                const event = new CustomEvent('ca-form-validate-error', {
+                    detail,
+                    bubbles: true
+                });
+                this.dispatchEvent(event);
+            }
+
             return valid;
         }
 
@@ -1227,6 +1239,12 @@ define([
 
                         trace('Existing record created.');
 
+                        const event = new CustomEvent('ca-form-update-success', {
+                            detail: data,
+                            bubbles: true
+                        });
+                        this.dispatchEvent(event);
+
                         // get next schema from response is present
                         const next = ((data || {}).links || []).find(link => link.rel === 'next');
 
@@ -1236,6 +1254,11 @@ define([
                         }
                     }, err => {
                         trace('Error updating existing record', err);
+                        const event = new CustomEvent('ca-form-update-error', {
+                            detail: err,
+                            bubbles: true
+                        });
+                        this.dispatchEvent(event);
                     });
             } else if (createUrl !== '') {
                 componentSupport.request({
@@ -1249,6 +1272,12 @@ define([
 
                         trace('New record created.');
 
+                        const event = new CustomEvent('ca-form-create-success', {
+                            detail: data,
+                            bubbles: true
+                        });
+                        this.dispatchEvent(event);
+
                         // get next schema from response is present
                         const next = ((data || {}).links || []).find(link => link.rel === 'next');
 
@@ -1258,6 +1287,11 @@ define([
                         }
                     }, err => {
                         trace('Error creating new record', err);
+                        const event = new CustomEvent('ca-form-create-error', {
+                            detail: err,
+                            bubbles: true
+                        });
+                        this.dispatchEvent(event);
                     });
             } else {
                 this.onsave.call(this, formData); // @todo ... this method does not appear in weblab-common-ui...
@@ -1455,6 +1489,35 @@ define([
 
                 }
 
+            }
+
+            return el;
+        }
+
+        /**
+         * @description create sortable list
+         * @param {string} type - type of object
+         * @param {string} key - item object key
+         * @param {object} schema - the form schema
+         * @param {string} format - type of item
+         * @returns {object} dom object
+         */
+        createSortableList(type, key, schema, format) {
+            let el = null;
+
+            if (format === 'sortable-list') {
+                // set up the base attributes for the ca-sortable-list element
+                const attrs = {
+                    name: key,
+                    id: key
+                };
+
+                // the sortable list items will be held as an enum in the items property
+                if (schema.items && schema.items.enum) {
+                    attrs.items = schema.items.enum;
+                }
+
+                el = createElementLegacy(null, 'ca-sortable-list', attrs);
             }
 
             return el;
@@ -1748,6 +1811,7 @@ define([
                 this.createIntSelect,
                 this.createRating,
                 this.createList,
+                this.createSortableList,
                 this.createListBuilder,
                 this.createObjectList,
                 this.createImageCapture,
