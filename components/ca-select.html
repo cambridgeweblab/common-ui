@@ -393,7 +393,8 @@ define([
                 return results;
             }
 
-            return this.root ? (this.root.value || this._value) : '';
+            // return root's value (if it exists) or internal _value (if it doesn't)
+            return (this.root && typeof this.root.value !== 'undefined') ? this.root.value : (this._value || '');
         }
 
         /**
