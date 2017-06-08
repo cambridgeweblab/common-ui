@@ -604,10 +604,22 @@ define([
                             if (notifier) {
                                 notifier.addNotification(createElement(null, 'ca-notification', { content: 'The item has been deleted' }));
                             }
+
+                            const event = new CustomEvent('ca-crud-delete-success', {
+                                detail: data,
+                                bubbles: true
+                            });
+                            this.dispatchEvent(event);
                         }).catch(err => {
                             if (Array.isArray(err) && err[0].summary) {
                                 dialogs.alert(err[0].summary, `Problem deleting ${this.title}`);
                             }
+
+                            const event = new CustomEvent('ca-crud-delete-error', {
+                                detail: err,
+                                bubbles: true
+                            });
+                            this.dispatchEvent(event);
                         });
                     }
                 }, 'dialog-delete-item', ['Delete', 'Cancel']);
