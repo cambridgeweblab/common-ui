@@ -40,7 +40,14 @@
     ca-treeview [data-selected="true"] { font-weight: bold; }
 </style>
 <script>
-define(['create-element', 'clear-element', 'parent-by-attribute', 'cancel-event', 'secure-ajax'], (createElement, clearElement, parentByAttribute, cancelEvent, ajax) => {
+define('ca-treeview', [
+    'create-element',
+    'clear-element',
+    'parent-by-attribute',
+    'cancel-event',
+    'secure-ajax'
+],
+(createElement, clearElement, parentByAttribute, cancelEvent, ajax) => {
     /**
      * Class TreeView for a TreeView web component
      * @extends HTMLElement
