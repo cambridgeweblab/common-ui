@@ -55,11 +55,11 @@ define('validate-against-schema', ['get-property-by-path'], (getPropertyByPath) 
                 }
             }
 
-            if (value && schemaItem.minimum && parseFloat(value) < schemaItem.minimum) {
+            if (!isNaN(value) && schemaItem.minimum !== undefined && parseFloat(value) < schemaItem.minimum) {
                 return `The value must not be lower than ${schemaItem.minimum}`;
             }
 
-            if (value && schemaItem.maximum && parseFloat(value) > schemaItem.maximum) {
+            if (!isNaN(value) && schemaItem.maximum !== undefined && parseFloat(value) > schemaItem.maximum) {
                 return `The value must not be higher than ${schemaItem.maximum}`;
             }
 
