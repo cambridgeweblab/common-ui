@@ -923,6 +923,13 @@ define('ca-list', [
                     }
                 }
             }
+
+            // raise a custom event to inform all listeners that the list has been rendered
+            const event = new CustomEvent('ca-list-render-complete', {
+                detail: {},
+                bubbles: true
+            });
+            this.dispatchEvent(event);
         }
     }
 
