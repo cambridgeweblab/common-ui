@@ -758,7 +758,7 @@ define('ca-form', [
                             // validate on blur
                             inputEl.onblur = () => {
                                 if (inputEl.type !== 'checkbox') {
-                                    setTimeout(() => this.validateField(item.id, item.value), 250);
+                                    setTimeout(() => this.validateField(inputEl.id, inputEl.value), 250);
                                 }
                             };
                         }
