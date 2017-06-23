@@ -923,6 +923,19 @@ define('ca-list', [
                     }
                 }
             }
+
+            // execute event handler to let the listener know render completed (i.e. all dependent data loaded)
+            if (this.onrendercomplete) {
+                this.onrendercomplete.call(this);
+            }
+        }
+
+        /**
+         * Designed for extension instead of firing a custom event. TODO: fire a custom event.
+         * @returns {undefined}
+         */
+        onrendercomplete() {
+            // For extension
         }
     }
 
