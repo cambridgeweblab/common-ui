@@ -5,6 +5,8 @@
 <script>
 define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dialogs'], (ajax, createElement, postViaForm, dialogs) => {
 
+    /** TODO - TechDebt - need to split schema actions into two separate modules and find/replace all instances (breaking change)
+     */
     const schemaActions = {
 
         action(action, dlg, container, data = {}) {
@@ -36,7 +38,7 @@ define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dia
 
                     // add the schema description to the dialog if it eixsts
                     if (action.description) {
-                        createElement(dlg.body, 'p', {class: 'dialog-intro'}, action.description);
+                        createElement(dlg.body, 'p', { class: 'dialog-intro' }, action.description);
                     }
 
                     // create the from using the action schema
