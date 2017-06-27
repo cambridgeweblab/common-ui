@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/clear-element.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/keyboard.html">
 <style>
     ca-input-array {
@@ -66,7 +65,7 @@
     }
 </style>
 <script>
-define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'keyboard'], (createElement, clearElement, cancelEvent, keyboard) => {
+define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (createElement, clearElement, keyboard) => {
     /**
      * @exports ca-input-array component
      * @extends HTMLElement
@@ -501,7 +500,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'ke
 
             this.removeItem(index);
 
-            cancelEvent(ev);
+            e.preventDefault();
+            e.stopPropagation();
         }
 
         /**
@@ -516,7 +516,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'ke
 
             this.addItem(index + 1);
 
-            cancelEvent(ev);
+            e.preventDefault();
+            e.stopPropagation();
         }
 
         /**
@@ -539,7 +540,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'ke
                 // eslint-disable-next-line no-lone-blocks
                 case 13: { // handle ENTER key press
 
-                    cancelEvent(ev);
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     // if we have no max items OR the current count < maxItem && index == this.count (at the bottom)
                     if ((this.maxItems === -1 || this.count < this.maxItems) && index === this.count - 1) {
@@ -559,7 +561,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'ke
 
                         if (this.count > this.minItems) {
 
-                            cancelEvent(ev);
+                            e.preventDefault();
+                            e.stopPropagation();
                             this.removeItem(index);
                         } else {
 
@@ -571,7 +574,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'cancel-event', 'ke
 
                 default: {
                     if (this.type === 'number' && !keyboard.navKeys(key) && !this.isNumberChar(char)) {
-                        cancelEvent(ev);
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                 }
             }
