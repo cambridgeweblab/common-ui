@@ -3,7 +3,6 @@
 <link rel="import" href="./cancel-event.html">
 <link rel="import" href="./add-event.html">
 <link rel="import" href="./has-class.html">
-<link rel="import" href="./add-class.html">
 <link rel="import" href="./remove-class.html">
 <link rel="import" href="./clear-element.html">
 <style>
@@ -260,10 +259,9 @@ define('dialogs', [
     'cancel-event',
     'add-event',
     'has-class',
-    'add-class',
     'remove-class',
     'clear-element'
-], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, addClass, removeClass, clearElement) => {
+], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, removeClass, clearElement) => {
     const dialogs = {
         // is the object ready for interaction ?
         ready: false,
@@ -481,7 +479,7 @@ define('dialogs', [
                 dlg.id = dlg.params.id || `dlg${(new Date()).getTime()}`; // might need to check if it's already in use and if so alter it!?
 
                 if (dlg.params.bodycss) {
-                    addClass(body, dlg.params.bodycss);
+                    body.classList.add(dlg.params.bodycss);
                 }
 
                 // create style object if dimensions exist, otherwise fall back to css assigned values
@@ -689,7 +687,7 @@ define('dialogs', [
                         // eslint-disable-next-line
                         const marginTop = parseInt(dlg.dialog.offsetHeight / 2);
 
-                        addClass(dlg.dialog, 'dialog-autoshow');
+                        dlg.dialog.classList.add('dialog-autoshow');
                     }
 
                     removeClass(dlg.dialog, 'dialog-offscreen');
