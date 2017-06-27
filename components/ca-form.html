@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/get-sorted-schema-keys.html">
 <link rel="import" href="./helpers/new-guid.html">
@@ -311,7 +310,6 @@
 define('ca-form', [
     'component-support',
     'create-element-legacy',
-    'cancel-event',
     'clear-element',
     'get-sorted-schema-keys',
     'new-guid',
@@ -319,7 +317,7 @@ define('ca-form', [
     'trace',
     'set-element-value',
     'html-to-dom'
-], (componentSupport, createElementLegacy, cancelEvent, clearElement, getSortedSchemaKeys, newGuid, validateAgainstSchema, trace, setElementValue, htmlToDom) => {
+], (componentSupport, createElementLegacy, clearElement, getSortedSchemaKeys, newGuid, validateAgainstSchema, trace, setElementValue, htmlToDom) => {
     /**
      * @exports ca-form
      * @description A custom HTML element (Web Component) that can be created using
@@ -345,7 +343,8 @@ define('ca-form', [
 
             // hook form submit event
             this.form.onsubmit = (e) => {
-                cancelEvent(e);
+                e.preventDefault();
+                e.stopPropagation();
                 this.save();
             };
 
@@ -902,7 +901,8 @@ define('ca-form', [
 
                         // bubble click event passing button display value to external handler
                         button.onclick = (e) => {
-                            cancelEvent(e);
+                            e.preventDefault();
+                            e.stopPropagation();
                             this.onbuttonclick(button.value);
                         };
                     }
