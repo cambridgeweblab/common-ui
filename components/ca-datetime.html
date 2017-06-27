@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/is-mobile.html">
 <link rel="import" href="./helpers/component-support.html">
 <script src="../bower_components/pikaday/pikaday.js" as="pikaday"></script>
@@ -45,11 +44,10 @@
 define('ca-datetime', [
     'create-element',
     'parent-by-attribute',
-    'cancel-event',
     'is-mobile',
     'component-support',
     'pikaday'
-], (createElement, parentByAttribute, cancelEvent, isMobile, componentSupport, Pikaday) => {
+], (createElement, parentByAttribute, isMobile, componentSupport, Pikaday) => {
     /**
      * @exports ca-datetime
      * @description A custom HTML element (Web Component) that can be created using
@@ -352,7 +350,8 @@ define('ca-datetime', [
             }
 
             clearBtn.onclick = (e) => {
-                cancelEvent(e || event);
+                (e || event).preventDefault();
+                (e || event).stopPropagation();
                 this.clearInput(clearBtn);
             };
         }
