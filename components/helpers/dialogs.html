@@ -1,6 +1,5 @@
 <link rel="import" href="./create-element-legacy.html">
 <link rel="import" href="./parent-by-attribute.html">
-<link rel="import" href="./cancel-event.html">
 <link rel="import" href="./add-event.html">
 <link rel="import" href="./has-class.html">
 <link rel="import" href="./add-class.html">
@@ -257,13 +256,12 @@
 define('dialogs', [
     'create-element-legacy',
     'parent-by-attribute',
-    'cancel-event',
     'add-event',
     'has-class',
     'add-class',
     'remove-class',
     'clear-element'
-], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, addClass, removeClass, clearElement) => {
+], (createElement, parentByAttribute, addEvent, hasClass, addClass, removeClass, clearElement) => {
     const dialogs = {
         // is the object ready for interaction ?
         ready: false,
@@ -443,7 +441,8 @@ define('dialogs', [
                     // open the link in an internal window (use either title or inner text as the dialog title)
                     dialogs.open(url, settings);
 
-                    cancelEvent(e);
+                    e.preventDefault();
+                    e.stopPropagation();
                 }
             },
 
@@ -552,7 +551,8 @@ define('dialogs', [
                             e = e || event; // resolve event object
                             const el = e.target || e.srcElement; // get event target
 
-                            cancelEvent(e);
+                            e.preventDefault();
+                            e.stopPropagation();
 
                             // TODO: Add check here to only call close if callback did not return false!
                             dlg.close.call(null, el[dialogs._.txtProp]);
