@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/clear-element.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/fire-event.html">
 <link rel="import" href="./helpers/dialogs.html">
 <link rel="import" href="./ca-form.html">
@@ -39,7 +38,7 @@
     }
 </style>
 <script>
-define('ca-object-list', ['create-element', 'clear-element', 'cancel-event', 'fire-event', 'dialogs'], (createElement, clearElement, cancelEvent, fireEvent, dialogs) => {
+define('ca-object-list', ['create-element', 'clear-element', 'fire-event', 'dialogs'], (createElement, clearElement, fireEvent, dialogs) => {
 
     /**
      * @exports ca-object-list
@@ -201,7 +200,8 @@ define('ca-object-list', ['create-element', 'clear-element', 'cancel-event', 'fi
          * @returns {undefined} nothing. Shows form.
          */
         addButtonHandler(e) {
-            cancelEvent(e);
+            e.preventDefault();
+            e.stopPropagation();
             this.showForm();
         }
     }
