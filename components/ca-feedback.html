@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/component-support.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./ca-dialog.html">
 <link rel="import" href="./ca-form.html">
@@ -47,8 +46,7 @@
     }
 </style>
 <script>
-define('ca-feedback', ['component-support', 'cancel-event', 'create-element'],
-(componentSupport, cancelEvent, createElement) => {
+define('ca-feedback', ['component-support', 'create-element'], (componentSupport, createElement) => {
   /**
    * Class Feedback for a ca-feedback web component
    * @extends HTMLElement
@@ -154,7 +152,8 @@ define('ca-feedback', ['component-support', 'cancel-event', 'create-element'],
          */
         render(e) {
 
-            cancelEvent(e);
+            e.preventDefault();
+            e.stopPropagation();
 
             this.dialog = document.querySelector('ca-dialog') || createElement(document.body, 'ca-dialog');
             this.dialog.buttons = ['Send feedback'];
