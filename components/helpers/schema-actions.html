@@ -182,8 +182,17 @@ define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dia
         getActionsFromData(data) {
 
             return (data.links || []).filter(link => (link.rel || '').indexOf('action:') === 0);
-        }
+        },
 
+        /**
+         * @description extracts a list of navigations from data object passed in
+         * @param {object} data - data object with hateaos links collection to inspect
+         * @returns {Array} a list of all rel="nav:name" links from within object.links collection
+         */
+        getNavsFromData(data) {
+
+            return (data.links || []).filter(link => (link.rel || '').indexOf('nav:') === 0);
+        }
     };
 
     return schemaActions;
