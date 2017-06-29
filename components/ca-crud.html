@@ -259,6 +259,10 @@ define('ca-crud', [
             // convert each instance end point into a promise for loading
             const promises = this.instances
                 .filter((item, position, instances) => {
+                    /* Remove duplicate 'hrefs', this is achieved by using a first match principle.
+                      If the href is found using this match, then it will be the first match index.
+                      If the returned first match index is the same as the current index, then it's unique
+                    */
                     const href = item.href.toLowerCase();
                     return instances.findIndex(instance => instance.href.toLowerCase() === href) === position;
                 })
