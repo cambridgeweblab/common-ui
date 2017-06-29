@@ -161,6 +161,7 @@ define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dia
                             const actions = schemaActions.getActionsFromData(resData);
 
                             if (actions.length === 1) {
+                                schemaActions.onSuccessInvokeWithAction(actions[0]);
                                 return schemaActions.action(actions[0], dlg, container);
                             }
                         }
@@ -182,6 +183,42 @@ define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dia
         getActionsFromData(data) {
 
             return (data.links || []).filter(link => (link.rel || '').indexOf('action:') === 0);
+        },
+
+        /**
+         * @description a helper method that extracts triggers from oneOf property in schema
+         * @param  {object} action schema object
+         * @return {Array} list of catched triggers
+         */
+        triggerSchemaEvent : function(action) {
+          var schema = action.schema;
+          var triggers = [];
+
+          if (schema && schema.oneOf && schema.oneOf.length > 0) {
+            schema.oneOf.forEach(function(obj) {
+              if (obj.trigger && obj.trigger != '') {
+                  triggers.push(obj.trigger);
+              }
+            })
+          }
+
+          return triggers;
+        },
+
+        /**
+         * Method that uses triggerSchemaEvent and onSuccessInvokeWithTriggers
+         * @param  {object} schema schema object
+         */
+        onSuccessInvokeWithAction : function(schema){
+          var triggers = schemaActions.triggerSchemaEvent(schema);
+          schemaActions.onSuccessInvokeWithTriggers(triggers);
+        },
+
+        /**
+         * Implicit method that can be overriden by importing js files
+         * @param  {Function} callback triggers from triggerSchemaEvent method
+         */
+        onSuccessInvokeWithTriggers : function(callback) {
         }
 
     };
