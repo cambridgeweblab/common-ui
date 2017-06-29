@@ -483,10 +483,7 @@ define('ca-import', [
                     for (let i = 0, l = headers.length; i < l; i++) {
 
                         const label = headers[i].replace('*', '');
-                        const key = label.trim().replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
-                            if (p2) return p2.toUpperCase();
-                            return p1.toLowerCase();
-                        });
+                        const key = camelCase(label.trim());
 
                         // insert selection col/header cell
                         createElement(colGroup, 'col', { 'data-key': key });
@@ -834,10 +831,7 @@ define('ca-import', [
                     const item = {};
 
                     for (let ii = 0, ll = headers.length; ii < ll; ii++) {
-                        const key = headers[ii].trim().replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
-                            if (p2) return p2.toUpperCase();
-                            return p1.toLowerCase();
-                        });
+                        const key = camelCase(headers[ii].trim());
                         item[key] = data[ii].trim();
                     }
 
@@ -854,4 +848,12 @@ define('ca-import', [
     document.registerElement('ca-import', CaImportElement);
 
 });
+
+// private functions
+function camelCase(inputString) {
+    inputString.replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
+        if (p2) return p2.toUpperCase();
+        return p1.toLowerCase();
+    });
+}
 </script>
