@@ -1,7 +1,6 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/types.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/trace.html">
 <style>
@@ -67,10 +66,9 @@ define('ca-select', [
     'component-support',
     'create-element',
     'types',
-    'cancel-event',
     'parent-by-attribute',
     'trace'
-], (componentSupport, createElement, types, cancelEvent, parentByAttribute, trace) => {
+], (componentSupport, createElement, types, parentByAttribute, trace) => {
 
     /**
      * Select class for Select web component
@@ -240,13 +238,15 @@ define('ca-select', [
 
                                 opt.onmousedown = e => {
 
-                                    cancelEvent(e || event);
+                                    (e || event).preventDefault();
+                                    (e || event).stopPropagation();
                                     this.checkChange(this);
                                 };
 
                                 this.root.onclick = e => {
 
-                                    cancelEvent(e || event);
+                                    (e || event).preventDefault();
+                                    (e || event).stopPropagation();
                                 };
                             }
                         }

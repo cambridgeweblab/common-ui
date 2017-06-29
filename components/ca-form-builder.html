@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/clone-object.html">
 <link rel="import" href="./helpers/schema-to-default.html">
@@ -235,14 +234,13 @@
 define('ca-form-builder', [
     'component-support',
     'create-element-legacy',
-    'cancel-event',
     'clear-element',
     'clone-object',
     'schema-to-default',
     'parent-by-attribute',
     'dialogs',
     'keyboard'
-], (componentSupport, createElementLegacy, cancelEvent, clearElement, cloneObject, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
+], (componentSupport, createElementLegacy, clearElement, cloneObject, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
 
     const isValid = {
         _id(e) {
@@ -432,7 +430,8 @@ define('ca-form-builder', [
             // if the key pressed in the field name is not valid
             if (isValid.fieldName(e) === false) {
                 // then cancel the event and don't let it bubble
-                cancelEvent(e);
+                e.preventDefault();
+                e.stopPropagation();
                 return;
             }
 
@@ -880,7 +879,8 @@ define('ca-form-builder', [
                     // then invoke the method with this passed through as the instance of ca-form-builder
                     if (eventActions[action].call(this, el, src, e) === false) {
                         // if the method explicitly returns false then prevent the event from bubbling up
-                        cancelEvent(e);
+                        e.preventDefault();
+                        e.stopPropagation();
                     }
                 }
             }

@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/clear-element.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <style>
     ca-image-capture {
         display: block;
@@ -89,7 +88,7 @@
     }
 </style>
 <script>
-define('ca-image-capture', ['create-element', 'clear-element', 'cancel-event'], (createElement, clearElement, cancelEvent) => {
+define('ca-image-capture', ['create-element', 'clear-element'], (createElement, clearElement) => {
     /**
      * @exports ca-image-capture
      * @description A custom HTML element (Web Component) that can be created using
@@ -191,7 +190,8 @@ define('ca-image-capture', ['create-element', 'clear-element', 'cancel-event'], 
 
             switch (tag) {
                 case 'button':
-                    cancelEvent(e);
+                    e.preventDefault();
+                    e.stopPropagation();
                     if (!this.imageCaptured) {
                         // capture image from video stream
                         this.captureImage();

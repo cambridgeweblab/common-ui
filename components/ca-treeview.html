@@ -1,7 +1,6 @@
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/secure-ajax.html">
 <style>
     /* GENERIC WEB-COMPONENT OVERRIDES */
@@ -44,10 +43,9 @@ define('ca-treeview', [
     'create-element',
     'clear-element',
     'parent-by-attribute',
-    'cancel-event',
     'secure-ajax'
 ],
-(createElement, clearElement, parentByAttribute, cancelEvent, ajax) => {
+(createElement, clearElement, parentByAttribute, ajax) => {
     /**
      * Class TreeView for a TreeView web component
      * @extends HTMLElement
@@ -270,12 +268,14 @@ define('ca-treeview', [
 
             // ignore root clicks
             if (rel === 'root') {
-                cancelEvent(e);
+                e.preventDefault();
+                e.stopPropagation();
                 return;
             }
 
             if (dataSrc !== '') {
-                cancelEvent(e);
+                e.preventDefault();
+                e.stopPropagation();
 
                 // clear previous selection
                 if (this.selected) {
