@@ -500,8 +500,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
 
             this.removeItem(index);
 
-            e.preventDefault();
-            e.stopPropagation();
+            ev.preventDefault();
+            ev.stopPropagation();
         }
 
         /**
@@ -516,8 +516,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
 
             this.addItem(index + 1);
 
-            e.preventDefault();
-            e.stopPropagation();
+            ev.preventDefault();
+            ev.stopPropagation();
         }
 
         /**
@@ -540,8 +540,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
                 // eslint-disable-next-line no-lone-blocks
                 case 13: { // handle ENTER key press
 
-                    e.preventDefault();
-                    e.stopPropagation();
+                    ev.preventDefault();
+                    ev.stopPropagation();
 
                     // if we have no max items OR the current count < maxItem && index == this.count (at the bottom)
                     if ((this.maxItems === -1 || this.count < this.maxItems) && index === this.count - 1) {
@@ -561,8 +561,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
 
                         if (this.count > this.minItems) {
 
-                            e.preventDefault();
-                            e.stopPropagation();
+                            ev.preventDefault();
+                            ev.stopPropagation();
                             this.removeItem(index);
                         } else {
 
@@ -574,8 +574,8 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
 
                 default: {
                     if (this.type === 'number' && !keyboard.navKeys(key) && !this.isNumberChar(char)) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                        ev.preventDefault();
+                        ev.stopPropagation();
                     }
                 }
             }
