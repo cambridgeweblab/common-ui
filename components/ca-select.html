@@ -1,7 +1,6 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element.html">
 <link rel="import" href="./helpers/types.html">
-<link rel="import" href="./helpers/add-event.html">
 <link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/trace.html">
@@ -68,11 +67,10 @@ define('ca-select', [
     'component-support',
     'create-element',
     'types',
-    'add-event',
     'cancel-event',
     'parent-by-attribute',
     'trace'
-], (componentSupport, createElement, types, addEvent, cancelEvent, parentByAttribute, trace) => {
+], (componentSupport, createElement, types, cancelEvent, parentByAttribute, trace) => {
 
     /**
      * Select class for Select web component

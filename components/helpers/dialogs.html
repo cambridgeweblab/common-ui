@@ -1,7 +1,6 @@
 <link rel="import" href="./create-element-legacy.html">
 <link rel="import" href="./parent-by-attribute.html">
 <link rel="import" href="./cancel-event.html">
-<link rel="import" href="./add-event.html">
 <link rel="import" href="./has-class.html">
 <link rel="import" href="./add-class.html">
 <link rel="import" href="./clear-element.html">
@@ -257,11 +256,10 @@ define('dialogs', [
     'create-element-legacy',
     'parent-by-attribute',
     'cancel-event',
-    'add-event',
     'has-class',
     'add-class',
     'clear-element'
-], (createElement, parentByAttribute, cancelEvent, addEvent, hasClass, addClass, clearElement) => {
+], (createElement, parentByAttribute, cancelEvent, hasClass, addClass, clearElement) => {
     const dialogs = {
         // is the object ready for interaction ?
         ready: false,
@@ -288,7 +286,7 @@ define('dialogs', [
 
                 // assign application wide event handler
                 //  - if we have a top then use that as it ensures only one window is responsible for all dialogs, makes them stackable no matter how deep they open
-                addEvent(document, 'click', window.top.dialogs._.eventDelegate || dialogs._.eventDelegate);
+                document.addEventListener('click', window.top.dialogs._.eventDelegate || dialogs._.eventDelegate);
 
                 // override window.open if required (if no name provided need to create a temp in order to close!!)
                 if (dialogs.overrideDefaultWindows) {
