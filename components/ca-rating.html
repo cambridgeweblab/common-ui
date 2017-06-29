@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <style>
     ca-rating {
         display:block;
@@ -39,7 +38,7 @@
     }
 </style>
 <script>
-define('ca-rating', ['clear-element', 'create-element', 'cancel-event'], (clearElement, createElement, cancelEvent) => {
+define('ca-rating', ['clear-element', 'create-element'], (clearElement, createElement) => {
     /**
      * @exports ca-rating
      * @description A custom HTML element (Web Component) that can be created using
@@ -237,7 +236,8 @@ define('ca-rating', ['clear-element', 'create-element', 'cancel-event'], (clearE
             const tag = (el.tagName || '').toLowerCase();
 
             if (tag === 'a') {
-                cancelEvent(e);
+                e.preventDefault();
+                e.stopPropagation();
 
                 // Deselect the currently selected element
                 this.deselectItem();

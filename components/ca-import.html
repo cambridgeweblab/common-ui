@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/cancel-event.html">
 <link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/post-via-iframe.html">
@@ -141,13 +140,13 @@
 /* global $ */
 define('ca-import', [
     'create-element',
-    'cancel-event',
     'clear-element',
     'component-support',
     'post-via-iframe',
     'trace',
     'validate-against-schema'
-], (createElement, cancelEvent, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
+], (createElement, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
+
 
     //
     // TODO: consider adding method to validate attachment data against headers before firing external events
@@ -547,7 +546,8 @@ define('ca-import', [
 
                 case 'xlsx': {
 
-                    cancelEvent(e);
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     const rows = [];      // collection of rows
                     const rowData = {};   // individual row item (js object key/values)
