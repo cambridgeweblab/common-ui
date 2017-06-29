@@ -687,10 +687,22 @@ define('ca-crud', [
 
             // extracts action information to be used by the UI such as button labels
             actions.forEach(item => {
-
-                // store action using its name as the key, this allows retrive
+                // store action using its name as the key, this allows retrieve
                 // action based on button label clicked from dialog
                 labelToAction[item.title] = item;
+            });
+
+            // get a list of navigations from hateoas links with URN nav:name
+            const navs = schemaActions.getNavsFromData(data);
+
+            // extracts navigation information to be used by the UI such as button labels
+            const labelToNav = {};
+
+            // extracts navigation information to be used by the UI such as button labels
+            navs.forEach(item => {
+                // store navigation using its name as the key, this allows retrieve
+                // navigation based on button label clicked from dialog
+                labelToNav[item.title] = item;
             });
 
             // create an array of button labels to be added to the dialog
@@ -704,7 +716,9 @@ define('ca-crud', [
             if (previewable) {
                 arr.splice(0, 0, 'Preview');
             }
-            const buttons = Object.keys(labelToAction).concat(arr);
+
+            // add the action and navigation buttons to the base buttons for the dialog
+            const buttons = Object.keys(labelToAction).concat(Object.keys(labelToNav)).concat(arr);
 
             // check if this item has a download link
             const links = (data.links || []);
@@ -729,6 +743,20 @@ define('ca-crud', [
                         self.onaction(action, data, dlg);
                         return false;
                     }
+
+                    // find the navigation for the button that was clicked
+                    const nav = labelToNav[button];
+
+                    if (nav) {
+                        // we want to raise a navigation action event
+                        const event = new CustomEvent('ca-crud-action-nav', {
+                            detail: data,
+                            bubbles: true
+                        });
+                        self.dispatchEvent(event);
+                        return true;
+                    }
+
                     if (previewable && button === 'Preview') {
 
                         self.previewItem((data.links || []).find(l => l.rel === 'preview'));
