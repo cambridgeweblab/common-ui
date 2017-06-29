@@ -851,7 +851,7 @@ define('ca-import', [
 
 // private functions
 function camelCase(inputString) {
-    inputString.replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
+    return inputString.replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
         if (p2) return p2.toUpperCase();
         return p1.toLowerCase();
     });
