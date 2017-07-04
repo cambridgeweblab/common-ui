@@ -10,7 +10,6 @@
 <link rel="import" href="./helpers/clone-object.html">
 <link rel="import" href="./helpers/schema-actions.html">
 <link rel="import" href="./helpers/capitalize.html">
-<link rel="import" href="./helpers/distinct.html">
 <link rel="import" href="./ca-form.html">
 <link rel="import" href="./ca-list.html">
 <style>
@@ -118,9 +117,8 @@ define('ca-crud', [
     'fire-event',
     'clone-object',
     'schema-actions',
-    'capitalize',
-    'distinct'
-], (componentSupport, clearElement, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, cloneObject, schemaActions, capitalize, distinct) => {
+    'capitalize'
+], (componentSupport, clearElement, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, cloneObject, schemaActions, capitalize) => {
     /**
      * @exports ca-crud
      * A custom HTML element (Web Component) that can be created using document.createElement('ca-crud') or included in a HTML page as an element.
@@ -259,13 +257,22 @@ define('ca-crud', [
         loadData() {
 
             // convert each instance end point into a promise for loading
-            const promises = distinct(this.instances, item => item.href.toLowerCase()).map(item => {
-                if (item.schema && item.schema.properties && Object.keys(item.schema.properties).length) {
-                    // This URL is parameterized, so we can't load it in advance.
-                    return Promise.resolve([]);
-                }
-                return ajax.execute({ url: item.href, dataType: 'json' });
-            });
+            const promises = this.instances
+                .filter((item, position, instances) => {
+                    /* Remove duplicate 'hrefs', this is achieved by using a first match principle.
+                      If the href is found using this match, then it will be the first match index.
+                      If the returned first match index is the same as the current index, then it's unique
+                    */
+                    const href = item.href.toLowerCase();
+                    return instances.findIndex(instance => instance.href.toLowerCase() === href) === position;
+                })
+                .map(item => {
+                    if (item.schema && item.schema.properties && Object.keys(item.schema.properties).length) {
+                        // This URL is parameterized, so we can't load it in advance.
+                        return Promise.resolve([]);
+                    }
+                    return ajax.execute({ url: item.href, dataType: 'json' });
+                });
 
             // load all promises and then merge the data
             Promise.all(promises).then(data => {
