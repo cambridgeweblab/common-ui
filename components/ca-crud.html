@@ -7,7 +7,6 @@
 <link rel="import" href="./helpers/to-class-name.html">
 <link rel="import" href="./helpers/dialogs.html">
 <link rel="import" href="./helpers/fire-event.html">
-<link rel="import" href="./helpers/clone-object.html">
 <link rel="import" href="./helpers/schema-actions.html">
 <link rel="import" href="./helpers/capitalize.html">
 <link rel="import" href="./ca-form.html">
@@ -115,10 +114,9 @@ define('ca-crud', [
     'to-class-name',
     'dialogs',
     'fire-event',
-    'clone-object',
     'schema-actions',
     'capitalize'
-], (componentSupport, clearElement, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, cloneObject, schemaActions, capitalize) => {
+], (componentSupport, clearElement, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, schemaActions, capitalize) => {
     /**
      * @exports ca-crud
      * A custom HTML element (Web Component) that can be created using document.createElement('ca-crud') or included in a HTML page as an element.
@@ -543,7 +541,7 @@ define('ca-crud', [
                         }
                     }
 
-                    const mungedSchema = cloneObject(schema);
+                    const mungedSchema = JSON.parse(JSON.stringify(schema));
                     Object.keys(mungedSchema.properties).forEach(propertyName => {
                         const defaultValue = priorVersionData[propertyName];
                         if (defaultValue) {
