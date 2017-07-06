@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/get-sorted-schema-keys.html">
 <link rel="import" href="./helpers/new-guid.html">
 <link rel="import" href="./helpers/validate-against-schema.html">
@@ -310,14 +309,13 @@
 define('ca-form', [
     'component-support',
     'create-element-legacy',
-    'clear-element',
     'get-sorted-schema-keys',
     'new-guid',
     'validate-against-schema',
     'trace',
     'set-element-value',
     'html-to-dom'
-], (componentSupport, createElementLegacy, clearElement, getSortedSchemaKeys, newGuid, validateAgainstSchema, trace, setElementValue, htmlToDom) => {
+], (componentSupport, createElementLegacy, getSortedSchemaKeys, newGuid, validateAgainstSchema, trace, setElementValue, htmlToDom) => {
     /**
      * @exports ca-form
      * @description A custom HTML element (Web Component) that can be created using
@@ -640,7 +638,7 @@ define('ca-form', [
             if (this._schema) {
 
                 // erase current form
-                clearElement(this.form);
+                this.form.innerHTML = '';
                 this.removeAttribute('create-url');
                 this.removeAttribute('update-url');
 
