@@ -534,7 +534,7 @@ define('dialogs', [
                 });
 
                 (dlg.writeButtons = function(buttons) {
-                    clearElement(dlg.buttons);
+                    dlg.buttons.innerHTML = '';
 
                     if (buttons && buttons.length > 0) {
 
@@ -628,7 +628,7 @@ define('dialogs', [
                     }
 
                     // insert the HTML
-                    clearElement(dlg.body);
+                    dlg.body.innerHTML = '';
                     html.toDOM(dlg.body);
                 };
 
