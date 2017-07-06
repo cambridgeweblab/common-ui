@@ -2,7 +2,6 @@
 <link rel="import" href="./helpers/get-sorted-schema-keys.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
 <link rel="import" href="./helpers/trace.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/parse-iso-local-date.html">
 <link rel="import" href="./helpers/secure-ajax.html">
@@ -213,11 +212,10 @@ define('ca-list', [
     'get-sorted-schema-keys',
     'create-element-legacy',
     'trace',
-    'clear-element',
     'parent-by-attribute',
     'parse-iso-local-date',
     'secure-ajax'
-], (componentSupport, getSortedSchemaKeys, createElement, trace, clearElement, getParentByAttribute, parseIsoLocalDate, ajax) => {
+], (componentSupport, getSortedSchemaKeys, createElement, trace, getParentByAttribute, parseIsoLocalDate, ajax) => {
     /**
      * @exports ca-list
      * A custom HTML element (Web Component) that can be created using document.createElement('ca-list') or included in a HTML page as an element.
@@ -749,8 +747,8 @@ define('ca-list', [
             if (this.schema) {
 
                 // remove previous values
-                clearElement(this.colgroup);
-                clearElement(this.thead);
+                this.colgroup.innerHTML = '';
+                this.thead.innerHTML = '';
 
                 const props = this.schema.properties;
                 const tblRow = createElement(null, 'tr');
@@ -800,7 +798,7 @@ define('ca-list', [
             if (dataToPopulate) {
 
                 // remove previous data
-                clearElement(this.tbody);
+                this.tbody.innerHTML = '';
 
                 // assign table data
                 let i = 0;
