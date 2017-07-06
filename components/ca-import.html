@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/post-via-iframe.html">
 <link rel="import" href="./helpers/trace.html">
@@ -140,12 +139,11 @@
 /* global $ */
 define('ca-import', [
     'create-element',
-    'clear-element',
     'component-support',
     'post-via-iframe',
     'trace',
     'validate-against-schema'
-], (createElement, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
+], (createElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
 
 
     //
