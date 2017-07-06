@@ -1,7 +1,6 @@
 <link rel="import" href="./create-element-legacy.html">
 <link rel="import" href="./parent-by-attribute.html">
 <link rel="import" href="./has-class.html">
-<link rel="import" href="./clear-element.html">
 <style>
     body.no-scroll { overflow: hidden; }
 
@@ -253,9 +252,8 @@
 define('dialogs', [
     'create-element-legacy',
     'parent-by-attribute',
-    'has-class',
-    'clear-element'
-], (createElement, parentByAttribute, hasClass, clearElement) => {
+    'has-class'
+], (createElement, parentByAttribute, hasClass) => {
     const dialogs = {
         // is the object ready for interaction ?
         ready: false,
