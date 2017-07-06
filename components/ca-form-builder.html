@@ -1,7 +1,6 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
 <link rel="import" href="./helpers/clear-element.html">
-<link rel="import" href="./helpers/clone-object.html">
 <link rel="import" href="./helpers/schema-to-default.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/dialogs.html">
@@ -235,12 +234,11 @@ define('ca-form-builder', [
     'component-support',
     'create-element-legacy',
     'clear-element',
-    'clone-object',
     'schema-to-default',
     'parent-by-attribute',
     'dialogs',
     'keyboard'
-], (componentSupport, createElementLegacy, clearElement, cloneObject, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
+], (componentSupport, createElementLegacy, clearElement, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
 
     const isValid = {
         _id(e) {
@@ -280,7 +278,7 @@ define('ca-form-builder', [
                 // if there is a selected tool
                 if (selectedTool.tool) {
                     // create a new schema by cloning the selected tool from the form builder grand schema
-                    const newSchema = cloneObject(this.schemaToolbox.find(s => s.id === selectedTool.schemaType));
+                    const newSchema = JSON.parse(JSON.stringify(this.schemaToolbox.find(s => s.id === selectedTool.schemaType)));
 
                     // need to show the property form in the property area
                     this.propertyFormShow.call(this);
@@ -511,7 +509,7 @@ define('ca-form-builder', [
                     });
 
                     // create a new instance of the schema
-                    const newProps = cloneObject(props);
+                    const newProps = JSON.parse(JSON.stringify(props));
 
                     // set the base properties on the new schema instance
                     newProps.id = urn.id;
@@ -968,7 +966,7 @@ define('ca-form-builder', [
                 }
 
                 // clone the metadata schema but clear out the properties (to leave a blank form)
-                const clone = cloneObject(metadata);
+                const clone = JSON.parse(JSON.stringify((metadata)));
                 clone[0].properties = {};
 
                 // save the schema (which triggers a render)
@@ -1013,7 +1011,7 @@ define('ca-form-builder', [
             }
 
             // Return a clone of the schema passed in with the links removed so the associated form doesn't have any buttons
-            const retSchema = cloneObject(schema);
+            const retSchema = JSON.parse(JSON.stringify((schema)));
             delete retSchema[0].links;
             return retSchema;
         }
@@ -1153,7 +1151,7 @@ define('ca-form-builder', [
                 validFrom: metadata.validFrom,
                 validTo: metadata.validTo,
                 columns: metadata.columns,
-                formDefinition: cloneObject(this.previewForm.schema[0])
+                formDefinition: JSON.parse(JSON.stringify((this.previewForm.schema[0])))
             };
         }
 
@@ -1171,7 +1169,7 @@ define('ca-form-builder', [
                 validFrom: metadata.validFrom,
                 validTo: metadata.validTo,
                 columns: metadata.columns,
-                formDefinition: cloneObject(this.previewForm.schema[0])
+                formDefinition: JSON.parse(JSON.stringify((this.previewForm.schema[0])))
             };
 
             // compare this to the previous version (if they are different, then the form is "dirty")
@@ -1352,7 +1350,7 @@ define('ca-form-builder', [
                 const selectedSchema = this.schemaToolbox.filter((item) => item.id === urnSchema)[0];
 
                 // create a new instance of the selected schema
-                const newSchema = cloneObject(selectedSchema);
+                const newSchema = JSON.parse(JSON.stringify((selectedSchema)));
 
                 // create a new form in the property area based on the new schema
                 this.propertyFormCreate.call(this, newSchema);
