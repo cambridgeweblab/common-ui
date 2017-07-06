@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <style>
     ca-image-capture {
         display: block;
@@ -88,7 +87,7 @@
     }
 </style>
 <script>
-define('ca-image-capture', ['create-element', 'clear-element'], (createElement, clearElement) => {
+define('ca-image-capture', ['create-element'], (createElement) => {
     /**
      * @exports ca-image-capture
      * @description A custom HTML element (Web Component) that can be created using
@@ -215,7 +214,7 @@ define('ca-image-capture', ['create-element', 'clear-element'], (createElement, 
          */
         render() {
             // clear this container incase we have been here before
-            clearElement(this);
+            this.innerHTML = '';
 
             // create a canvas element to be used to show the captred static image
             this.canvasEl = createElement(this, 'canvas', { width: this.videoWidth, height: this.videoHeight });
