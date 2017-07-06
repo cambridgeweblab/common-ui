@@ -461,9 +461,10 @@ define('ca-import', [
                 const tbody = table.querySelector('tbody');
 
                 // remove previous values
-                clearElement(colGroup);
-                clearElement(thead);
-                clearElement(tbody);
+                colGroup.innerHTML = '';
+                thead.innerHTML = '';
+                tbody.innerHTML = '';
+
 
                 // remove any errors on this form
                 this.form.removeAttribute('data-error');
