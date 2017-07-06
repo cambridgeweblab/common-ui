@@ -1,7 +1,6 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
 <link rel="import" href="./helpers/escape-html.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/resolve-enum-titles.html">
 <link rel="import" href="./helpers/parse-iso-local-date.html">
 <style>
@@ -61,10 +60,9 @@ define('ca-property', [
     'component-support',
     'create-element-legacy',
     'escape-html',
-    'clear-element',
     'resolve-enum-titles',
     'parse-iso-local-date'
-], (componentSupport, createElement, escapeHtml, clearElement, resolveEnumTitles, parseIsoLocalDate) => {
+], (componentSupport, createElement, escapeHtml, resolveEnumTitles, parseIsoLocalDate) => {
     /**
      * Property class for ca-property web component.
      * @exports ca-property
@@ -190,7 +188,7 @@ define('ca-property', [
          * @returns {void} void§
          */
         render() {
-            clearElement(this);
+            this.innerHTML = ''
 
             // creates the element for the given property value
             const item = this.property && this.formatDataForDisplay(this.property, this.value);
