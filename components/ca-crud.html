@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/component-support.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/secure-ajax.html">
 <link rel="import" href="./helpers/trace.html">
 <link rel="import" href="./helpers/create-element.html">
@@ -107,7 +106,6 @@
 <script>
 define('ca-crud', [
     'component-support',
-    'clear-element',
     'secure-ajax',
     'trace',
     'create-element',
@@ -118,7 +116,7 @@ define('ca-crud', [
     'clone-object',
     'schema-actions',
     'capitalize'
-], (componentSupport, clearElement, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, cloneObject, schemaActions, capitalize) => {
+], (componentSupport, ajax, trace, createElement, schemaToDefault, toClassName, dialogs, fireEvent, cloneObject, schemaActions, capitalize) => {
     /**
      * @exports ca-crud
      * A custom HTML element (Web Component) that can be created using document.createElement('ca-crud') or included in a HTML page as an element.
@@ -151,7 +149,7 @@ define('ca-crud', [
 
             // if empty url assigned, clear the screen
             if (value === '') {
-                clearElement(this);
+                this.innerHtml = '';
             }
             this.loadSrc();
         }
@@ -301,7 +299,7 @@ define('ca-crud', [
 
             const self = this;
 
-            clearElement(this);
+            this.innerHTML = '';
             createElement(self, 'h2', {});
 
             const buttons = createElement(null, 'div', { class: 'buttons' });
