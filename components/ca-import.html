@@ -4,7 +4,6 @@
 <link rel="import" href="./helpers/post-via-iframe.html">
 <link rel="import" href="./helpers/trace.html">
 <link rel="import" href="./helpers/validate-against-schema.html">
-<link rel="import" href="./helpers/to-camel-case.html">
 <style>
     ca-import {
         position: relative;
@@ -145,9 +144,9 @@ define('ca-import', [
     'component-support',
     'post-via-iframe',
     'trace',
-    'validate-against-schema',
-    'to-camel-case'
-], (createElement, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema, toCamelCase) => {
+    'validate-against-schema'
+], (createElement, clearElement, componentSupport, postViaIframe, trace, validateAgainstSchema) => {
+
 
     //
     // TODO: consider adding method to validate attachment data against headers before firing external events
@@ -483,7 +482,7 @@ define('ca-import', [
                     for (let i = 0, l = headers.length; i < l; i++) {
 
                         const label = headers[i].replace('*', '');
-                        const key = toCamelCase(label.trim());
+                        const key = camelCase(label.trim());
 
                         // insert selection col/header cell
                         createElement(colGroup, 'col', { 'data-key': key });
@@ -832,7 +831,7 @@ define('ca-import', [
                     const item = {};
 
                     for (let ii = 0, ll = headers.length; ii < ll; ii++) {
-                        const key = toCamelCase(headers[ii].trim());
+                        const key = camelCase(headers[ii].trim());
                         item[key] = data[ii].trim();
                     }
 
@@ -849,4 +848,12 @@ define('ca-import', [
     document.registerElement('ca-import', CaImportElement);
 
 });
+
+// private functions
+function camelCase(inputString) {
+    return inputString.replace(/^([A-Z])|\s(\w)/g, (match, p1, p2, offset) => {
+        if (p2) return p2.toUpperCase();
+        return p1.toLowerCase();
+    });
+}
 </script>
