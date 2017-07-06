@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <style>
     ca-nav {
         display: block;
@@ -38,7 +37,7 @@
     }
 </style>
 <script>
-define('ca-nav', ['create-element', 'clear-element'], (createElement, clearElement) => {
+define('ca-nav', ['create-element'], (createElement) => {
     /**
      * Navigation custom web component.
      */
@@ -119,7 +118,7 @@ define('ca-nav', ['create-element', 'clear-element'], (createElement, clearEleme
          * @return {undefined}
          */
         render() {
-            clearElement(this.container);
+            this.container.innerHTML = '';
 
             const items = this.links;
 
