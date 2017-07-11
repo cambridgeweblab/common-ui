@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/keyboard.html">
 <style>
     ca-input-array {
@@ -65,7 +64,7 @@
     }
 </style>
 <script>
-define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (createElement, clearElement, keyboard) => {
+define('ca-input-array', ['create-element', 'keyboard'], (createElement, keyboard) => {
     /**
      * @exports ca-input-array component
      * @extends HTMLElement
@@ -478,7 +477,7 @@ define('ca-input-array', ['create-element', 'clear-element', 'keyboard'], (creat
         render() {
 
             // in case this has been called before, wipe out all children
-            clearElement(this);
+            this.innerHTML = '';
 
             // insert items - at least one!
             for (let i = 0, l = this.minItems; i < l; i++) {

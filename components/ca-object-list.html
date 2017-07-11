@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/fire-event.html">
 <link rel="import" href="./helpers/dialogs.html">
 <link rel="import" href="./ca-form.html">
@@ -38,7 +37,7 @@
     }
 </style>
 <script>
-define('ca-object-list', ['create-element', 'clear-element', 'fire-event', 'dialogs'], (createElement, clearElement, fireEvent, dialogs) => {
+define('ca-object-list', ['create-element', 'fire-event', 'dialogs'], (createElement, fireEvent, dialogs) => {
 
     /**
      * @exports ca-object-list
@@ -172,7 +171,7 @@ define('ca-object-list', ['create-element', 'clear-element', 'fire-event', 'dial
          * @returns {undefined} renders to the dom.
          */
         render() {
-            clearElement(this);
+            this.innerHTML = '';
             this._button = createElement(this, 'button', { class: 'ca-object-list-add' }, 'Add');
             this._button.onclick = this.addButtonHandler.bind(this);
             if (this._property && Array.isArray(this._property)) {

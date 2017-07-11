@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/component-support.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
 <link rel="import" href="./helpers/get-sorted-schema-keys.html">
 <link rel="import" href="./helpers/camel-to-title-case.html">
@@ -146,11 +145,10 @@
 <script>
 define('ca-summary', [
     'component-support',
-    'clear-element',
     'create-element-legacy',
     'get-sorted-schema-keys',
     'camel-to-title-case'
-], (componentSupport, clearElement, createElement, getSortedSchemaKeys, camelToTitleCase) => {
+], (componentSupport, createElement, getSortedSchemaKeys, camelToTitleCase) => {
     /**
      * Summary class for ca-summary web component.
      * @exports ca-summary
@@ -263,7 +261,7 @@ define('ca-summary', [
          */
         render() {
 
-            clearElement(this);
+            this.innerHTML = '';
 
             const items = this.createPropertyElements();
             let itemsPerCol = 1;

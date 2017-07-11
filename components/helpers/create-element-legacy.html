@@ -1,7 +1,6 @@
-<link rel="import" href="./clear-element.html">
 <link rel="import" href="./html-to-dom.html">
 <script>
-define('create-element-legacy', ['clear-element', 'html-to-dom'], (clearElement, htmlToDom) =>
+define('create-element-legacy', ['html-to-dom'], (htmlToDom) =>
     function createEl (parentEl, tagName, attrs, text, html, domEl) {
 
         const el = document.createElement(tagName);
@@ -37,7 +36,7 @@ define('create-element-legacy', ['clear-element', 'html-to-dom'], (clearElement,
             el.textContent = text;
         }
         if (typeof html !== 'undefined') {
-            clearElement(el);
+            el.innerHTML = '';
             htmlToDom(html, el);
         }
         if (domEl) {

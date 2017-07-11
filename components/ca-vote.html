@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 <style>
     ca-vote button {
@@ -37,7 +36,7 @@
 </style>
 <script>
 /* global api */
-define('ca-vote', ['create-element', 'clear-element'], (createElement, clearElement) => {
+define('ca-vote', ['create-element'], (createElement) => {
     const componentName = 'ca-vote';
 
     /**
@@ -151,7 +150,7 @@ define('ca-vote', ['create-element', 'clear-element'], (createElement, clearElem
          * @returns {void} void
          */
         render() {
-            clearElement(this);
+            this.innerHTML = '';
 
             if (localStorage[this.storageKey]) {
                 this.status = 'disabled';
