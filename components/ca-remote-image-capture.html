@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <style>
     ca-remote-image-capture {
         display: block;
@@ -95,7 +94,7 @@
     }
 </style>
 <script>
-define('ca-remote-image-capture', ['create-element', 'clear-element'], (createElement, clearElement) => {
+define('ca-remote-image-capture', ['create-element'], (createElement) => {
     /**
      * @exports ca-image-capture
      * @description A custom HTML element (Web Component) that can be created using
@@ -204,7 +203,7 @@ define('ca-remote-image-capture', ['create-element', 'clear-element'], (createEl
             // only render based on these conditions.
             if (this.streamUrl && !this.imageCaptured) {
                 // clear this container incase we have been here before
-                clearElement(this);
+                this.innerHTML = '';
                 // create a canvas element to be used to show the captred static image
                 this.imageCanvas = createElement(this, 'canvas', { width: this.width, height: this.height });
                 this.imageTag = createElement(this, 'img', { src: this.streamUrl });

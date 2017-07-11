@@ -1,6 +1,5 @@
 <link rel="import" href="./helpers/component-support.html">
 <link rel="import" href="./helpers/create-element-legacy.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/schema-to-default.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/dialogs.html">
@@ -233,12 +232,11 @@
 define('ca-form-builder', [
     'component-support',
     'create-element-legacy',
-    'clear-element',
     'schema-to-default',
     'parent-by-attribute',
     'dialogs',
     'keyboard'
-], (componentSupport, createElementLegacy, clearElement, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
+], (componentSupport, createElementLegacy, schemaToDefault, getParentByAttribute, dialogs, keyboard) => {
 
     const isValid = {
         _id(e) {
@@ -748,7 +746,7 @@ define('ca-form-builder', [
          */
         render() {
             // clear all elements from the form builder
-            clearElement(this);
+            this.innerHTML = '';
 
             // create a tool box for holding the tools
             this.toolbox = createElementLegacy(this, 'div', {
@@ -1381,7 +1379,7 @@ define('ca-form-builder', [
         // <propertyForm> methods
         propertyFormClear() {
             // clear all elements from the property area
-            clearElement(this.property);
+            this.property.innerHTML = '';
 
             // release the form
             this.propertyForm = null;

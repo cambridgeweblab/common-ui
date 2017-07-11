@@ -1,5 +1,4 @@
 <link rel="import" href="./helpers/create-element.html">
-<link rel="import" href="./helpers/clear-element.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/secure-ajax.html">
 <style>
@@ -41,11 +40,10 @@
 <script>
 define('ca-treeview', [
     'create-element',
-    'clear-element',
     'parent-by-attribute',
     'secure-ajax'
 ],
-(createElement, clearElement, parentByAttribute, ajax) => {
+(createElement, parentByAttribute, ajax) => {
     /**
      * Class TreeView for a TreeView web component
      * @extends HTMLElement
@@ -188,7 +186,7 @@ define('ca-treeview', [
                         // we need to go get the instance data and recall this function to trigger rendering
                         this.loadData(parent, instancesUrl);
                     } else {
-                        clearElement(this.ol);
+                        this.ol.innerHTML = '';
                         this.render(parent, data);
                     }
                 });
