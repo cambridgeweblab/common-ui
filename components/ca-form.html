@@ -1145,15 +1145,16 @@ define('ca-form', [
             dataItem[key] = value;
 
             // execute regular form validation but passing a single property to test
-            this.isValid(dataItem);
+            this.isValid(dataItem, 'ca-form-field-validate');
         }
 
         /**
          * @description Returns true if form data is valid, otherwise false. Also updates the UI with any validation errors
          * @param {Object} data, form data
+         * @param {string} validationType - whether individual field validation or full form validation
          * @returns {Boolean} if it's a valid object or not
          */
-        isValid(data) {
+        isValid(data, validationType) {
 
             // if validation has been disabled (for example, the Form Builder doesn't want/need it)
             if (this.disableValidation === true) {
@@ -1201,7 +1202,7 @@ define('ca-form', [
                 const detail = data;
                 detail.pageName = 'ca-form';
                 // then raise a validate-error custom event
-                const event = new CustomEvent('ca-form-validate-error', {
+                const event = new CustomEvent(`${validationType || 'ca-form-validate'}-error`, {
                     detail,
                     bubbles: true
                 });
