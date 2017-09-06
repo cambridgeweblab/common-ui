@@ -758,6 +758,13 @@ define('ca-form', [
                                     setTimeout(() => this.validateField(inputEl.id, inputEl.value), 250);
                                 }
                             };
+
+                            // clear error when gaining focus on this control
+                            inputEl.onfocus = () => {
+                                if (inputEl.type !== 'checkbox') {
+                                    setTimeout(() => this.clearError(key), 250);
+                                }
+                            };
                         }
 
                         if (!isHidden) {
