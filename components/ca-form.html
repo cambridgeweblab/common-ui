@@ -762,7 +762,7 @@ define('ca-form', [
                             // clear error when gaining focus on this control
                             inputEl.onfocus = () => {
                                 if (inputEl.type !== 'checkbox') {
-                                    setTimeout(() => this.clearError(key), 250);
+                                    this.clearError(key);
                                 }
                             };
                         }
