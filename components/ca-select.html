@@ -3,6 +3,7 @@
 <link rel="import" href="./helpers/types.html">
 <link rel="import" href="./helpers/parent-by-attribute.html">
 <link rel="import" href="./helpers/trace.html">
+<link rel="import" href="./helpers/fire-event.html">
 <style>
     ca-select select{
         display: block;
@@ -67,8 +68,9 @@ define('ca-select', [
     'create-element',
     'types',
     'parent-by-attribute',
-    'trace'
-], (componentSupport, createElement, types, parentByAttribute, trace) => {
+    'trace',
+    'fire-event'
+], (componentSupport, createElement, types, parentByAttribute, trace, fireEvent) => {
 
     /**
      * Select class for Select web component
@@ -110,7 +112,7 @@ define('ca-select', [
 
                     // force blur events to bubble (required for ca-form validation)
                     this.root.onblur = () => {
-                        // helpers.fireEvent(this, 'blur');
+                        fireEvent(this, 'blur');
                     };
                 }
             }
