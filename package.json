@@ -23,7 +23,7 @@
     "web-components"
   ],
   "author": "WebLab",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cambridgeweblab/common-ui/issues"
   },
