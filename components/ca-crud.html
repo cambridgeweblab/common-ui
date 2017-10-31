@@ -858,6 +858,13 @@ define('ca-crud', [
                         const text = `The following action completed successfully - ${capitalizedTitle}`;
                         notifier.addNotification(createElement(null, 'ca-notification', { content: text }));
                     }
+
+                    // we want to raise a custom action success event
+                    const event = new CustomEvent('ca-crud-action-success', {
+                        detail: { action, data, text: result },
+                        bubbles: true
+                    });
+                    this.dispatchEvent(event);
                 }
             }).catch(err => {
 
