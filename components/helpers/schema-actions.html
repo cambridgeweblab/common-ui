@@ -12,7 +12,7 @@ define('schema-actions', ['secure-ajax', 'create-element', 'post-via-form', 'dia
         action(action, dlg, container, data = {}) {
 
             const request = ajax.execute;
-            const schemaProps = (action && action.schema) ? action.schema.properties : {};
+            const schemaProps = (action && action.schema && action.schema.properties) ? action.schema.properties : {};
             let requiresInput = (action && action.schema && Array.isArray(action.schema.type));
             let form = null;
 
