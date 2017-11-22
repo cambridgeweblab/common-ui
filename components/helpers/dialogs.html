@@ -1,6 +1,7 @@
 <link rel="import" href="./create-element-legacy.html">
 <link rel="import" href="./parent-by-attribute.html">
 <link rel="import" href="./has-class.html">
+<link rel="import" href="./html-to-dom.html">
 <style>
     body.no-scroll { overflow: hidden; }
 
@@ -253,8 +254,9 @@
 define('dialogs', [
     'create-element-legacy',
     'parent-by-attribute',
-    'has-class'
-], (createElement, parentByAttribute, hasClass) => {
+    'has-class',
+    'html-to-dom'
+], (createElement, parentByAttribute, hasClass, htmlToDom) => {
     const dialogs = {
         // is the object ready for interaction ?
         ready: false,
@@ -630,7 +632,7 @@ define('dialogs', [
 
                     // insert the HTML
                     dlg.body.innerHTML = '';
-                    html.toDOM(dlg.body);
+                    htmlToDom(html, dlg.body);
                 };
 
                 dlg.writeCss = function(cssClass) {
