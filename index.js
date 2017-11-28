@@ -19,7 +19,7 @@ server
     .get('/', (req, res) => res.sendFile(path.resolve(__dirname, 'examples', 'index.html')))
     .get('/:component', (req, res) => {
         const component = req.params.component;
-        res.sendFile(path.resolve(__dirname, 'examples', `${component}.html`));
+        res.sendFile(path.resolve(__dirname, 'examples', `${component}${component.endsWith('.html') ? '' : '.html'}`));
     })
     .listen(PORT, () => {
         console.log(`server up and listening on ${PORT}`);

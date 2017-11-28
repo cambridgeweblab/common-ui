@@ -1,0 +1,123 @@
+<script>
+    define('ca-resource', [], () => {
+        /**
+         * Non-UI component which declares a remote resource accessed through HTTP. The value of the resource is
+         * exposed through the {@link value} property. The following events are fired by this element:
+         *
+         * <dl>
+         * <dt>ca-resource-fetching</dt><dd>Fired when the resource is about to be fetched, with the fetch options available to be modified.</dd>
+         * <dt>ca-resource-fetched</dt><dd>Fired when the resource has been fetched, with an error or non-error result.</dd>
+         * <dt>ca-resource-ready</dt><dd>Fired when the resource has been fetched successfully. {@link value} will be available.
+         * <dt>ca-resource-unauthorized</dt><dd>Fired when the resource fetch failed with 401 Unauthorised because the user's credentials could not be verified.</dd>
+         * <dt>ca-resource-forbidden</dt><dd>Fired when the resource fetch failed with 403 Forbidden because the user's credentials were not acceptable to retrieve it.</dd>
+         * </dl>
+         * TODO: make this able to PUT resources back by changing the 'value' property
+         */
+        class CaResourceElement extends HTMLElement {
+            /**
+             * observedAttributes - get a list of attributes that should effect re-fetch.
+             * @return {Array} list of attributes that effect a re-fetch.
+             */
+            static get observedAttributes() {
+                return ['href'];
+            }
+
+            /**
+             * @description Executes when any attribute is changed on the element
+             * @type {Event}
+             * @param {string} attrName - the name of the attribute to have changed
+             * @param {string} oldVal - the old value of the attribute
+             * @param {string} newVal - the new value of the attribute
+             * @returns {undefined}
+             */
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                if (CaResourceElement.observedAttributes.includes(attrName)) {
+                    this.fetch();
+                }
+            }
+
+            /**
+             * @returns {string} URI to which this resource refers
+             */
+            get href() {
+                return this.getAttribute('href');
+            }
+
+            /**
+             * @param {string} value, URI to which this resource refers
+             */
+            set href(value) {
+                this.setAttribute('href', value);
+            }
+
+            /**
+             * @returns {object|string|Blob} value of fetching the resource, as the best type available (e.g. object for JSON, string for text, or failing that a BLOB)
+             */
+            get value() {
+                if (this._decodedResponse) {
+                    return this._decodedResponse;
+                }
+                return undefined;
+            }
+
+            attachedCallback() {
+                if (this.href) {
+                    this.fetch();
+                }
+            }
+
+            /**
+             * Fetches the resource at the specified {@link href}.
+             * @return {Promise<Response>|null} promise of a Fetch response, or null if the fetch was cancelled
+             */
+            fetch() {
+                if (!document.contains(this) || !this.href) return null; // Don't fetch if we're not attached to a document or we haven't got a URL.
+
+                this._fetchResponse = this._decodedResponse = undefined;
+                const init = {};
+                // Give other components a chance to mess with our 'init' object
+                if (!this.dispatchEvent(new CustomEvent('ca-resource-fetching', {
+                    detail: { href: this.href, init },
+                    bubbles: true,
+                    cancelable: true
+                }))) {
+                    return null; // Someone called event.preventDefault(), so don't fetch.
+                }
+                // Now fetch
+                return window.fetch(this.href, init)
+                    .then(response => {
+                        this._fetchResponse = response;
+                        const eventInit = { detail: response, bubbles: true };
+                        this.dispatchEvent(new CustomEvent('ca-resource-fetched', eventInit));
+
+                        if (response.ok) {
+                            const headers = response.headers;
+                            let responseDecoder;
+                            if (!headers.has('Content-Type') || headers.get('Content-Type').startsWith('application/json')) {
+                                responseDecoder = response.json();
+                            } else if (headers.get('Content-Type').startsWith('text/')) {
+                                responseDecoder = response.text();
+                            } else {
+                                responseDecoder = response.blob();
+                            }
+                            responseDecoder.then(decodedResponse => {
+                                this._decodedResponse = decodedResponse;
+                                this.dispatchEvent(new CustomEvent('ca-resource-ready', {
+                                    detail: decodedResponse,
+                                    bubbles: true
+                                }));
+                            });
+                        } else if (response.status === 401) {
+                            this.dispatchEvent(new CustomEvent('ca-resource-unauthorized', eventInit));
+                        } else if (response.status === 403) {
+                            this.dispatchEvent(new CustomEvent('ca-resource-forbidden', eventInit));
+                        }
+                    });
+            }
+
+        }
+
+        // Register our new element
+        document.registerElement('ca-resource', CaResourceElement);
+    });
+</script>
