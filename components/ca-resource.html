@@ -31,7 +31,7 @@
              * @returns {undefined}
              */
             attributeChangedCallback(attrName, oldVal, newVal) {
-                if (CaResourceElement.observedAttributes.indexOf(attrName) >= 0) {
+                if (CaResourceElement.observedAttributes.includes(attrName)) {
                     this.fetch();
                 }
             }
