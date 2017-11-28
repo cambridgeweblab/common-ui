@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA RESOURCE | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-resource.html">
+</head>
+<body>
+<test-fixture id="ca-resource">
+    <template>
+        <ca-resource></ca-resource>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-resource>', () => {
+        let caResource;
+        let server;
+        const mockJsonResponse = (body = {}) => {
+            return Promise.resolve(new window.Response(JSON.stringify(body), {
+                status: 200,
+                headers: { 'Content-type': 'application/json' }
+            }));
+        };
+        const mockTextResponse = (body = "", status = 200) => {
+            return Promise.resolve(new window.Response(body, {
+                status,
+                headers: { 'Content-type': 'text/plain' }
+            }));
+        };
+        const mockBlobResponse = () => {
+            return new Promise((resolve) => {
+                const img = new Image();
+                const c = document.createElement("canvas");
+                const ctx = c.getContext("2d");
+                img.onload = () => {
+                    c.width = img.naturalWidth;
+                    c.height = img.naturalHeight;
+                    ctx.drawImage(img, 0, 0);
+                    c.toBlob(blob => {
+                        resolve(new window.Response(blob, {
+                            status: 200,
+                            headers: { 'Content-type': 'image/jpeg' }
+                        }));
+                    }, "image/jpeg", 0.75);
+                };
+                img.crossOrigin = '';
+                img.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAKBJREFUeNpiYBjpgBFd4P///wJAaj0QO9DEQiAg5ID9tLIcmwMYsDgABhqoaTHMUHRxpsGYBv5TGqTIZsDkYWLo6gc8BEYdMOqAUQeMOoAqDgAWcgZAfB9EU63SIAGALH8PZb+H8v+jVz64KiOK6wIg+ADEArj4hOoCajiAqMpqtDIadcCoA0YdQIoDDtCqQ4KtBY3NAYG0csQowAYAAgwAgSqbls5coPEAAAAASUVORK5CYII=';
+            });
+        };
+
+
+        setup(done => {
+            caResource = fixture('ca-resource');
+            sinon.stub(window, 'fetch');
+            window.fetch.returns(Promise.reject());
+            done();
+        });
+
+        teardown(() => {
+            window.fetch.restore();
+        });
+
+        test('should fetch JSON', done => {
+            window.fetch.withArgs('http://localhost/hello.json').returns(mockJsonResponse({hello: 'world'}));
+
+            caResource.addEventListener('ca-resource-ready', () => {
+               expect(caResource.value).to.not.be.undefined;
+               expect(caResource.value.hello).to.equal('world');
+               done();
+            });
+
+            caResource.href = 'http://localhost/hello.json';
+        });
+
+        test('should fetch text', done => {
+            window.fetch.withArgs('http://localhost/hello.txt').returns(mockTextResponse("hello world"));
+            caResource.addEventListener('ca-resource-ready', () => {
+                expect(caResource.value).to.not.be.undefined;
+                expect(caResource.value).to.equal('hello world');
+                done();
+            });
+
+            caResource.href = 'http://localhost/hello.txt';
+        });
+
+        test('should fetch blob', done => {
+            window.fetch.withArgs('http://localhost/hello.jpg').returns(mockBlobResponse());
+            caResource.addEventListener('ca-resource-ready', () => {
+                expect(caResource.value).to.not.be.undefined;
+                // Recreate an image from the blob and check it's the same size
+                const img = new Image();
+                img.onload = () => {
+                    expect(img.naturalHeight).to.equal(32);
+                    expect(img.naturalWidth).to.equal(32);
+                    done();
+                };
+                img.src = window.URL.createObjectURL(caResource.value);
+
+            });
+
+            caResource.href = 'http://localhost/hello.jpg';
+        });
+
+        test('fires fetched event for OK', done => {
+            window.fetch.withArgs('http://localhost/api/').returns(mockTextResponse("You got this!.", 200));
+
+            caResource.addEventListener('ca-resource-fetched', () => {
+                // This is what we were waiting for.
+                done();
+            });
+            caResource.href = 'http://localhost/api/';
+        });
+
+        test('fires fetched event for not OK', done => {
+            window.fetch.withArgs('http://localhost/api/').returns(mockTextResponse("You don't got this!.", 404));
+
+            caResource.addEventListener('ca-resource-fetched', () => {
+                // This is what we were waiting for.
+                done();
+            });
+            caResource.href = 'http://localhost/api/';
+        });
+
+        test('fires unauthorized event', done => {
+            window.fetch.withArgs('http://localhost/api/').returns(mockTextResponse("You need to authenticate.", 401));
+
+            caResource.addEventListener('ca-resource-unauthorized', () => {
+                // This is what we were waiting for.
+                done();
+            });
+            caResource.href = 'http://localhost/api/';
+        });
+
+        test('fires forbidden event', done => {
+            window.fetch.withArgs('http://localhost/api/').returns(mockTextResponse("You are not allowed to see this.", 403));
+
+            caResource.addEventListener('ca-resource-forbidden', () => {
+                // This is what we were waiting for.
+                done();
+            });
+            caResource.href = 'http://localhost/api/';
+        });
+
+        test('should be cancellable', done => {
+            window.fetch.withArgs('http://localhost/hello.json').returns(mockJsonResponse({hello: 'world'}));
+
+            caResource.addEventListener('ca-resource-fetching', e => {
+                e.preventDefault();
+            });
+
+            window.setTimeout(() => {
+                expect(window.fetch.callCount).to.equal(0);
+                done();
+            }, 100);
+
+            caResource.href = 'http://localhost/hello.json';
+        });
+    });
+    a11ySuite('ca-resource');
+</script>
+</body>
+</html>

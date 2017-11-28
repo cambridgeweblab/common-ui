@@ -1,0 +1,86 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA RESOURCE | Web Lab Common UI</title>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-resource.html">
+    <link href="/examples/index.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="ca-home">
+    <a id="home" href="../index.html"></a>
+</div>
+
+<div class="ca-title">CA RESOURCE</div>
+
+<h2>Dog breeds</h2>
+<ca-resource id="breeds" href="https://dog.ceo/api/breeds/list"></ca-resource>
+<ul id="breed-list"></ul>
+
+<div id="pictures" style="position: fixed; top: 3em; left: 20em;">
+<h3>Picture</h3>
+<ca-resource id="random-picture"></ca-resource>
+</div>
+
+<script>
+    window.addEventListener('HTMLImportsLoaded', () => {
+        const breedResource = document.getElementById('breeds');
+        const breedList = document.getElementById('breed-list');
+        const randomPicture = document.getElementById('random-picture');
+        const pictures = document.getElementById('pictures');
+
+        const clickHandler = e => {
+            const breed = e.srcElement.textContent;
+            const url = `https://pixabay.com/api/?key=7203309-f5134cfe26877a78f07472ddb&q=dog+${breed}&image_type=photo&safesearch=true`;
+            randomPicture.href = url;
+        };
+
+        // Example of handling JSON data
+        breedResource.addEventListener('ca-resource-ready', () => {
+            const breedData = breedResource.value;
+
+            breedData.message.forEach(breed => {
+                const breedItem = document.createElement('li');
+                const breedLink = document.createElement('a');
+                breedLink.href = `#${breed}`;
+                breedLink.textContent = breed;
+                breedItem.appendChild(breedLink);
+                breedList.appendChild(breedItem);
+
+                breedLink.addEventListener('click', clickHandler);
+            });
+        });
+
+        randomPicture.addEventListener('ca-resource-ready', () => {
+            const searchResults = randomPicture.value;
+            if (searchResults.totalHits) {
+                const hit = searchResults.hits[0];
+                const newResource = document.createElement('ca-resource');
+                newResource.href = hit.previewURL;
+
+                // Example of handling blob data
+                newResource.addEventListener('ca-resource-ready', () => {
+                    const blobData = newResource.value;
+                    const urlCreator = window.URL || window.webkitURL;
+                    const imageUrl = urlCreator.createObjectURL(blobData);
+                    const image = new Image();
+                    image.src = imageUrl;
+                    newResource.parentNode.removeChild(newResource);
+                    pictures.appendChild(image);
+                });
+
+                pictures.appendChild(newResource);
+            } else {
+                const newSpan = document.createElement('span');
+                newSpan.textContent = 'Nothing to see here';
+                pictures.appendChild(newSpan);
+            }
+
+        });
+    });
+</script>
+</body>
+</html>
