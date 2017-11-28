@@ -18,6 +18,7 @@
     "tests"
   ],
   "dependencies": {
+    "app-router": "^2.7.2",
     "pikaday": "^1.5.1",
     "imd": "PolymerLabs/IMD#master",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.24"

@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA AUTH | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/bower_components/app-router/app-router.html">
+    <link rel="import" href="/components/ca-auth.html">
+    <link rel="import" href="/components/ca-resource.html">
+</head>
+<body>
+<test-fixture id="ca-auth">
+    <template>
+        <ca-auth type="Auth1" credentials-key="auth1" login-path="/login">
+            <app-router mode="hash">
+                <app-route path="/login">
+                    <template>
+                        <span id="login"></span>
+                    </template>
+                </app-route>
+                <app-route path="/home">
+                    <template>
+                        <span id="home">
+                            <ca-resource></ca-resource>
+                        </span>
+                    </template>
+                </app-route>
+                <app-route path="*" redirect="/home"></app-route>
+            </app-router>
+        </ca-auth>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-auth>', () => {
+        let caAuth;
+
+        setup(done => {
+            sessionStorage.clear();
+            caAuth = fixture('ca-auth');
+            document.querySelector('app-router').go('/');
+            done();
+        });
+
+        test('stores and retrieve credentials using the key specified', done => {
+            caAuth.innerHTML = '';
+            caAuth.credentials = 'open sesame';
+            expect(sessionStorage.getItem('auth1')).to.equal('open sesame');
+            done();
+        });
+
+        test('provides credentials in response to a ca-resource-fetching event (no app-router)', done => {
+            caAuth.type= 'Auth2';
+            caAuth.credentials = 'open sesame';
+            caAuth.innerHTML = '<ca-resource></ca-resource>';
+
+            const detail = { href: 'about:null', init: {} };
+            const cancelled = !caAuth.querySelector('ca-resource').dispatchEvent(new CustomEvent('ca-resource-fetching', {
+                detail,
+                bubbles: true,
+                cancelable: true
+            }));
+            expect(cancelled).to.be.false;
+            expect(detail.init.headers).to.not.be.undefined;
+            expect(detail.init.headers.get('Authorization')).to.equal('Auth2 open sesame');
+            done();
+        });
+
+        test('displays a login page in response to a ca-resource-unauthorized event', done => {
+            document.getElementById('home').querySelector('ca-resource').dispatchEvent(new CustomEvent('ca-resource-unauthorized', {
+                bubbles: true
+            }));
+            expect(document.getElementById('home')).to.be.null;
+            expect(document.getElementById('login')).to.not.be.null;
+            done();
+        });
+
+        test('reverts to the previous page when credentials are set', done => {
+            document.getElementById('home').querySelector('ca-resource').dispatchEvent(new CustomEvent('ca-resource-unauthorized', {
+                bubbles: true
+            }));
+            caAuth.credentials = 'some kind of password';
+            expect(document.getElementById('home')).to.not.be.null;
+            expect(document.getElementById('login')).to.be.null;
+            done();
+        });
+    });
+    a11ySuite('ca-auth');
+</script>
+</body>
+</html>

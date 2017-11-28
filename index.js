@@ -17,6 +17,13 @@ server
     .use('/examples', express.static(path.join(__dirname, 'examples')))
     .use('/components', express.static(path.join(__dirname, 'components')))
     .get('/', (req, res) => res.sendFile(path.resolve(__dirname, 'examples', 'index.html')))
+    .get('/insecure', (req, res) => res.json({ success: true }))
+    .get('/secure', (req, res) => {
+        if (req.headers.authorization === 'Example letmein') {
+            return res.json({ success: true });
+        }
+        return res.status(401).send('Unauthorized');
+    })
     .get('/:component', (req, res) => {
         const component = req.params.component;
         res.sendFile(path.resolve(__dirname, 'examples', `${component}${component.endsWith('.html') ? '' : '.html'}`));

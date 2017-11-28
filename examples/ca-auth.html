@@ -1,0 +1,102 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA AUTH | Web Lab Common UI</title>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/bower_components/app-router/app-router.html">
+    <link rel="import" href="/components/ca-resource.html">
+    <link rel="import" href="/components/ca-auth.html">
+    <link href="/examples/index.css" rel="stylesheet">
+    <style>
+        app-router {
+            display: block;
+            margin: 1em;
+            border: solid mediumslateblue 2px;
+            padding: 4px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="ca-home">
+    <a id="home" href="../index.html"></a>
+</div>
+
+<div class="ca-title">CA AUTH</div>
+
+<h2>Current authentication</h2>
+<p>Your current authentication token is:
+    <span id="credentials"></span>
+    <a href="javascript:refreshCredentials();">Refresh</a>
+    <a href="javascript:clearCredentials();">Clear</a>.
+</p>
+
+<h2>With app-router</h2>
+
+<ca-auth type="Example" credentials-key="example-credentials" login-path="/login">
+    <app-router mode="hash">
+        <app-route path="/login">
+            <template>
+                <p>This is the login page.</p>
+                <p><a href="javascript:setCredentials();">Log in with valid credentials</a></p>
+            </template>
+        </app-route>
+        <app-route path="/secure">
+            <template>
+                <p>This is a page hosting a <span style="color: darkred">secured</span> resource</p>
+                <ca-resource href="/secure"></ca-resource>
+                <p><a href="#/insecure">Why not try to access a unsecured one?</a></p>
+            </template>
+        </app-route>
+        <app-route path="/insecure">
+            <template>
+                <p>This is a page hosting a <span style="color: darkgreen">unsecured</span> resource</p>
+                <ca-resource href="/insecure"></ca-resource>
+                <p><a href="#/secure">Why not try to access a secure one?</a></p>
+            </template>
+        </app-route>
+        <app-route path="*" redirect="/insecure"></app-route>
+    </app-router>
+</ca-auth>
+
+<h2>Without app-router</h2>
+
+<ca-auth type="Example" credentials-key="example-credentials" login-page="/login">
+    <a href="javascript:fetchUnrouted()">Fetch secured resource</a>
+    <ca-resource id="fetch-unrouted-resource"></ca-resource>
+    <div id="fetch-unrouted-result"></div>
+</ca-auth>
+
+<script>
+    function refreshCredentials() {
+        document.getElementById('credentials').textContent = sessionStorage.getItem('example-credentials');
+    }
+
+    function clearCredentials() {
+        sessionStorage.removeItem('example-credentials');
+        refreshCredentials();
+    }
+
+    function setCredentials() {
+        document.querySelector('ca-auth').credentials = 'letmein';
+    }
+
+    function fetchUnrouted() {
+        const resource = document.getElementById('fetch-unrouted-resource');
+        const result = document.getElementById('fetch-unrouted-result');
+        result.innerHTML = '';
+        resource.addEventListener('ca-resource-fetched', e => {
+            result.textContent = `${e.detail.status} ${e.detail.statusText}`;
+        });
+        resource.href = '';
+        resource.href = '/secure';
+    }
+
+    window.addEventListener('HTMLImportsLoaded', () => {
+        refreshCredentials();
+    });
+</script>
+</body>
+</html>
