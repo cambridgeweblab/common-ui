@@ -13,7 +13,7 @@
          * </dl>
          * TODO: make this able to PUT resources back by changing the 'value' property
          */
-        class ApiResourceElement extends HTMLElement {
+        class CaResourceElement extends HTMLElement {
             /**
              * observedAttributes - get a list of attributes that should effect re-fetch.
              * @return {Array} list of attributes that effect a re-fetch.
@@ -31,7 +31,7 @@
              * @returns {undefined}
              */
             attributeChangedCallback(attrName, oldVal, newVal) {
-                if (ApiResourceElement.observedAttributes.indexOf(attrName) >= 0) {
+                if (CaResourceElement.observedAttributes.indexOf(attrName) >= 0) {
                     this.fetch();
                 }
             }
@@ -71,7 +71,7 @@
              * @return {Promise<Response>|null} promise of a Fetch response, or null if the fetch was cancelled
              */
             fetch() {
-                if (!document.contains(this)) return null; // Don't fetch if we're not attached to a document.
+                if (!document.contains(this) || !this.href) return null; // Don't fetch if we're not attached to a document or we haven't got a URL.
 
                 this._fetchResponse = this._decodedResponse = undefined;
                 const init = {};
@@ -118,6 +118,6 @@
         }
 
         // Register our new element
-        document.registerElement('ca-resource', ApiResourceElement);
+        document.registerElement('ca-resource', CaResourceElement);
     });
 </script>
