@@ -1,0 +1,122 @@
+<script>
+    define('ca-auth', [], () => {
+        const REPLACE_CURRENT_PAGE = { replace: true };
+
+        /**
+         * Non-UI component which handles authorization headers on all <ca-resource> requests contained within it.
+         * If there is an <app-router> contained in this element, it also redirects the view to a login page when a
+         * request is not authorized, and then back afterwards.
+         */
+        class CaAuthElement extends HTMLElement {
+            /**
+             * @returns {string} the app-router path to which to redirect for a login
+             */
+            get loginPath() {
+                return this.getAttribute('login-path');
+            }
+
+            /**
+             * @param {string} value, the app-router path to which to redirect for a login
+             */
+            set loginPath(value) {
+                this.setAttribute('login-path', value);
+            }
+
+            /**
+             * @returns {string} the type to add to the Authorization header e.g. Bearer which is the default
+             */
+            get type() {
+                return this.getAttribute('type') || 'Bearer';
+            }
+
+            /**
+             * @param {string} value, the type to add to the Authorization header e.g. Bearer
+             */
+            set type(value) {
+                this.setAttribute('type', value);
+            }
+
+            /**
+             * @returns {string} the key to use with session storage to hold the credentials e.g. webapiCredentials which is the default
+             */
+            get credentialsKey() {
+                return this.getAttribute('credentials-key') || 'webapiCredentials';
+            }
+
+            /**
+             * @param {string} value, the key to use with session storage to hold the credentials e.g. webapiCredentials
+             */
+            set credentialsKey(value) {
+                this.setAttribute('credentials-key', value);
+            }
+
+            /**
+             * @returns {string} the credentials to add to the Authorization header e.g. a JWT access token
+             */
+            get credentials() {
+                return sessionStorage.getItem(this.credentialsKey);
+            }
+
+            /**
+             * @param {string} value, the credentials to add to the Authorization header e.g. a JWT access token
+             */
+            set credentials(value) {
+                sessionStorage.setItem(this.credentialsKey, value);
+                if (this._restorePath) {
+                    this._restorePath();
+                }
+            }
+
+            /**
+             * Attach event listeners to listen for ca-resource events.
+             * @return {undefined} nothing
+             */
+            attachedCallback() {
+                const appRouter = this.querySelector('app-router');
+
+                // Listener to add Authorization headers while fetching.
+                this.addEventListener('ca-resource-fetching', e => {
+                    const credentials = this.credentials;
+                    if (credentials) {
+                        const init = e.detail.init;
+                        const headers = init.headers || new Headers();
+                        headers.append('Authorization', `${this.type} ${credentials}`);
+                        init.headers = headers;
+                    }
+                });
+
+                // Listener to redirect to login when necessary.
+                this.addEventListener('ca-resource-unauthorized', e => {
+                    if (appRouter && this.loginPath) {
+                        appRouter.go(this.loginPath, REPLACE_CURRENT_PAGE);
+                    }
+                });
+
+                if (appRouter) {
+                    // Listener to keep track of where we were before we redirected to login and create a function to go
+                    // back there.
+                    this._restorePath = () => appRouter.go('/', REPLACE_CURRENT_PAGE); // Default to root path.
+                    appRouter.addEventListener('activate-route-start', e => {
+                        if (e.detail.path !== this.loginPath) {
+                            this._restorePath = () => appRouter.go(e.detail.path, REPLACE_CURRENT_PAGE);
+                        }
+                    });
+
+                }
+
+            }
+
+            /**
+             * Stop listening for events.
+             * @returns {undefined} nothing
+             */
+            detachedCallback() {
+                // TODO: implement this.
+            }
+
+        }
+
+        // Register our new element
+        document.registerElement('ca-auth', CaAuthElement);
+    });
+</script>
