@@ -52,6 +52,16 @@
                 expect(caInputArray.value.length).to.equal(5);
                 expect(JSON.stringify(caInputArray.value)).to.equal('["a","b","c","d","e"]');
             });
+
+            test('should populate values correctly', () => {
+                const values = ['dick', 'george', 'anne', 'julian', 'timmy', 'aunt fanny'];
+                caInputArray.value = values;
+                const inputs = caInputArray.querySelectorAll('input');
+                expect(inputs.length).to.equal(values.length);
+                for (let i = 0; i < inputs.length; i++) {
+                    expect(inputs[i].value).to.equal(values[i]);
+                }
+            });
         });
         a11ySuite('ca-input-array');
     </script>

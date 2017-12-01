@@ -171,6 +171,29 @@ define('ca-input-array', ['create-element', 'keyboard'], (createElement, keyboar
         }
 
         /**
+         * @param {array|string} newValue, the value
+         */
+        set value(newValue) {
+            const arrayValue = (Array.isArray(newValue) ? newValue : [newValue]).filter(Boolean);
+            let elements = Array.prototype.slice.call(this.querySelectorAll(this.childSelector));
+
+            // Add more elements if we need them and then refetch the element list
+            for (let i = 0; i < (arrayValue.length - elements.length); i++) {
+                this.addItem();
+            }
+            elements = Array.prototype.slice.call(this.querySelectorAll(this.childSelector));
+
+            // Populate the input values
+            for (let i = 0; i < elements.length; i++) {
+                if (i < arrayValue.length) {
+                    elements[i].value = String(arrayValue[i]);
+                } else {
+                    elements[i].value = '';
+                }
+            }
+        }
+
+        /**
          * Returns a sum of the numeric values
          * @returns {integer} sum
          */
