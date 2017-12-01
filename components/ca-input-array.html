@@ -134,7 +134,7 @@ define('ca-input-array', ['create-element', 'keyboard'], (createElement, keyboar
          */
         get value() {
             const self = this;
-            const elements = Array.prototype.slice(this.querySelectorAll(this.childSelector));
+            const elements = Array.prototype.slice.call(this.querySelectorAll(this.childSelector));
             let values = [];
             let invalid = false;
 

@@ -42,6 +42,16 @@
 
                 expect(caInputArray.querySelectorAll('input').length).to.equal(5);
             });
+
+            test('should return values correctly', () => {
+                const inputs = caInputArray.querySelectorAll('input');
+                for (let i = 0; i < inputs.length; i++) {
+                    inputs[i].value = String.fromCharCode('a'.charCodeAt(0) + i);
+                }
+                expect(Array.isArray(caInputArray.value)).to.be.true;
+                expect(caInputArray.value.length).to.equal(5);
+                expect(JSON.stringify(caInputArray.value)).to.equal('["a","b","c","d","e"]');
+            });
         });
         a11ySuite('ca-input-array');
     </script>
