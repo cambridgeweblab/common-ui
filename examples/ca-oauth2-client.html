@@ -1,0 +1,81 @@
+<!doctype>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA OAUTH2 CLIENT | Web Lab Common UI</title>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-oauth2-client.html">
+    <link rel="import" href="/components/ca-auth.html">
+    <link href="/examples/index.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="ca-home">
+    <a id="home" href="../index.html"></a>
+</div>
+
+<div class="ca-title">CA OAUTH2 CLIENT</div>
+
+<h2>Current authentication</h2>
+<p>Your current authentication token is:
+    <span id="credentials"></span>
+    <a href="javascript:refreshCredentials();">Refresh</a>
+    <a href="javascript:clearCredentials();">Clear</a>.
+</p>
+
+<h2>Password grant</h2>
+<ca-auth type="Example" credentials-key="example-credentials" login-path="/login">
+    <ca-oauth2-client type="password"></ca-oauth2-client>
+</ca-auth>
+
+<form id="password_form" onsubmit="return authorize()">
+    <p><label>Token endpoint: <input type="text" name="href"></label></p>
+    <p><label>Client ID: <input type="text" name="client-id"></label></p>
+    <p><label>Client Secret: <input type="text" name="client-secret"></label></p>
+    <p><label>Username: <input type="text" name="username"></label></p>
+    <p><label>Password: <input type="password" name="password"></label></p>
+    <p><input type="submit" value="Authorize"></p>
+</form>
+
+<div id="authorize-result"></div>
+
+<script>
+    const client = document.querySelector('ca-oauth2-client[type=password]');
+    const result = document.getElementById('authorize-result');
+
+    function refreshCredentials() {
+        document.getElementById('credentials').textContent = sessionStorage.getItem('example-credentials');
+    }
+
+    function clearCredentials() {
+        sessionStorage.removeItem('example-credentials');
+        refreshCredentials();
+    }
+
+    function authorize() {
+        result.innerHTML = '';
+
+        const inputs = document.getElementById('password_form').querySelectorAll('input');
+        for (let i = 0; i < inputs.length; i++) {
+            const input = inputs[i];
+            if (input.name && input.value) {
+                client.setAttribute(input.name, input.value);
+            }
+        }
+
+        return false;
+    }
+
+    client.addEventListener('ca-oauth2-authorized', e => {
+        result.textContent = `Authorized with token ${e.detail.access_token}`;
+    });
+
+    client.addEventListener('ca-oauth2-unauthorized', e => {
+        result.textContent = e.detail;
+    });
+
+    refreshCredentials();
+</script>
+</body>
+</html>
