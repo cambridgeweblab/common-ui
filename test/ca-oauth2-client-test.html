@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CA OAUTH2 CLIENT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/ca-oauth2-client.html">
+    <link rel="import" href="/components/ca-auth.html">
+</head>
+<body>
+<test-fixture id="ca-oauth2-client">
+    <template>
+        <ca-oauth2-client href="http://localhost/oauth2/authorize" client-id="test-client" client-secret="sshhh"></ca-oauth2-client>
+    </template>
+</test-fixture>
+<script>
+    suite('<ca-oauth2-client>', () => {
+        let caOAuth2Client;
+
+        const mockJsonResponse = (body = {}, status = 200) => {
+            return Promise.resolve(new window.Response(JSON.stringify(body), {
+                status,
+                headers: { 'Content-type': 'application/json' }
+            }));
+        };
+
+        setup(done => {
+            sessionStorage.clear();
+            caOAuth2Client = fixture('ca-oauth2-client');
+            sinon.stub(window, 'fetch');
+            window.fetch.returns(Promise.reject());
+            done();
+        });
+
+        teardown(() => {
+            window.fetch.restore();
+        });
+
+        test('should default to password grant type', done => {
+            expect(caOAuth2Client.type).to.equal('password');
+            done();
+        });
+
+        test('ignores unknown grant types when set via property', done => {
+            caOAuth2Client.type = 'guesswork';
+            expect(caOAuth2Client.type).to.equal('password');
+            done();
+        });
+
+        test('ignores unknown grant types when set via attribute', done => {
+            caOAuth2Client.setAttribute('type', 'divination');
+            expect(caOAuth2Client.type).to.equal('password');
+            done();
+        });
+
+        test('should request a token once the username and password are set', done => {
+            window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({
+                    "access_token": "ACCESS_TOKEN",
+                    "token_type": "bearer",
+                    "expires_in": 2592000,
+                    "refresh_token": "REFRESH_TOKEN",
+                    "scope": "read",
+                    "uid": 100101,
+                    "info": {"name": "Mark E. Mark", "email": "mark@thefunkybunch.com"}
+                }
+            ));
+            let eventFired = false;
+
+            caOAuth2Client.addEventListener('ca-oauth2-authorized', e => {
+                eventFired = true;
+                expect(e.detail).to.not.be.undefined;
+                expect(e.detail.access_token).to.equal('ACCESS_TOKEN');
+
+                const fetchOptions = window.fetch.getCall(0).args[1];
+                // validate that we called the authorize endpoint with an Authorization header
+                expect(fetchOptions.headers).to.not.be.undefined;
+                expect(fetchOptions.headers.get('Authorization')).to.equal(`Basic ${window.btoa('test-client:sshhh')}`);
+                // validate that we called the authorize endpoint with grant_type, username, and password
+                expect(fetchOptions.headers.get('Content-Type')).to.equal('application/x-www-form-urlencoded');
+                expect(fetchOptions.body).to.include('grant_type=password');
+                expect(fetchOptions.body).to.include('username=marky');
+                expect(fetchOptions.body).to.include('password=funky');
+                done();
+            });
+
+            caOAuth2Client.username = 'marky';
+            window.setTimeout(() => {
+                expect(eventFired).to.be.false;
+                caOAuth2Client.password = 'funky';
+            }, 100);
+        });
+
+        test('fires unauthorized event with error authorization response', done => {
+            window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({ error: 'BAD_THINGS' }));
+
+            caOAuth2Client.addEventListener('ca-oauth2-authorized', () => {
+                fail();
+            });
+            caOAuth2Client.addEventListener('ca-oauth2-unauthorized', e => {
+                expect(e.detail).to.not.be.undefined;
+                expect(e.detail.message).to.equal('BAD_THINGS');
+                done();
+            });
+            caOAuth2Client.username = 'marky';
+            caOAuth2Client.password = 'funky';
+        });
+
+        test('fires unauthorized event with unauthorized authorization response', done => {
+            window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({}, 401));
+
+            caOAuth2Client.addEventListener('ca-oauth2-authorized', () => {
+                fail();
+            });
+            caOAuth2Client.addEventListener('ca-oauth2-unauthorized', e => {
+                expect(e.detail).to.not.be.undefined;
+                expect(e.detail.message).to.equal('401 OK');
+                done();
+            });
+            caOAuth2Client.username = 'marky';
+            caOAuth2Client.password = 'fonky';
+        });
+
+        test('sets credentials on an ancestor ca-auth element', done => {
+            window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({
+                    "access_token": "ACCESS_TOKEN"
+                }
+            ));
+
+            // Wrap the client in a ca-auth element
+            const caAuth = document.createElement('ca-auth');
+            const parent = caOAuth2Client.parentNode;
+            caAuth.appendChild(caOAuth2Client);
+            parent.appendChild(caAuth);
+            caOAuth2Client.addEventListener('ca-oauth2-authorized', e => {
+                window.setTimeout(() => {
+                    expect(caAuth.credentials).to.equal('ACCESS_TOKEN');
+                    done();
+                }, 100);
+            });
+
+            caOAuth2Client.username = 'marky';
+            caOAuth2Client.password = 'funky';
+        });
+
+        test('should be cancellable', done => {
+            window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({
+                    "access_token": "ACCESS_TOKEN"
+                }
+            ));
+
+            // Wrap the client in a ca-auth element
+            const caAuth = document.createElement('ca-auth');
+            const parent = caOAuth2Client.parentNode;
+            caAuth.appendChild(caOAuth2Client);
+            parent.appendChild(caAuth);
+            caOAuth2Client.addEventListener('ca-oauth2-authorized', e => {
+                e.preventDefault();
+                window.setTimeout(() => {
+                    expect(caAuth.credentials).to.not.equal('ACCESS_TOKEN');
+                    done();
+                }, 100);
+            });
+
+            caOAuth2Client.username = 'marky';
+            caOAuth2Client.password = 'funky';
+        });
+
+    });
+    a11ySuite('ca-oauth2-client');
+</script>
+</body>
+</html>

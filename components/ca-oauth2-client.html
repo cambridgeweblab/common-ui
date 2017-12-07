@@ -1,0 +1,221 @@
+<script>
+    define('ca-oauth2-client', [], () => {
+
+        /**
+         * This non-UI component acts as an OAuth2 client.
+         * If it is used in conjunction with <ca-auth> then it can automatically provide access token credentials post-authentication.
+         * This first version supports password flow only and is therefore usually used in conjunction with a conventional HTML form.
+         * The component will immediately initiate the OAuth2 authorization process once it has sufficient attributes set.
+         * This component requires {@code Element.closest()}, so {@link https://github.com/jonathantneal/closest polyfill it} for IE.
+         * The following events are fired by this element:
+         *
+         * <dl>
+         * <dt>ca-oauth2-authorized</dt>
+         * <dd>Fired when authorization has been successful, before the credentials are provided to <ca-auth>.
+         * Call {@code Event.preventDefault()} to stop this happening. Event detail is the OAuth2 token response.</dd>
+         * <dt>ca-oauth2-unauthorized</dt>
+         * <dd>Fired when authorization has been unsuccessful. Event detail is the error message.</dd>
+         * </dl>
+         *
+         * @see https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2
+         */
+        class CaOAuth2ClientElement extends HTMLElement {
+            /**
+             * observedAttributes - get a list of attributes that should be considered in the callback.
+             * @return {Array} list of attributes that should be considered in the callback.
+             */
+            static get observedAttributes() {
+                return ['href', 'type', 'client-id', 'client-secret', 'username', 'password'];
+            }
+
+            /**
+             * @return {Array<String>} list of valid values for the {@link type} property.
+             */
+            static get types() {
+                // TODO: add the rest of the valid values to this list once implemented ('code', 'implicit' or 'client')
+                return ['password'];
+            }
+
+            /**
+             * Called when any attribute is changed on the element, but is only interested in the {@link CaOAuth2ClientElement.observedAttributes}.
+             * Will trigger the authorization request if the element has sufficient attributes set to initiate a flow.
+             * @param {string} attrName - the name of the attribute to have changed
+             * @param {string} oldVal - the old value of the attribute
+             * @param {string} newVal - the new value of the attribute
+             * @returns {undefined} nothing
+             */
+            attributeChangedCallback(attrName, oldVal, newVal) {
+                if (CaOAuth2ClientElement.observedAttributes.includes(attrName)) {
+                    if (this.ready()) {
+                        this.requestToken();
+                    }
+                }
+            }
+
+            /**
+             * @return {string} the URI of the authorization server's endpoint (token endpoint for password grant)
+             */
+            get href() {
+                return this.getAttribute('href');
+            }
+
+            /**
+             * @param {string} value, the URI of the authorization server's endpoint (token endpoint for password grant)
+             */
+            set href(value) {
+                this.setAttribute('href', value);
+            }
+
+            /**
+             * @return {string} the grant type, defaults to 'password'
+             */
+            get type() {
+                return CaOAuth2ClientElement.types.includes(this.getAttribute('type')) ? this.getAttribute('type') : 'password';
+            }
+
+            /**
+             * @param {string} value, the grant type - one of the values listed in {@link #types} - 'password', 'code', 'implicit' or 'client'.
+             */
+            set type(value) {
+                if (CaOAuth2ClientElement.types.includes(value)) {
+                    this.setAttribute('type', value);
+                }
+            }
+
+            /**
+             * @return {string} the string which identifies this application with the authorization server
+             */
+            get clientId() {
+                return this.getAttribute('client-id');
+            }
+
+            /**
+             * @param {string} value, the string which identifies this application with the authorization server
+             */
+            set clientId(value) {
+                this.setAttribute('client-id', value);
+            }
+
+            /**
+             * The client secret should never normally be required in a browser client as it cannot be kept secret.
+             * However, some OAuth2 implementations (particularly Spring Security) require it (redundantly) for the password grant flow.
+             * @return {string} the string which authenticates the identity of this application alongside the {@link clientId}
+             */
+            get clientSecret() {
+                return this.getAttribute('client-secret');
+            }
+
+            /**
+             * The client secret should never normally be required in a browser client as it cannot be kept secret.
+             * However, some OAuth2 implementations (particularly Spring Security) require it (redundantly) for the password grant flow.
+             * @param {string} value, the string which authenticates the identity of this application alongside the {@link clientId}
+             */
+            set clientSecret(value) {
+                this.setAttribute('client-secret', value);
+            }
+
+            /**
+             * @return {string} the username of the authenticating user, for password flow from trusted client applications only
+             */
+            get username() {
+                return this.getAttribute('username');
+            }
+
+            /**
+             * @param {string} value, the username of the authenticating user, for password flow from trusted client applications only
+             */
+            set username(value) {
+                this.setAttribute('username', value);
+            }
+
+            /**
+             * @return {string} the password of the authenticating user, for password flow from trusted client applications only
+             */
+            get password() {
+                return this.getAttribute('password');
+            }
+
+            /**
+             * @param {string} value, the password of the authenticating user, for password flow from trusted client applications only
+             */
+            set password(value) {
+                this.setAttribute('password', value);
+            }
+
+            /**
+             * Will trigger the authorization request if the element has sufficient attributes set to initiate a flow.
+             * @return {undefined} nothing
+             */
+            attachedCallback() {
+                if (this.ready()) {
+                    this.requestToken();
+                }
+            }
+
+            /**
+             * Checks if we have sufficient attributes set to initiate an authorization flow.
+             * @return {boolean} if sufficient attributes are set
+             */
+            ready() {
+                // Check if we're in a state where we can request a token
+                return (this.type === 'password' && this.href && this.clientId && this.clientSecret && this.username && this.password);
+            }
+
+            /**
+             * Initiates an authorization flow if we are attached to the current browser docuemnt.
+             * Dispatches a bubbling, cancellable {@code ca-oauth2-authorized} event if successful, or a {@code ca-oauth2-unauthorized} event if not.
+             * If the {@code ca-oauth2-authorized} event is not cancelled then the nearest ancestor <ca-auth> element (if any)
+             * will have its {@link CaAuthElement#credentials} set.
+             * @return {Promise|null} promise, or null if the flow was not initiated
+             */
+            requestToken() {
+                // Don't do anything if we're not attached to a document.
+                if (!document.contains(this)) return null;
+
+                return this.passwordGrant()
+                    .then(res => {
+                        if (res.access_token) {
+                            if (this.dispatchEvent(new CustomEvent('ca-oauth2-authorized', {
+                                detail: res,
+                                bubbles: true,
+                                cancelable: true
+                            }))) {
+                                const caAuth = this.closest('ca-auth');
+                                if (caAuth) {
+                                    caAuth.credentials = res.access_token;
+                                }
+                            }
+                        } else {
+                            throw Error(res.error);
+                        }
+                    })
+                    .catch(error => {
+                        this.dispatchEvent(new CustomEvent('ca-oauth2-unauthorized', { detail: error }));
+                    });
+            }
+
+            /**
+             * Initiates a password grant authorization with client credentials passed as a Basic authentication header
+             * and user credentials passed as form parameters.
+             * @return {Promise} promise of a password grant response including an access_token and other fields.
+             */
+            passwordGrant() {
+                const headers = new Headers();
+                const clientCredentials = `${this.clientId}:${this.clientSecret}`;
+                const body = `username=${window.encodeURIComponent(this.username)}&password=${window.encodeURIComponent(this.password)}&grant_type=password`;
+                headers.append('Content-Type', 'application/x-www-form-urlencoded');
+                headers.append('Authorization', `Basic ${window.btoa(clientCredentials)}`);
+                const init = { method: 'POST', headers, body };
+                return window.fetch(this.href, init).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw Error(`${response.status} ${response.statusText}`);
+                });
+            }
+        }
+
+        // Register our new element
+        document.registerElement('ca-oauth2-client', CaOAuth2ClientElement);
+    });
+</script>
