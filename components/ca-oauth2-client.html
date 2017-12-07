@@ -29,6 +29,14 @@
             }
 
             /**
+             * @return {Array<String>} list of valid values for the {@link type} property.
+             */
+            static get types() {
+                // TODO: add the rest of the valid values to this list once implemented ('code', 'implicit' or 'client')
+                return ['password'];
+            }
+
+            /**
              * Called when any attribute is changed on the element, but is only interested in the {@link CaOAuth2ClientElement.observedAttributes}.
              * Will trigger the authorization request if the element has sufficient attributes set to initiate a flow.
              * @param {string} attrName - the name of the attribute to have changed
@@ -62,14 +70,16 @@
              * @return {string} the grant type, defaults to 'password'
              */
             get type() {
-                return this.getAttribute('type') || 'password';
+                return CaOAuth2ClientElement.types.includes(this.getAttribute('type')) ? this.getAttribute('type') : 'password';
             }
 
             /**
-             * @param {string} value, the grant type - one of 'password', 'code', 'implicit' or 'client'.
+             * @param {string} value, the grant type - one of the values listed in {@link #types} - 'password', 'code', 'implicit' or 'client'.
              */
             set type(value) {
-                this.setAttribute('type', value);
+                if (CaOAuth2ClientElement.types.includes(value)) {
+                    this.setAttribute('type', value);
+                }
             }
 
             /**

@@ -43,6 +43,18 @@
             done();
         });
 
+        test('ignores unknown grant types when set via property', done => {
+            caOAuth2Client.type = 'guesswork';
+            expect(caOAuth2Client.type).to.equal('password');
+            done();
+        });
+
+        test('ignores unknown grant types when set via attribute', done => {
+            caOAuth2Client.setAttribute('type', 'divination');
+            expect(caOAuth2Client.type).to.equal('password');
+            done();
+        });
+
         test('should request a token once the username and password are set', done => {
             window.fetch.withArgs('http://localhost/oauth2/authorize').returns(mockJsonResponse({
                     "access_token": "ACCESS_TOKEN",
