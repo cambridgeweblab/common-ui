@@ -238,7 +238,8 @@ define('ca-summary', [
 
             // resolve all json pointers
             componentSupport
-                    .resolveExternalSchemaDefinitions(value)
+                    .resolveInternalSchemaReferences(value)
+                    .then(componentSupport.resolveExternalSchemaDefinitions)
                     .then(resolvedSchema => {
                         this._schema = resolvedSchema;
                         if (this.data) {

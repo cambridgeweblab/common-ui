@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>COMPONENT SUPPORT | Web Lab Common UI</title>
+    <script src="/web-component-tester/browser.js"></script>
+    <script src="/bower_components/webcomponentsjs/webcomponents-lite.min.js">
+    </script><link rel="import" href="/bower_components/imd/imd.html">
+    <link rel="import" href="/components/helpers/component-support.html">
+</head>
+<body>
+<test-fixture id="component-support">
+    <template>
+        <div class="container"></div>
+    </template>
+</test-fixture>
+<script>
+
+    suite('componentSupport', () => {
+        let element;
+        let componentSupport;
+        const schema = {
+            "type": "object",
+            "id": "http://localhost/$schema",
+            "$schema": "http://json-schema.org/draft-03/schema#",
+            "properties": {
+                "withSchema": {
+                    "type": "array",
+                    "id": "order:010_withSchema",
+                    "required": true,
+                    "title": "With schema",
+                    "items": {
+                        "type": "object",
+                        "id": "urn:jsonschema:ucles:weblab:Resource",
+                        "properties": {
+                            "resourceProperty": {
+                                "type": "string",
+                                "id": "order:010_resourceProperty",
+                                "required": true
+                            }
+                        }
+                    }
+                },
+                "notAnObject": {
+                    "type": "string",
+                    "id": "order:050_notAnObject",
+                    "title": "Not an object"
+                },
+                "withRefSchema1": {
+                    "type": "array",
+                    "id": "order:060_withRefSchema1",
+                    "title": "With ref schema",
+                    "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:ucles:weblab:Resource"
+                    }
+                },
+                "withRefSchema2": {
+                    "type": "array",
+                    "id": "order:080_withRefSchema2",
+                    "title": "With ref schema",
+                    "items": {
+                        "type": "object",
+                        "$ref": "urn:jsonschema:ucles:weblab:Resource"
+                    }
+                }
+            }
+        };
+
+        suiteSetup(done => {
+            define(['component-support'], (helper) => {
+                componentSupport = helper;
+                done();
+            });
+        });
+
+        setup(() => {
+            element = fixture('component-support');
+        });
+
+        test('it should resolve internal property schema references', done => {
+            // act
+            componentSupport.resolveInternalSchemaReferences(schema).then(resolved => {
+                // assert
+                expect(resolved.properties.withRefSchema1.items.properties).to.not.be.undefined;
+                expect(resolved.properties.withRefSchema2.items.properties).to.not.be.undefined;
+                expect(resolved.properties.notAnObject.items).to.be.undefined;
+                done();
+            });
+        });
+    });
+</script>
+</body>
+</html>
