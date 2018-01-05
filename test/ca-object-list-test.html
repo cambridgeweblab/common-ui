@@ -20,7 +20,36 @@
 
             // TODO: CREATE TESTS, there were none associated with the original component
             setup(done => {
-                object = fixture('ca-object-list');
+                caObjectList = fixture('object-list');
+                done();
+            });
+
+            test('should set properties on card', done => {
+                caObjectList.schema = {
+                    "type": "object",
+                    "id": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$schema",
+                    "$schema": "http://json-schema.org/draft-03/schema#",
+                    "properties": {
+                        "description": {
+                            "type": "string",
+                            "id": "order:010_description"
+                        },
+                        "content": {
+                            "type": "string",
+                            "id": "order:020_content",
+                            "required": true
+                        }
+                    }
+                };
+                caObjectList.value = [
+                    {
+                        description: "This is the thing",
+                        content: "The thing"
+                    }
+                ];
+                const caSummary = caObjectList.querySelector('ca-summary');
+                expect(caSummary.type).to.equal('card');
+                expect(caSummary.itemsPerCol).to.equal(100);
                 done();
             });
         });
