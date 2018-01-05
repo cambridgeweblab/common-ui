@@ -9,11 +9,17 @@
     ca-object-list {
         display: block;
         position: relative;
-        overflow: hidden;
+        overflow: inherit;
+    }
+
+    ca-object-list::after {
+        content: "";
+        display: block;
+        clear: both;
     }
 
     ca-object-list button {
-        display: inline-block;
+        float: left;
         overflow: hidden;
         color: #fff;
         cursor: pointer;
@@ -22,6 +28,28 @@
         padding: 0.5em 2em;
         border-radius: 5px;
         text-align: center;
+    }
+
+    button.ca-object-list-remove {
+        margin-left: -2em;
+        margin-top: -0.5em;
+        margin-right: 1em;
+        width: 2em;
+        z-index: 2;
+        position: relative;
+        border: none;
+        text-indent: -0.1em;
+        padding: 0.2em;
+        border-radius: 1.5em;
+    }
+
+    button.ca-object-list-remove::before {
+        content: "×";
+        font-size: 1.3em;
+    }
+
+    button.ca-object-list-remove span {
+        display: none;
     }
 
     ca-object-list ca-summary {
@@ -191,6 +219,10 @@ define('ca-object-list', ['create-element', 'fire-event', 'dialogs'], (createEle
             card.schema = this.schema;
             card.data = data;
             this.insertBefore(card, this._button);
+            const removeButton = createElement(null, 'button', { class: 'ca-object-list-remove' });
+            removeButton.innerHTML = '<span>Remove</span>';
+            removeButton.onclick = this.removeButtonHandler.bind(this, card);
+            this.insertBefore(removeButton, this._button);
         }
 
         /**
@@ -202,6 +234,19 @@ define('ca-object-list', ['create-element', 'fire-event', 'dialogs'], (createEle
             e.preventDefault();
             e.stopPropagation();
             this.showForm();
+        }
+
+        /**
+         * @description remove button handler.
+         * @param {CaSummaryElement} card, ca-summary element to be removed
+         * @param {event} e, event
+         * @returns {undefined} nothing. Removes card and button (event target) from DOM.
+         */
+        removeButtonHandler(card, e) {
+            e.preventDefault();
+            e.stopPropagation();
+            card.parentNode.removeChild(card);
+            e.target.parentNode.removeChild(e.target);
         }
     }
 
