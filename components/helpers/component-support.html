@@ -84,6 +84,27 @@ define('component-support', ['create-element', 'secure-ajax'], (createElement, a
         },
 
         /**
+         * Go through schema properties and replace any internal '$ref' references with the referenced schema.
+         * @param {object} schema - schema to be parsed
+         * @returns {promise} resolved state of schema
+         */
+        resolveInternalSchemaReferences(schema) {
+            const properties = schema.properties;
+            // Build a map of schemas.
+            const schemaMap = Object.values(properties).filter(prop => prop.items && prop.items.id).reduce((acc, prop) => {
+                acc[prop.items.id] = prop.items; // eslint-disable-line no-param-reassign
+                return acc;
+            }, {});
+            // And replace any explicit references to them with an object reference
+            Object.values(properties).filter(prop => prop.items && prop.items.$ref).forEach(prop => {
+                if (schemaMap[prop.items.$ref]) {
+                    prop.items = schemaMap[prop.items.$ref]; // eslint-disable-line no-param-reassign
+                }
+            });
+            return Promise.resolve(schema);
+        },
+
+        /**
          * Go through schema properties resolving JSON pointers to external schemas (inlining external schema definitions)
          * @param {object} schema - schema to be parsed
          * @returns {promise} resolved state of schema
