@@ -187,7 +187,9 @@ define('ca-object-list', ['create-element', 'fire-event', 'dialogs'], (createEle
          * @returns {undefined} nothing
          */
         addCard(data) {
-            const card = createElement(null, 'ca-summary', { type: 'card', itemsPerCol: 100 });
+            const card = createElement(null, 'ca-summary');
+            card.type = 'card';
+            card.itemsPerCol = 100;
             card.schema = this.schema;
             card.data = data;
             this.insertBefore(card, this._button);
