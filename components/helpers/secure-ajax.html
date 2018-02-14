@@ -55,7 +55,7 @@ define('secure-ajax', [], () => {
                     if (request.readyState === 4) {
                         const reqText = (request.responseText || '');
                         // TODO FIX/DELETE this is just horrible, migrated from helpers.js hacking string prototype
-                        const isJson = (/^[\],:{}\s]*$/.test(reqText.replace(/\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
+                        const isJson = t => (/^[\],:{}\s]*$/.test(t.replace(/\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4})/g, '@')
                                         .replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g, ']')
                                         .replace(/(?:^|:|,)(?:\s*\[)+/g, '')));
 
@@ -64,7 +64,7 @@ define('secure-ajax', [], () => {
                                 // just about to resolve the request
                                 ajax.onloadend();
                                 resolve(request.response);
-                            } else if (settings.dataType === 'json' && isJson) {
+                            } else if (settings.dataType === 'json' && isJson(reqText)) {
                                 // just about to resolve the request
                                 ajax.onloadend();
                                 resolve(JSON.parse(reqText));
@@ -83,7 +83,7 @@ define('secure-ajax', [], () => {
                                 if (parsedDataUri) {
                                     // just about to resolve the request
                                     ajax.onloadend();
-                                    resolve(settings.dataType === 'json' && parsedDataUri.isJson() ? JSON.parse(parsedDataUri) : parsedDataUri);
+                                    resolve(settings.dataType === 'json' && isJson(parsedDataUri) ? JSON.parse(parsedDataUri) : parsedDataUri);
                                     return;
                                 }
                             }
