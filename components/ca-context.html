@@ -44,7 +44,7 @@ define('ca-context', [], () => {
             const txtProp = ('textContent' in document.createElement('i')) ? 'textContent' : 'innerText';
             const result = [];
 
-            const nav = document.querySelector('ca-nav:not(.non-contextual) a[data-selected]');
+            const nav = document.querySelector('ca-nav:not(.non-contextual) li > div[data-selected]');
             if (nav) {
                 result.push(`Menu[${nav[txtProp]}]`);
             }

@@ -37,8 +37,8 @@
                     { rel: 'rel3', href: 'href3', title: 'Item 3' }
                 ];
 
-                // Get hold of all the anchors elements within the ca-nav component
-                const a = document.querySelectorAll('ca-nav a');
+                // Get hold of all the tab elements within the ca-nav component
+                const a = document.querySelectorAll('ca-nav li > div');
 
                 expect(a.length).to.equal(3);
 

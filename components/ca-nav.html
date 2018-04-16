@@ -15,7 +15,7 @@
         border-bottom: 1px dotted #333;
     }
 
-    ca-nav a {
+    ca-nav li > div {
         display: block;
         color: #333;
         padding: .5em .25em .5em 24px;
@@ -25,8 +25,8 @@
         transition: all .25s;
     }
 
-    ca-nav a:hover,
-    ca-nav a[data-selected="true"] {
+    ca-nav li > div:hover,
+    ca-nav li > div[data-selected="true"] {
         background-color: #e6e6e6;
         color: #000;
         background-position: 10px center;
@@ -34,6 +34,10 @@
 
     ca-nav li:last-child {
         border-bottom: 0;
+    }
+
+    ca-nav > nav > ul > li > div {
+        cursor: pointer;
     }
 </style>
 <script>
@@ -103,7 +107,7 @@ define('ca-nav', ['create-element'], (createElement) => {
 
             if (value > -1) {
                 // get all the child links inside the container
-                const items = this.container.querySelectorAll('a');
+                const items = this.container.querySelectorAll('div');
 
                 // if we have a matching item, execute click event
                 if (items[value]) {
@@ -130,11 +134,11 @@ define('ca-nav', ['create-element'], (createElement) => {
                     const li = createElement(this.container, 'li');
                     const rel = (item.rel || '').replace(/describedby:/g, '');
 
-                    const link = createElement(li, 'a',
+                    const link = createElement(li, 'div',
                         {
-                            href: item.href,
                             'data-action': 'loadCRUD',
                             'data-rel': rel,
+                            href: item.href,
                             'data-href': item.href
                         },
                         item.title
