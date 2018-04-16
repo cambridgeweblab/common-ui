@@ -35,6 +35,10 @@
     ca-nav li:last-child {
         border-bottom: 0;
     }
+
+    ca-nav > nav > ul > li > a {
+        cursor: pointer;
+    }
 </style>
 <script>
 define('ca-nav', ['create-element'], (createElement) => {
@@ -132,7 +136,8 @@ define('ca-nav', ['create-element'], (createElement) => {
 
                     const link = createElement(li, 'a',
                         {
-                            href: item.href,
+                            // eslint-disable-next-line no-script-url
+                            onclick: 'javascript:void(0)',
                             'data-action': 'loadCRUD',
                             'data-rel': rel,
                             'data-href': item.href
