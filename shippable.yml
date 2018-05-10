@@ -27,11 +27,6 @@ build:
 
   on_success:
   - cp -rv package.json index.js bower_components/ components/ examples/  ./shippable/buildoutput
-  - cd shippable/buildoutput && ls -la
-  - if [[ $BRANCH == "master"  ]]  && [[ $IS_PULL_REQUEST != true ]]; then cf login -a https://api.eu-gb.bluemix.net -o "Web Lab" -u $BLUEMIX_USER -s dev -p $BLUEMIX_PASSWORD; fi
-  - if [[ $BRANCH == "master"  ]]  && [[ $IS_PULL_REQUEST != true ]]; then cf push common-ui -t 120 -c "node index.js"; else echo "Not deploying to dev for branch $BRANCH"; fi
-  - if [[ $BRANCH == "master"  ]]  && [[ $IS_PULL_REQUEST != true ]]; then cf target -s stable; fi
-  - if [[ $BRANCH == "master"  ]]  && [[ $IS_PULL_REQUEST != true ]]; then cf push common-ui -t 120 -c "node index.js"; else echo "Not deploying to stable for branch $BRANCH"; fi
 
 integrations:
   notifications:
