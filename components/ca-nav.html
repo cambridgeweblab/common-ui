@@ -140,7 +140,8 @@ define('ca-nav', ['create-element'], (createElement) => {
                             onclick: 'javascript:void(0)',
                             'data-action': 'loadCRUD',
                             'data-rel': rel,
-                            'data-href': item.href
+                            'data-href': item.href,
+                            tabIndex: 0
                         },
                         item.title
                     );
