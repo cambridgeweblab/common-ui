@@ -417,6 +417,7 @@
                 server = sinon.fakeServer.create();
                 server.respondWith('GET', /\/schema.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testSchema)]);
                 server.respondWith('GET', /\/data.json/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testData)]);
+                server.respondWith('GET', /\/data.json\?foo=bar/, [ 200, { 'Content-type': 'application/json' }, JSON.stringify(testData.testData)]);
                 done();
             });
 
@@ -476,6 +477,43 @@
 
                 // Verify
                 expect(caCrud.loadSrc.calledOnce);
+            });
+
+            test('should work with parameterized lists', done => {
+                const newTestSchema = JSON.parse(JSON.stringify(testData.testSchema));
+                newTestSchema.links[0].schema = {
+                    "type": "object",
+                    "id": "http://stable-odt-api.eu-gb.mybluemix.net/api/learner/$metaschema",
+                    "$schema": "http://json-schema.org/draft-03/schema#",
+                    "properties": {
+                        "foo": {
+                            "type": "string",
+                            "id": "order:010_foo",
+                            required: true
+                        }
+                    }
+                };
+                server.respondWith('GET', /\/schema2.json/, [200, {'Content-type': 'application/json'}, JSON.stringify(newTestSchema)]);
+
+                caCrud.onrendercomplete = () => {
+                    // Expect a new form and no list
+                    const caForm = caCrud.querySelector("ca-form");
+                    expect(caForm).to.not.be.undefined;
+                    const caList = caCrud.querySelector("ca-list");
+                    caList.addEventListener('ca-list-render-complete', () => {
+                        done();
+                    });
+
+                    // Submit the form using the filter button
+                    caCrud.querySelector("input#foo").value = 'bar';
+                    caCrud.querySelector("div.buttons button").click();
+
+                    server.respond();
+                };
+
+                server.respondImmediately = true;
+                caCrud.src = 'http://localhost/schema2.json';
+                server.respond();
             });
         });
         a11ySuite('crud');
