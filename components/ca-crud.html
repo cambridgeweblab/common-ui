@@ -322,11 +322,12 @@ define('ca-crud', [
                     // if we need a form to parameterize the instances list, add it
                     if (instanceSchema && instanceSchema.schema && instanceSchema.schema.properties && Object.keys(instanceSchema.schema.properties).length) {
 
-                        const caForm = createElement(self, 'ca-form', { schema: [self.instances[index].schema] });
+                        const caForm = createElement(self, 'ca-form', {});
+                        caForm.schema = [self.instances[index].schema];
                         const formButtons = createElement(self, 'div', { class: 'buttons' });
                         const filterButton = createElement(formButtons, 'button', {}, `List ${self.title || ''}`);
-                        filterButton.onclick = this.submitParameterizedList(caForm);
-                        caForm.onsave = this.loadParameterizedData(instanceSchema, caList);
+                        filterButton.onclick = this.submitParameterizedList.bind(this, caForm);
+                        caForm.onsave = this.loadParameterizedData.bind(this, instanceSchema, caList);
 
                         // get defaults from schema if we have any
                         const defaultData = schemaToDefault(instanceSchema.schema);
